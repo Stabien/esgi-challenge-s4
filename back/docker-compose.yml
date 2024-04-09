@@ -17,6 +17,7 @@ services:
     volumes:
       - postgres_db:/var/lib/postgresql/data
     environment:
+      - POSTGRES_DB=echoAPI
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_USER=postgres
 
