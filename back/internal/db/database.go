@@ -1,7 +1,7 @@
-package config
+package db
 
 import (
-	"echoApi/utils"
+	"easynight/pkg/utils"
 	"fmt"
 
 	"gorm.io/driver/postgres"
@@ -12,11 +12,11 @@ var database *gorm.DB
 var e error
 
 func DatabaseInit() {
-	host := utils.GoDotEnvVariable("DB_HOST")
-	user := utils.GoDotEnvVariable("DB_USERNAME")
-	password := utils.GoDotEnvVariable("DB_PASSWORD")
-	dbName := utils.GoDotEnvVariable("DB_NAME")
-	port := utils.GoDotEnvVariable("DB_PORT")
+	host := utils.GetEnvVariable("DB_HOST")
+	user := utils.GetEnvVariable("DB_USERNAME")
+	password := utils.GetEnvVariable("DB_PASSWORD")
+	dbName := utils.GetEnvVariable("DB_NAME")
+	port := utils.GetEnvVariable("DB_PORT")
 
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable", host, user, password, dbName, port)
 	database, e = gorm.Open(postgres.Open(dsn), &gorm.Config{})

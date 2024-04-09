@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"echoApi/controllers"
+	"easynight/internal/controllers"
 
 	"github.com/labstack/echo/v4"
 )
