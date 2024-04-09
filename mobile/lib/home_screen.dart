@@ -10,12 +10,12 @@ class HomeScreen extends StatelessWidget {
       appBar:
       PreferredSize(
         preferredSize: const Size.fromHeight(100),
-        child: Container(child:Text('eerte' )),
+        child: Container(child:const Text('eerte' )),
       ),
-      bottomNavigationBar: Container(child:Text("test")) ,
+      bottomNavigationBar: Container(child:const Text("test")) ,
       body: Container(
         color: Colors.white,
-        child: Center(
+        child: const Center(
           child: Directionality(textDirection: TextDirection.ltr,child: Text(
             "EASY NIGHT",
             style: TextStyle(color:Colors.red, fontSize: 22, fontWeight: FontWeight.bold),
