@@ -1,6 +1,7 @@
 package db
 
 import (
+	"easynight/internal/models"
 	"easynight/pkg/utils"
 	"fmt"
 
@@ -24,6 +25,8 @@ func DatabaseInit() {
 	if e != nil { 
 		panic(e)
 	}
+
+	database.AutoMigrate(&models.User{})
 
 	dbGorm, err := database.DB()
 	

@@ -9,9 +9,11 @@ services:
       - ./:/app
       - ./vendor:/app/vendor
     command: "go run cmd/main.go"
+    depends_on:
+      - postgres
 
   postgres:
-    image: postgres:15-alpine
+    build: ./internal/db
     ports:
       - 5432:5432
     volumes:
