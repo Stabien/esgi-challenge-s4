@@ -6,5 +6,5 @@ import (
 
 type Admin struct {
 	UserID uuid.UUID `gorm:"type:uuid;ForeignKey:ID"`
-	User   User `gorm:"foreignKey:UserID"`
+	User   User      `gorm:"foreignKey:UserID"`
 }
