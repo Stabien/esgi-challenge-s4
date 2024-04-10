@@ -26,7 +26,7 @@ func DatabaseInit() {
 		panic(e)
 	}
 
-	database.AutoMigrate(&models.User{})
+	database.AutoMigrate(&models.User{}, &models.Admin{})
 
 	dbGorm, err := database.DB()
 	
