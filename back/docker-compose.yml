@@ -8,7 +8,7 @@ services:
     volumes: 
       - ./:/app
       - ./vendor:/app/vendor
-    command: "go run cmd/main.go"
+    command: "go run main.go"
     depends_on:
       - postgres
 
