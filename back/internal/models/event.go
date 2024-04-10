@@ -22,4 +22,5 @@ type Event struct {
 	Lat               float32
 	Lng               float32
 	Location          string
+	Tag               string
 }

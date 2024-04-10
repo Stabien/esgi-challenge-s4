@@ -13,4 +13,5 @@ type Notification struct {
 	Receiver   User
 	Content    string
 	Type       string
+	IsOpened   bool
 }
