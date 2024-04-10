@@ -2,10 +2,19 @@ package models
 
 import (
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 type User struct {
-	ID uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4()"`
-	Email string
-	Password string
+	gorm.Model
+	ID                   uuid.UUID      `gorm:"primaryKey;type:uuid;default:uuid_generate_v4()"`
+	Admins               []Admin        `gorm:"foreignKey:UserID"`
+	Customers            []Customer     `gorm:"foreignKey:UserID"`
+	Organizers           []Organizer    `gorm:"foreignKey:UserID"`
+	Reservations         []Reservation  `gorm:"foreignKey:UserID"`
+	Rates                []Rate         `gorm:"foreignKey:UserID"`
+	NotificationSent     []Notification `gorm:"foreignKey:SenderID"`
+	NotificationReceived []Notification `gorm:"foreignKey:ReceiverID"`
+	Email                string
+	Password             string
 }

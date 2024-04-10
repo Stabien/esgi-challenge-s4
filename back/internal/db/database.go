@@ -22,14 +22,25 @@ func DatabaseInit() {
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable", host, user, password, dbName, port)
 	database, e = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
-	if e != nil { 
+	if e != nil {
 		panic(e)
 	}
 
-	database.AutoMigrate(&models.User{})
+	database.AutoMigrate(
+		&models.User{},
+		&models.Admin{},
+		&models.Customer{},
+		&models.Event{},
+		&models.EventPhoto{},
+		&models.Message{},
+		&models.Notification{},
+		&models.Organizer{},
+		&models.Rate{},
+		&models.Reservation{},
+	)
 
 	dbGorm, err := database.DB()
-	
+
 	if err != nil {
 		panic(err)
 	}
