@@ -2,11 +2,13 @@ package models
 
 import (
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 type Customer struct {
-	UserID    uuid.UUID `gorm:"type:uuid;ForeignKey:ID"`
-	User      User      `gorm:"foreignKey:UserID"`
+	gorm.Model
+	UserID    uuid.UUID
+	User      User
 	Firstname string
 	Lastname  string
 }
