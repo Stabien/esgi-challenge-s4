@@ -19,7 +19,7 @@ func GetEnvVariable(key string) string {
 	return os.Getenv(key)
 }
 
-func MergeSlice[T any](slices ...[]T) []T {
+func MergeSlices[T any](slices ...[]T) []T {
 	var mergedSlice []T
 
 	for _, slice := range slices {
@@ -27,4 +27,15 @@ func MergeSlice[T any](slices ...[]T) []T {
 	}
 
 	return mergedSlice
+}
+
+func ForEach[T any, S any](slice []T, transform func(element T) S) []S {
+	var newSlice []S
+	
+	for _, element := range slice {
+		newElement := transform(element)
+		newSlice = append(newSlice, newElement)
+	}
+
+	return newSlice
 }
