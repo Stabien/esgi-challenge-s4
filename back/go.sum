@@ -382,8 +382,6 @@ github.com/yuin/goldmark v1.1.27/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9de
 github.com/yuin/goldmark v1.1.32/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.2.1/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.3.5/go.mod h1:mwnBkeHKe2W/ZEtQ+71ViKU8L12m81fl3OWwC1Zlc8k=
-github.com/zc2638/swag v1.5.1 h1:T/PyvMTXOxCRIakSpD7Ed4uICW4PM16JdPsS+3dJbKU=
-github.com/zc2638/swag v1.5.1/go.mod h1:AjyTDUHzZZ4mctSNLEZVD5jWQHFGDJlaCR5XjDm46aE=
 github.com/zc2638/swag v1.14.0 h1:lQ1xVEoyny3non20sGcs81bGbcxLnn2py7HdlejkGfE=
 github.com/zc2638/swag v1.14.0/go.mod h1:lpYcvHX5q0aPGCN4AFsUcPWV3gHYUxpTRiT2KuE5VSo=
 go.etcd.io/etcd/api/v3 v3.5.4/go.mod h1:5GB2vv4A4AOn3yk7MftYGHkUfGtDHnEraIjym4dYz5A=
