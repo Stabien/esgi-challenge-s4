@@ -7,6 +7,10 @@ import (
 	"gorm.io/gorm"
 )
 
+func usersFixtures(db *gorm.DB) {
+
+}
+
 func InitFixtures(db *gorm.DB) {
 	baseAdmins := []models.User{{Email: "admin@test.fr", Password: "test"}}
 	baseCustomers := []models.User{
