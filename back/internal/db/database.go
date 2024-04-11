@@ -39,6 +39,8 @@ func DatabaseInit() {
 		&models.Reservation{},
 	)
 
+	InitFixtures(database)
+
 	dbGorm, err := database.DB()
 
 	if err != nil {
