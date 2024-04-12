@@ -1,6 +1,7 @@
 package main
 
 import (
+	"easynight/internal/db"
 	"log"
 	"net/http"
 	"strings"
@@ -15,6 +16,7 @@ func main() {
 		option.Title("API Doc EsayNight"),
 	)
 	router := echo.New()
+	db.DatabaseInit()
 	api.Walk(func(path string, e *swag.Endpoint) {
 		h := echo.WrapHandler(e.Handler.(http.Handler))
 		path = swag.ColonPath(path)
@@ -44,5 +46,6 @@ func main() {
 	router.GET("/swagger/json", echo.WrapHandler(api.Handler()))
 	router.GET("/swagger/ui/*", echo.WrapHandler(swag.UIHandler("/swagger/ui", "/swagger/json", true)))
 
+	// log.Fatal(http.ListenAndServe(":"+utils.GetEnvVariable("PORT"), router))
 	log.Fatal(http.ListenAndServe(":3000", router))
 }
