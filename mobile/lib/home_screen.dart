@@ -9,11 +9,8 @@ class HomeScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       body: Container(
         color: Theme.of(context).colorScheme.background,
-        child:  const Center(
-          child: Directionality(textDirection: TextDirection.ltr,child: Text(
-            "EASY NIGHT",
-
-          )),
+        child:   Center(
+          child: Text("Paris, France", style: Theme.of(context).textTheme.titleLarge,),
         ),
       ),
     );
