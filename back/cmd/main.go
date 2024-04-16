@@ -27,12 +27,25 @@ func main() {
 
 	api.AddEndpoint(
 		endpoint.New(
-			http.MethodPost, "/suscribe",
-			endpoint.Handler(controllers.HelloHandle),
-			endpoint.Summary("Create user"),
-			endpoint.Description("Create a acount for the user"),
-			endpoint.Body(models.User{}, "User object that needs to be create", true),
-			endpoint.Response(http.StatusOK, "Successfully user create", endpoint.SchemaResponseOption(models.User{})),
+			http.MethodGet, "/events/{title}",
+			endpoint.Handler(controllers.GetAllEvents),
+			endpoint.Path("title", "string", "filter title", false),
+			endpoint.Summary("Get all events"),
+			endpoint.Description("all event that are available"),
+			endpoint.Response(http.StatusOK, "events", endpoint.SchemaResponseOption(models.Event{})),
+
+			// endpoint.Security("petstore_auth", "read:pets", "write:pets"),
+		),
+	)
+
+	api.AddEndpoint(
+		endpoint.New(
+			http.MethodPost, "/reservations",
+			endpoint.Handler(controllers.PostReservation),
+			endpoint.Body(models.Reservation{}, "application/json", true),
+			endpoint.Summary("Get all events"),
+			endpoint.Description("all event that are available"),
+			endpoint.Response(http.StatusOK, "events", endpoint.SchemaResponseOption(models.Event{})),
 			// endpoint.Security("petstore_auth", "read:pets", "write:pets"),
 		),
 	)
