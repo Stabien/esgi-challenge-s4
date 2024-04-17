@@ -14,11 +14,13 @@ type EventInput struct {
 	Title             string  `json:"title"`
 	Description       string  `json:"description"`
 	Banner            string  `json:"banner"`
+	Image             string  `json:"image"`
 	Date              string  `json:"date"`
 	ParticipantNumber int     `json:"participant_number"`
 	Lat               float64 `json:"lat"`
 	Lng               float64 `json:"lng"`
 	Location          string  `json:"location"`
+	Tag               string  `json:"tag"`
 }
 
 func CreateEvent(c echo.Context) error {
@@ -41,12 +43,13 @@ func CreateEvent(c echo.Context) error {
 		Title:             eventInput.Title,
 		Description:       eventInput.Description,
 		Banner:            eventInput.Banner,
+		Image:             eventInput.Image,
 		Date:              date,
 		ParticipantNumber: eventInput.ParticipantNumber,
 		Lat:               float32(eventInput.Lat),
 		Lng:               float32(eventInput.Lng),
 		Location:          eventInput.Location,
-		// Tag:            "", // TODO: Add tag
+		Tag:               eventInput.Tag,
 	}
 
 	// Insert event into database
@@ -80,10 +83,12 @@ func UpdateEvent(c echo.Context) error {
 	event.Title = updateInput.Title
 	event.Description = updateInput.Description
 	event.Banner = updateInput.Banner
+	event.Image = updateInput.Image
 	event.Location = updateInput.Location
 	event.ParticipantNumber = updateInput.ParticipantNumber
 	event.Lat = float32(updateInput.Lat)
 	event.Lng = float32(updateInput.Lng)
+	event.Tag = updateInput.Tag
 
 	// Save event to database
 	if err := db.DB().Save(&event).Error; err != nil {
