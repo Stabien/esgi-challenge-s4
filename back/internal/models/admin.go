@@ -7,6 +7,6 @@ import (
 
 type Admin struct {
 	gorm.Model
-	UserID uuid.UUID
+	UserID uuid.UUID `gorm:"type:uuid"`
 	User   User
 }

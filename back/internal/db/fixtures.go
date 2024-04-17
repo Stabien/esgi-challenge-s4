@@ -2,10 +2,17 @@ package db
 
 import (
 	"easynight/internal/db/fixtures"
+	"log"
 
 	"gorm.io/gorm"
 )
 
 func InitFixtures(db *gorm.DB) {
-	db.Create(&fixtures.BaseUsers)
+	for _, fixture := range fixtures.AllFixtures {
+		result := db.Create(fixture)
+
+		if (result.Error != nil) {
+			log.Fatal(result.Error)
+		}
+	}
 }

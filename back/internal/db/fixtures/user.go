@@ -28,7 +28,7 @@ var BaseUsers = utils.MergeSlices(BaseAdmins, BaseCustomers, BaseOrganizers)
 // Users
 var Admins = []models.Admin{{UserID: BaseAdmins[0].ID, User: BaseAdmins[0]}}
 
-var Customers = []models.Organizer{
+var Organizers = []models.Organizer{
 	{UserID: BaseOrganizers[0].ID, User: BaseOrganizers[0], Firstname: "Organizer", Lastname: "Test"},
 	{UserID: BaseOrganizers[1].ID, User: BaseOrganizers[1], Firstname: "David", Lastname: "Guetta"},
 	{UserID: BaseOrganizers[2].ID, User: BaseOrganizers[2], Firstname: "DJ", Lastname: "Snake"},
@@ -36,11 +36,10 @@ var Customers = []models.Organizer{
 	{UserID: BaseOrganizers[4].ID, User: BaseOrganizers[4], Firstname: "La", Lastname: "Clairière"},
 }
 
-var Organizer = []models.Customer{
+var Customers = []models.Customer{
 	{UserID: BaseCustomers[0].ID, User: BaseCustomers[0], Firstname: "Customer", Lastname: "Test"},
 	{UserID: BaseCustomers[1].ID, User: BaseCustomers[1], Firstname: "Antoine", Lastname: "Dupont"},
 	{UserID: BaseCustomers[2].ID, User: BaseCustomers[2], Firstname: "Gaël", Lastname: "Fickou"},
 	{UserID: BaseCustomers[3].ID, User: BaseCustomers[3], Firstname: "Damien", Lastname: "Penaud"},
 	{UserID: BaseCustomers[4].ID, User: BaseCustomers[4], Firstname: "Romain", Lastname: "Ntamack"},
 }
-

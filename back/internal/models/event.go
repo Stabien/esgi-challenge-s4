@@ -14,13 +14,16 @@ type Event struct {
 	Messages          []Message     `gorm:"foreignKey:EventID"`
 	Photos            []EventPhoto  `gorm:"foreignKey:EventID"`
 	Rates             []Rate        `gorm:"foreignKey:EventID"`
+	OrganizerID       uuid.UUID     `gorm:"type:uuid"`
+	Organizer         Organizer     `gorm:"references:UserID"`
 	Title             string
 	Description       string
 	Banner            string
 	Date              time.Time
-	ParticipantNumber int
+	ParticipantNumber *int
 	Lat               float32
 	Lng               float32
 	Location          string
+	Place             string
 	Tag               string
 }

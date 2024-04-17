@@ -11,7 +11,6 @@ type User struct {
 	Admins               []Admin        `gorm:"foreignKey:UserID"`
 	Customers            []Customer     `gorm:"foreignKey:UserID"`
 	Organizers           []Organizer    `gorm:"foreignKey:UserID"`
-	Reservations         []Reservation  `gorm:"foreignKey:UserID"`
 	Rates                []Rate         `gorm:"foreignKey:UserID"`
 	NotificationSent     []Notification `gorm:"foreignKey:SenderID"`
 	NotificationReceived []Notification `gorm:"foreignKey:ReceiverID"`
