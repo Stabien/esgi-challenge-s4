@@ -1,9 +1,10 @@
 package fixtures
 
 var AllFixtures = []any{
-	BaseUsers,
+	Users,
 	Admins,
 	Organizers,
 	Customers,
 	Events,
+	Reservations,
 }

@@ -12,6 +12,5 @@ type Reservation struct {
 	Customer   Customer  `gorm:"references:UserID"`
 	EventID    uuid.UUID `gorm:"type:uuid"`
 	Event      Event
-	Name       string
 	Qrcode     string
 }
