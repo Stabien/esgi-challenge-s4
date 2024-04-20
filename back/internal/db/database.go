@@ -31,7 +31,6 @@ func DatabaseInit() {
 		&models.Admin{},
 		&models.Customer{},
 		&models.Event{},
-		&models.EventPhoto{},
 		&models.Message{},
 		&models.Notification{},
 		&models.Organizer{},

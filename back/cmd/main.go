@@ -82,6 +82,9 @@ func main() {
 	router.GET("/swagger/json", echo.WrapHandler(api.Handler()))
 	router.GET("/swagger/ui/*", echo.WrapHandler(swag.UIHandler("/swagger/ui", "/swagger/json", true)))
 
+	router.POST("/event", controllers.CreateEvent)
+	router.PATCH("/event/:id", controllers.UpdateEvent)
+
 	// routes.InitRouter(router)
 
 	// log.Fatal(http.ListenAndServe(":"+utils.GetEnvVariable("PORT"), router))
