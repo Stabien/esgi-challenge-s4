@@ -84,6 +84,7 @@ func main() {
 
 	router.POST("/event", controllers.CreateEvent)
 	router.PATCH("/event/:id", controllers.UpdateEvent)
+	router.GET("/event/:id", controllers.GetEvent)
 
 	// routes.InitRouter(router)
 

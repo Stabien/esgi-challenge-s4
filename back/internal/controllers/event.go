@@ -100,6 +100,20 @@ func UpdateEvent(c echo.Context) error {
 	return c.String(http.StatusOK, "Event updated successfully!")
 }
 
+func GetEvent(c echo.Context) error {
+	// Get event ID from URL
+	eventID := c.Param("id")
+
+	// Get event from database
+	var event models.Event
+	if err := db.DB().First(&event, "id = ?", eventID).Error; err != nil {
+		return err
+	}
+
+	// Return event as JSON response
+	return c.JSON(http.StatusOK, event)
+}
+
 func GetAllEvents(w http.ResponseWriter, r *http.Request) {
 	var events []models.Event
 	var nameFilter string = ""
