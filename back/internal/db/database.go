@@ -27,7 +27,7 @@ func migrate(database *gorm.DB) error {
 	)
 }
 
-func DatabaseInit() {
+func OpenDB() (*gorm.DB, error) {
 	host := utils.GetEnvVariable("DB_HOST")
 	user := utils.GetEnvVariable("DB_USERNAME")
 	password := utils.GetEnvVariable("DB_PASSWORD")
@@ -36,6 +36,12 @@ func DatabaseInit() {
 
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable", host, user, password, dbName, port)
 	database, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
+
+	return database, err
+}
+
+func DatabaseInit() {
+	database, err = OpenDB()
 
 	if err != nil {
 		log.Fatal(err)
@@ -50,7 +56,7 @@ func DatabaseInit() {
 	dbGorm, err := database.DB()
 
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	dbGorm.Ping()

@@ -1,10 +1,8 @@
 package fixtures
 
 import (
-	"easynight/internal/db"
 	"log"
 
-	"github.com/spf13/cobra"
 	"gorm.io/gorm"
 )
 
@@ -17,7 +15,7 @@ var AllFixtures = []any{
 	Reservations,
 }
 
-func loadFixtures(db *gorm.DB) {
+func LoadFixtures(db *gorm.DB) {
 	for _, fixture := range AllFixtures {
 		result := db.Create(fixture)
 
@@ -25,14 +23,4 @@ func loadFixtures(db *gorm.DB) {
 			log.Fatal(result.Error)
 		}
 	}
-}
-
-func loadFixturesCommand(cmd *cobra.Command, args []string) {
-	loadFixtures(db.DB())
-}
-
-var FixturesCmd = &cobra.Command{
-	Use:   "fixtures",
-	Short: "Load fixtures into the database",
-	Run:   loadFixturesCommand,
 }
