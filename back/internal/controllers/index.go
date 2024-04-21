@@ -7,5 +7,5 @@ import (
 )
 
 func GetDefault(c echo.Context) error {
-	return c.String(http.StatusOK, "Hello, Worldnnn!")
+	return c.String(http.StatusOK, "Hello world !")
 }

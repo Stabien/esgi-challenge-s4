@@ -7,6 +7,7 @@ import (
 
 type Notification struct {
 	gorm.Model
+	ID         uuid.UUID `gorm:"primaryKey;type:uuid;default:uuid_generate_v4()"`
 	SenderID   uuid.UUID `gorm:"type:uuid"`
 	ReceiverID uuid.UUID `gorm:"type:uuid"`
 	Sender     User

@@ -4,8 +4,8 @@ import (
 	"easynight/internal/controllers"
 	"easynight/internal/db"
 	"easynight/internal/models"
-	"fmt"
-	"io"
+	"easynight/internal/routes"
+	"easynight/pkg/utils"
 	"log"
 	"net/http"
 	"strings"
@@ -15,10 +15,6 @@ import (
 	"github.com/zc2638/swag/endpoint"
 	"github.com/zc2638/swag/option"
 )
-
-func handle(w http.ResponseWriter, r *http.Request) {
-	_, _ = io.WriteString(w, fmt.Sprintf("[%s]", r.Method))
-}
 
 func main() {
 	api := swag.New(
@@ -82,12 +78,7 @@ func main() {
 	router.GET("/swagger/json", echo.WrapHandler(api.Handler()))
 	router.GET("/swagger/ui/*", echo.WrapHandler(swag.UIHandler("/swagger/ui", "/swagger/json", true)))
 
-	router.POST("/event", controllers.CreateEvent)
-	router.PATCH("/event/:id", controllers.UpdateEvent)
-	router.GET("/event/:id", controllers.GetEvent)
+	routes.InitRouter(router)
 
-	// routes.InitRouter(router)
-
-	// log.Fatal(http.ListenAndServe(":"+utils.GetEnvVariable("PORT"), router))
-	log.Fatal(http.ListenAndServe(":3000", router))
+	log.Fatal(http.ListenAndServe(":"+utils.GetEnvVariable("PORT"), router))
 }

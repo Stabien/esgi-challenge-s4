@@ -18,7 +18,7 @@ type EventInput struct {
 	Banner            string  `json:"banner"`
 	Image             string  `json:"image"`
 	Date              string  `json:"date"`
-	ParticipantNumber int     `json:"participant_number"`
+	ParticipantNumber *int    `json:"participant_number"`
 	Lat               float64 `json:"lat"`
 	Lng               float64 `json:"lng"`
 	Location          string  `json:"location"`

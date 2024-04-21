@@ -13,14 +13,16 @@ type Event struct {
 	Reservations      []Reservation `gorm:"foreignKey:EventID"`
 	Messages          []Message     `gorm:"foreignKey:EventID"`
 	Rates             []Rate        `gorm:"foreignKey:EventID"`
+	Organizers        []Organizer   `gorm:"many2many:organizer_events;references:UserID"`
 	Title             string
 	Description       string
 	Banner            string
 	Image             string
 	Date              time.Time
-	ParticipantNumber int
+	ParticipantNumber *int
 	Lat               float32
 	Lng               float32
 	Location          string
+	Place             string
 	Tag               string
 }
