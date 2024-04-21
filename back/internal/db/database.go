@@ -13,7 +13,7 @@ import (
 var database *gorm.DB
 var err error
 
-func makeMigration(database *gorm.DB) error {
+func migrate(database *gorm.DB) error {
 	return database.AutoMigrate(
 		&models.User{},
 		&models.Admin{},
@@ -41,13 +41,11 @@ func DatabaseInit() {
 		log.Fatal(err)
 	}
 
-	err = makeMigration(database)
+	err = migrate(database)
 
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	InitFixtures(database)
 
 	dbGorm, err := database.DB()
 

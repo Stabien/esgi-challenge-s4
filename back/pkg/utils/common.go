@@ -8,7 +8,6 @@ import (
 )
 
 func GetEnvVariable(key string) string {
-
 	// load .env file
 	err := godotenv.Load(".env.local")
 
@@ -29,9 +28,9 @@ func MergeSlices[T any](slices ...[]T) []T {
 	return mergedSlice
 }
 
-func ForEach[T any, S any](slice []T, transform func(element T) S) []S {
+func Map[T any, S any](slice []T, transform func(element T) S) []S {
 	var newSlice []S
-	
+
 	for _, element := range slice {
 		newElement := transform(element)
 		newSlice = append(newSlice, newElement)

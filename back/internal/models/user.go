@@ -7,7 +7,7 @@ import (
 
 type User struct {
 	gorm.Model
-	ID                   uuid.UUID      `gorm:"primaryKey;type:uuid;default:uuid_generate_v4()"`
+	ID                   uuid.UUID      `gorm:"primaryKey;type:uuid;default:uuid_generate_v4();unique"`
 	Admins               []Admin        `gorm:"foreignKey:UserID"`
 	Customers            []Customer     `gorm:"foreignKey:UserID"`
 	Organizers           []Organizer    `gorm:"foreignKey:UserID"`

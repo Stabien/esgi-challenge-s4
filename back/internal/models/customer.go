@@ -8,7 +8,7 @@ import (
 )
 
 type Customer struct {
-	UserID       uuid.UUID `gorm:"primaryKey;type:uuid"`
+	UserID       uuid.UUID `gorm:"primaryKey;type:uuid;unique"`
 	User         User
 	Reservations []Reservation `gorm:"foreignKey:CustomerID"`
 	Firstname    string

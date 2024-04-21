@@ -14,8 +14,7 @@ type Event struct {
 	Reservations      []Reservation `gorm:"foreignKey:EventID"`
 	Messages          []Message     `gorm:"foreignKey:EventID"`
 	Rates             []Rate        `gorm:"foreignKey:EventID"`
-	OrganizerID       uuid.UUID     `gorm:"type:uuid"`
-	Organizer         Organizer     `gorm:"references:UserID"`
+	Organizers        []Organizer   `gorm:"many2many:organizer_events;references:UserID"`
 	Title             string
 	Description       string
 	Banner            string
