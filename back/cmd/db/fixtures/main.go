@@ -25,4 +25,6 @@ func main() {
 	}
 
 	fixtures.LoadFixtures(database)
+
+	fmt.Print("Fixtures loaded !")
 }
