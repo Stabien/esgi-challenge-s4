@@ -1,7 +1,6 @@
 package models
 
 import (
-	"database/sql"
 	"time"
 
 	"github.com/google/uuid"
@@ -18,7 +17,7 @@ type Event struct {
 	Title             string
 	Description       string
 	Banner            string
-	Photo             sql.NullString
+	Image             string
 	Date              time.Time
 	ParticipantNumber *int
 	Lat               float32
