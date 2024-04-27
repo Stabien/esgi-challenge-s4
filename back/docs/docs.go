@@ -15,31 +15,34 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/v1/pets/{id}": {
-            "get": {
-                "description": "Gets a pet using the pet ID",
+        "/user/authentication": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "Pets"
+                    "users"
                 ],
-                "summary": "Get pet by ID",
-                "operationId": "get-pet-by-id",
+                "summary": "Authenticate a user",
                 "parameters": [
                     {
-                        "type": "integer",
-                        "description": "Pet ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
+                        "description": "User credentials",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.Credentials"
+                        }
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/controllers.AuthSuccessResponse"
                         }
                     },
                     "400": {
@@ -50,10 +53,31 @@ const docTemplate = `{
                         "description": "Not Found",
                         "schema": {}
                     },
-                    "405": {
-                        "description": "Method Not Allowed",
+                    "500": {
+                        "description": "Internal Server Error",
                         "schema": {}
                     }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "controllers.AuthSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "token": {
+                    "type": "string"
+                }
+            }
+        },
+        "controllers.Credentials": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
                 }
             }
         }
@@ -64,7 +88,7 @@ const docTemplate = `{
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
 	Host:             "localhost:3000",
-	BasePath:         "/api/v1",
+	BasePath:         "/",
 	Schemes:          []string{},
 	Title:            "Swagger Example API",
 	Description:      "This is a sample server for using Swagger with Echo.",

@@ -16,7 +16,7 @@ import (
 // @version		1.0
 // @description	This is a sample server for using Swagger with Echo.
 // @host			localhost:3000
-// @BasePath		/api/v1
+// @BasePath		/
 func main() {
 	router := echo.New()
 

@@ -1,4 +1,17 @@
-basePath: /api/v1
+basePath: /
+definitions:
+  controllers.AuthSuccessResponse:
+    properties:
+      token:
+        type: string
+    type: object
+  controllers.Credentials:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
 host: localhost:3000
 info:
   contact: {}
@@ -6,33 +19,34 @@ info:
   title: Swagger Example API
   version: "1.0"
 paths:
-  /api/v1/pets/{id}:
-    get:
-      description: Gets a pet using the pet ID
-      operationId: get-pet-by-id
+  /user/authentication:
+    post:
+      consumes:
+      - application/json
       parameters:
-      - description: Pet ID
-        in: path
-        name: id
+      - description: User credentials
+        in: body
+        name: body
         required: true
-        type: integer
+        schema:
+          $ref: '#/definitions/controllers.Credentials'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            type: string
+            $ref: '#/definitions/controllers.AuthSuccessResponse'
         "400":
           description: Bad Request
           schema: {}
         "404":
           description: Not Found
           schema: {}
-        "405":
-          description: Method Not Allowed
+        "500":
+          description: Internal Server Error
           schema: {}
-      summary: Get pet by ID
+      summary: Authenticate a user
       tags:
-      - Pets
+      - users
 swagger: "2.0"

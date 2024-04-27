@@ -27,22 +27,41 @@ type jwtClaims struct {
 	jwt.StandardClaims
 }
 
+// @Summary	Authenticate a user
+// @Tags		users
+// @Accept		json
+// @Produce	json
+// @Param		body		body		Credentials	true	"User credentials"
+// @Success	200			{object}	AuthSuccessResponse
+// @Failure	400			{object}	error
+// @Failure	404			{object}	error
+// @Failure	500			{object}	error
+// @Router		/user/authentication [post]
 func Authentication(c echo.Context) error {
 	var user models.User
 
 	credentials := new(Credentials)
 
 	if err := c.Bind(credentials); err != nil {
-		return c.String(http.StatusBadRequest, "bad request")
+		return c.String(http.StatusBadRequest, "Bad request")
+	}
+
+	query := map[string]interface{}{
+		"email":    credentials.Email,
+		"password": credentials.Password,
 	}
 
 	db := db.DB()
-	db.Where(credentials).Find(&user)
+	db.Where(query).Find(&user)
+
+	if user.ID == uuid.Nil {
+		return c.String(http.StatusNotFound, "User not found")
+	}
 
 	token, err := generateJwtToken(user.ID, user.Email, time.Now())
 
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, "internal server error")
+		return c.String(http.StatusInternalServerError, "Internal server error")
 	}
 
 	return c.JSON(http.StatusOK, AuthSuccessResponse{Token: token})
