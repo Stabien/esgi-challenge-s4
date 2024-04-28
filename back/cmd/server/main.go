@@ -4,6 +4,7 @@ import (
 	_ "easynight/docs"
 	"easynight/internal/db"
 	"easynight/internal/routes"
+	"easynight/internal/validators"
 	"easynight/pkg/utils"
 	"log"
 	"net/http"
@@ -18,13 +19,14 @@ import (
 // @host			localhost:3000
 // @BasePath		/
 func main() {
-	router := echo.New()
+	e := echo.New()
 
 	db.DatabaseInit()
 
-	router.GET("/swagger/*", echoSwagger.WrapHandler)
+	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
-	routes.InitRouter(router)
+	validators.InitValidators(e)
+	routes.InitRouter(e)
 
-	log.Fatal(http.ListenAndServe(":"+utils.GetEnvVariable("PORT"), router))
+	log.Fatal(http.ListenAndServe(":"+utils.GetEnvVariable("PORT"), e))
 }

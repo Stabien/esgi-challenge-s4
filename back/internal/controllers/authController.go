@@ -13,11 +13,11 @@ import (
 )
 
 type Credentials struct {
-	Email    string `json:"email"`
+	Email    string `json:"email" validate:"required,email"`
 	Password string `json:"password"`
 }
 
-type AuthSuccessResponse struct {
+type authSuccessResponse struct {
 	Token string `json:"token"`
 }
 
@@ -58,13 +58,13 @@ func Authentication(c echo.Context) error {
 		return c.String(http.StatusNotFound, "User not found")
 	}
 
-	token, err := generateJwtToken(user.ID, user.Email, time.Now())
+	token, err := generateJwtToken(user.ID, user.Email, time.Now().AddDate(0, 0, 7))
 
 	if err != nil {
 		return c.String(http.StatusInternalServerError, "Internal server error")
 	}
 
-	return c.JSON(http.StatusOK, AuthSuccessResponse{Token: token})
+	return c.JSON(http.StatusOK, authSuccessResponse{Token: token})
 }
 
 func generateJwtToken(userID uuid.UUID, userEmail string, expirationTime time.Time) (string, error) {

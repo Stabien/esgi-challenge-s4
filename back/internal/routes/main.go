@@ -11,5 +11,7 @@ func InitRouter(e *echo.Echo) {
 	e.PATCH("/event/:id", controllers.UpdateEvent)
 	e.GET("/event/:id", controllers.GetEvent)
 
-	e.POST("/user/authentication", controllers.Authentication)
+	e.POST("/auth", controllers.Authentication)
+	e.POST("/customers", controllers.CustomerRegistration)
+	e.POST("/organizers", controllers.OrganizerRegistration)
 }

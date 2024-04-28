@@ -2,7 +2,7 @@ package main
 
 import (
 	"easynight/internal/db"
-	"easynight/internal/db/fixtures"
+	"easynight/internal/fixtures"
 	"fmt"
 	"log"
 )
