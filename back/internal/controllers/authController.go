@@ -28,15 +28,15 @@ type jwtClaims struct {
 }
 
 // @Summary	Authenticate a user
-// @Tags		users
+// @Tags		Auth
 // @Accept		json
 // @Produce	json
-// @Param		body		body		Credentials	true	"User credentials"
-// @Success	200			{object}	AuthSuccessResponse
-// @Failure	400			{object}	error
-// @Failure	404			{object}	error
-// @Failure	500			{object}	error
-// @Router		/user/authentication [post]
+// @Param		body	body		Credentials	true	"User credentials"
+// @Success	200		{object}	authSuccessResponse
+// @Failure	400		{object}	error
+// @Failure	404		{object}	error
+// @Failure	500		{object}	error
+// @Router		/auth [post]
 func Authentication(c echo.Context) error {
 	var user models.User
 
