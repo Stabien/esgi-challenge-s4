@@ -3,6 +3,7 @@ package controllers
 import (
 	"easynight/internal/models"
 	"easynight/internal/services"
+	"easynight/pkg/utils"
 	"net/http"
 
 	"github.com/google/uuid"
@@ -35,15 +36,15 @@ func CustomerRegistration(c echo.Context) error {
 	body := new(RegistrationPayload)
 
 	if err := c.Bind(body); err != nil {
-		return c.String(http.StatusBadRequest, "Bad request")
+		return echo.NewHTTPError(http.StatusUnprocessableEntity, err.Error())
 	}
 
 	if err := c.Validate(body); err != nil {
-		return c.String(http.StatusUnprocessableEntity, err.Error())
+		return echo.NewHTTPError(http.StatusUnprocessableEntity, err.Error())
 	}
 
 	if doesUserAlreadyExists(body.Email) {
-		return c.String(http.StatusConflict, "User already exists")
+		return echo.NewHTTPError(http.StatusUnprocessableEntity, "User already exists")
 	}
 
 	user, err := services.CreateUser(
@@ -54,7 +55,7 @@ func CustomerRegistration(c echo.Context) error {
 	)
 
 	if err != nil {
-		return c.String(http.StatusUnprocessableEntity, "Unprocessable entity")
+		return echo.NewHTTPError(http.StatusUnprocessableEntity, err.Error())
 	}
 
 	customer, err := services.CreateCustomer(
@@ -95,13 +96,19 @@ func OrganizerRegistration(c echo.Context) error {
 	}
 
 	if doesUserAlreadyExists(body.Email) {
-		return echo.NewHTTPError(http.StatusUnprocessableEntity, "User already exists")
+		return echo.NewHTTPError(http.StatusConflict, "User already exists")
+	}
+
+	hashedPassword, err := utils.HashPassword(body.Password)
+
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
 	user, err := services.CreateUser(
 		models.User{
 			Email:    body.Email,
-			Password: body.Password,
+			Password: hashedPassword,
 		},
 	)
 

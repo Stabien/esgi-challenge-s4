@@ -1,8 +1,7 @@
 package controllers
 
 import (
-	"easynight/internal/db"
-	"easynight/internal/models"
+	"easynight/internal/services"
 	"easynight/pkg/utils"
 	"net/http"
 	"time"
@@ -38,30 +37,26 @@ type jwtClaims struct {
 // @Failure	500		{object}	error
 // @Router		/auth [post]
 func Authentication(c echo.Context) error {
-	var user models.User
-
 	credentials := new(Credentials)
 
 	if err := c.Bind(credentials); err != nil {
-		return c.String(http.StatusBadRequest, "Bad request")
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	query := map[string]interface{}{
-		"email":    credentials.Email,
-		"password": credentials.Password,
-	}
-
-	db := db.DB()
-	db.Where(query).Find(&user)
+	user := services.GetUserByEmail(credentials.Email)
 
 	if user.ID == uuid.Nil {
-		return c.String(http.StatusNotFound, "User not found")
+		return echo.NewHTTPError(http.StatusNotFound, "User not found")
+	}
+
+	if !utils.IsPasswordMatchingHash(credentials.Password, user.Password) {
+		return echo.NewHTTPError(http.StatusNotFound, "User not found")
 	}
 
 	token, err := generateJwtToken(user.ID, user.Email, time.Now().AddDate(0, 0, 7))
 
 	if err != nil {
-		return c.String(http.StatusInternalServerError, "Internal server error")
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
 	return c.JSON(http.StatusOK, authSuccessResponse{Token: token})
