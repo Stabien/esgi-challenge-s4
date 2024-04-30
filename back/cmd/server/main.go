@@ -10,7 +10,7 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
-	echoSwagger "github.com/swaggo/echo-swagger"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 // @title			Swagger Example API
@@ -23,7 +23,8 @@ func main() {
 
 	db.DatabaseInit()
 
-	e.GET("/swagger/*", echoSwagger.WrapHandler)
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
 
 	validators.InitValidators(e)
 	routes.InitRouter(e)
