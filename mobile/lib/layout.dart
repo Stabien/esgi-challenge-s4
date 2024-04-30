@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/screens/home_screen.dart';
+import 'package:mobile/screens/login_screen.dart';
 import 'components/navigation/bottom_bar.dart';
 
 class Home extends StatefulWidget {
@@ -10,6 +12,11 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   int _selectedPageIndex = 0;
+
+  static const List<Widget> _pages = <Widget>[
+    HomeScreen(),
+    LoginScreen(),
+  ];
 
   void _onBottomBarItemTapped(int index) {
     setState(() {
@@ -26,22 +33,10 @@ class _HomeState extends State<Home> {
         child: Text('eerte'),
       ),
       bottomNavigationBar: BottomBar(
-          selectedIndex: _selectedPageIndex,
-          onItemTapped: _onBottomBarItemTapped),
-      body: Container(
-        color: Colors.white,
-        child: const Center(
-          child: Directionality(
-              textDirection: TextDirection.ltr,
-              child: Text(
-                "EASY NIGHT",
-                style: TextStyle(
-                    color: Colors.red,
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold),
-              )),
-        ),
+        selectedIndex: _selectedPageIndex,
+        onItemTapped: _onBottomBarItemTapped,
       ),
+      body: _pages.elementAt(_selectedPageIndex),
     );
   }
 }

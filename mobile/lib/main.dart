@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:mobile/home_screen.dart';
+import 'package:mobile/layout.dart';
 import 'package:mobile/create_event_form.dart';
 import 'package:mobile/update_event_form.dart';
 
