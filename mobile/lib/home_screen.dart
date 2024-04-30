@@ -7,19 +7,10 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar:
-      PreferredSize(
-        preferredSize: const Size.fromHeight(100),
-        child: Container(child:const Text('eerte' )),
-      ),
-      bottomNavigationBar: Container(child:const Text("test")) ,
       body: Container(
-        color: Colors.white,
-        child: const Center(
-          child: Directionality(textDirection: TextDirection.ltr,child: Text(
-            "EASY NIGHT",
-            style: TextStyle(color:Colors.red, fontSize: 22, fontWeight: FontWeight.bold),
-          )),
+        color: Theme.of(context).colorScheme.background,
+        child:   Center(
+          child: Text("Paris, France", style: Theme.of(context).textTheme.titleLarge,),
         ),
       ),
     );
