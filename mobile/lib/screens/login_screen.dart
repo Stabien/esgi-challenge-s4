@@ -11,6 +11,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final UserServices _userServices = UserServices();
+
   String _email = "";
   String _password = "";
 
@@ -22,13 +24,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _onPasswordInputChange(String value) {
     setState(() {
-      _email = value;
+      _password = value;
     });
   }
 
   void _onSubmit() async {
-    final Response response = await UserServices().auth(_email, _password);
-
+    final Response response = await _userServices.auth(_email, _password);
     print(response);
   }
 

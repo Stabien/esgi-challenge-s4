@@ -7,8 +7,8 @@ class UserServices {
 
   Future<Response> auth(String email, String password) async {
     final Response response = await dio.post('$baseUrl/auth', data: {
-      email: email,
-      password: password,
+      'email': email,
+      'password': password,
     });
 
     return response;
