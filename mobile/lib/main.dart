@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/theme_data.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:mobile/home_screen.dart';
-import 'package:mobile/create_event_form.dart';
-import 'package:mobile/update_event_form.dart';
+import 'package:mobile/layout.dart';
 
 void main() async {
   await dotenv.load();
@@ -18,7 +16,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: const HomeScreen(),
+      home: const Layout(),
       debugShowCheckedModeBanner: false,
       theme: easyTheme,
       themeMode: ThemeMode.dark,

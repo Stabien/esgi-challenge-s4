@@ -1,0 +1,129 @@
+basePath: /
+definitions:
+  controllers.Credentials:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    type: object
+  controllers.RegistrationPayload:
+    properties:
+      email:
+        type: string
+      firstname:
+        type: string
+      lastname:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - firstname
+    - lastname
+    type: object
+  controllers.authSuccessResponse:
+    properties:
+      token:
+        type: string
+    type: object
+host: localhost:3000
+info:
+  contact: {}
+  description: This is a sample server for using Swagger with Echo.
+  title: Swagger Example API
+  version: "1.0"
+paths:
+  /auth:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: User credentials
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.Credentials'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.authSuccessResponse'
+        "400":
+          description: Bad Request
+          schema: {}
+        "404":
+          description: Not Found
+          schema: {}
+        "500":
+          description: Internal Server Error
+          schema: {}
+      summary: Authenticate a user
+      tags:
+      - Auth
+  /customers:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Registration payload
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.RegistrationPayload'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+        "400":
+          description: Bad Request
+          schema: {}
+        "404":
+          description: Not Found
+          schema: {}
+        "500":
+          description: Internal Server Error
+          schema: {}
+      summary: Register as customer
+      tags:
+      - Users
+  /organizers:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Registration payload
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.RegistrationPayload'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+        "400":
+          description: Bad Request
+          schema: {}
+        "409":
+          description: Conflict
+          schema: {}
+        "500":
+          description: Internal Server Error
+          schema: {}
+      summary: Register as organizer
+      tags:
+      - Users
+swagger: "2.0"
