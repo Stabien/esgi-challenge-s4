@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/theme_data.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mobile/layout.dart';
 
@@ -14,12 +15,11 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-        home: Layout(),
-        // home: UpdateEventForm(
-        //   eventId: '244cf171-3aaf-426a-8f34-030941912146',
-        // ),
-        // home: CreateEventForm(),
-        debugShowCheckedModeBanner: false);
+    return MaterialApp(
+      home: const Layout(),
+      debugShowCheckedModeBanner: false,
+      theme: easyTheme,
+      themeMode: ThemeMode.dark,
+    );
   }
 }
