@@ -1,54 +1,15 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:mobile/services/userServices.dart';
+import 'package:mobile/components/forms/login_form.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
-}
-
-class _LoginScreenState extends State<LoginScreen> {
-  final UserServices _userServices = UserServices();
-
-  String _email = "";
-  String _password = "";
-
-  void _onEmailInputChange(String value) {
-    setState(() {
-      _email = value;
-    });
-  }
-
-  void _onPasswordInputChange(String value) {
-    setState(() {
-      _password = value;
-    });
-  }
-
-  void _onSubmit() async {
-    final Response response = await _userServices.auth(_email, _password);
-    print(response);
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Form(
-      child: Column(
-        children: [
-          TextFormField(
-            onChanged: _onEmailInputChange,
-          ),
-          TextFormField(
-            onChanged: _onPasswordInputChange,
-          ),
-          TextButton(
-            onPressed: _onSubmit,
-            child: const Text("Envoyer"),
-          ),
-        ],
+    return const Center(
+      child: FractionallySizedBox(
+        widthFactor: 0.8,
+        child: LoginForm(),
       ),
     );
   }

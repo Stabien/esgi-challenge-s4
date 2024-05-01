@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mobile/layout.dart';
-import 'package:mobile/create_event_form.dart';
-import 'package:mobile/update_event_form.dart';
 
 void main() async {
   await dotenv.load();

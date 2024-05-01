@@ -14,14 +14,23 @@ class _BottomBarState extends State<BottomBar> {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
+      type: BottomNavigationBarType.fixed,
       items: const [
         BottomNavigationBarItem(
           icon: Icon(Icons.home),
-          label: 'Home',
+          label: 'Accueil',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.login),
-          label: 'Login',
+          label: 'Connexion',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.login),
+          label: 'Inscription utilisateur',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.login),
+          label: 'Inscription organisateur',
         ),
       ],
       currentIndex: widget.selectedIndex,

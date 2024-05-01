@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/screens/customer_register_screen.dart';
 import 'package:mobile/screens/home_screen.dart';
 import 'package:mobile/screens/login_screen.dart';
+import 'package:mobile/screens/organizer_register_screen.dart';
 import 'components/navigation/bottom_bar.dart';
 
 class Home extends StatefulWidget {
@@ -16,6 +18,8 @@ class _HomeState extends State<Home> {
   static const List<Widget> _pages = <Widget>[
     HomeScreen(),
     LoginScreen(),
+    CustomerRegisterScreen(),
+    OrganizerRegisterScreen(),
   ];
 
   void _onBottomBarItemTapped(int index) {
@@ -30,7 +34,7 @@ class _HomeState extends State<Home> {
       backgroundColor: Colors.white,
       appBar: const PreferredSize(
         preferredSize: Size.fromHeight(100),
-        child: Text('eerte'),
+        child: Placeholder(),
       ),
       bottomNavigationBar: BottomBar(
         selectedIndex: _selectedPageIndex,
@@ -40,21 +44,3 @@ class _HomeState extends State<Home> {
     );
   }
 }
-
-class AppBar extends StatelessWidget {
-  const AppBar({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
-  }
-}
-
-// class BottomBar extends StatelessWidget {
-//   const BottomBar({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return const Placeholder();
-//   }
-// }
