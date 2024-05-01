@@ -39,6 +39,8 @@ type jwtClaims struct {
 func Authentication(c echo.Context) error {
 	credentials := new(Credentials)
 
+	print(credentials)
+
 	if err := c.Bind(credentials); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}

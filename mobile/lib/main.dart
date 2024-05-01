@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-        home: Home(),
+        home: Layout(),
         // home: UpdateEventForm(
         //   eventId: '244cf171-3aaf-426a-8f34-030941912146',
         // ),

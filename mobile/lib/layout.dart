@@ -5,14 +5,14 @@ import 'package:mobile/screens/login_screen.dart';
 import 'package:mobile/screens/organizer_register_screen.dart';
 import 'components/navigation/bottom_bar.dart';
 
-class Home extends StatefulWidget {
-  const Home({super.key});
+class Layout extends StatefulWidget {
+  const Layout({super.key});
 
   @override
-  State<Home> createState() => _HomeState();
+  State<Layout> createState() => _LayoutState();
 }
 
-class _HomeState extends State<Home> {
+class _LayoutState extends State<Layout> {
   int _selectedPageIndex = 0;
 
   static const List<Widget> _pages = <Widget>[
