@@ -7,7 +7,8 @@ services:
       - "3000:3000"
     volumes: 
       - ./:/app
-      - ./vendor:/app/vendor
+    tty: true
+    stdin_open: true
     depends_on:
       - postgres
 
