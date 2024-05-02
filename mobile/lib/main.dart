@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/home_screen.dart';
+import 'package:mobile/theme_data.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:mobile/layout.dart';
 
-void main() {
+void main() async {
+  await dotenv.load();
+  await dotenv.load(fileName: ".env.local");
   runApp(const MyApp());
 }
 
@@ -11,6 +15,11 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return  const MaterialApp(home: HomeScreen(), debugShowCheckedModeBanner: false );
+    return MaterialApp(
+      home: const Layout(),
+      debugShowCheckedModeBanner: false,
+      theme: easyTheme,
+      themeMode: ThemeMode.dark,
+    );
   }
 }

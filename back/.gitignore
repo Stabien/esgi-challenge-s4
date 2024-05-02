@@ -1,2 +1,8 @@
 vendor
 .env.local
+.vscode
+<<<<<<< HEAD
+tmp
+=======
+../.idea
+>>>>>>> b682a5cd170041f5b6c718375d1d502c5718af24

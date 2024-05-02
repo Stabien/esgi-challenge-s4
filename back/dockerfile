@@ -10,8 +10,11 @@ RUN go install github.com/swaggo/swag/cmd/swag@latest
 
 # Download Go modules
 COPY go.mod go.sum ./
+
 RUN go mod download
 
 COPY *.go ./
 
 EXPOSE 3000
+
+ENTRYPOINT [ "air" ]
