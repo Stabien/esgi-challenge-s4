@@ -96,6 +96,35 @@ paths:
       summary: Register as customer
       tags:
       - Users
+  /event/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Event ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Event found
+          schema:
+            type: object
+        "400":
+          description: Bad request
+          schema: {}
+        "404":
+          description: Event not found
+          schema: {}
+        "500":
+          description: Internal server error
+          schema: {}
+      summary: Get an event by ID
+      tags:
+      - Event
   /organizers:
     post:
       consumes:

@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"encoding/json"
 	"net/http"
 	"strings"
 	"time"
@@ -100,42 +99,43 @@ func UpdateEvent(c echo.Context) error {
 	return c.String(http.StatusOK, "Event updated successfully!")
 }
 
+// @Summary Get an event by ID
+// @Tags Event
+// @Accept json
+// @Produce json
+// @Param id path string true "Event ID"
+// @Success 200 {object} interface{} "Event found"
+// @Failure 400 {object} error "Bad request"
+// @Failure 404 {object} error "Event not found"
+// @Failure 500 {object} error "Internal server error"
+// @Router /event/{id} [get]
 func GetEvent(c echo.Context) error {
-	// Get event ID from URL
 	eventID := c.Param("id")
 
-	// Get event from database
 	var event models.Event
 	if err := db.DB().First(&event, "id = ?", eventID).Error; err != nil {
 		return err
 	}
 
-	// Return event as JSON response
 	return c.JSON(http.StatusOK, event)
 }
 
-func GetAllEvents(w http.ResponseWriter, r *http.Request) {
+func GetAllEvents(c echo.Context) error {
 	var events []models.Event
-	var nameFilter string = ""
+	var nameFilter string
 
-	nameFilter = r.URL.Path[len("/events/"):]
+	nameFilter = c.QueryParam("name")
 
-	if nameFilter != "undefined" {
+	if nameFilter != "" {
 		nameFilter = "%" + strings.ToLower(nameFilter) + "%"
 		if err := db.DB().Where("LOWER(title) LIKE ?", nameFilter).Find(&events).Error; err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
+			return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 		}
 	} else {
 		if err := db.DB().Find(&events).Error; err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
+			return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 		}
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	if err := json.NewEncoder(w).Encode(events); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	return c.JSON(http.StatusOK, events)
 }
