@@ -4,8 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'blocs/event_bloc.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class ScreenEvent extends StatelessWidget {
+  const ScreenEvent({super.key});
 
   @override
   Widget build(BuildContext context) {

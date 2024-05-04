@@ -10,7 +10,7 @@ import '../core/api_exception.dart';
 class ApiServices {
   static Future<List<Event>> getEvents() async {
     try {
-      final response = await http.get(Uri.parse('http://localhost:3000/event'));
+      final response = await http.get(Uri.parse('https://dummyjson.com/products'));
       await Future.delayed(const Duration(seconds: 1));
       if (response.statusCode < 200 || response.statusCode >= 400) {
         throw ApiException(message: 'Bad request');
