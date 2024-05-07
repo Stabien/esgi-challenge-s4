@@ -3,44 +3,87 @@ package controllers
 import (
 	"easynight/internal/db"
 	"easynight/internal/models"
-	"easynight/pkg/utils"
-	"encoding/json"
-	"fmt"
+
+	// "encoding/json"
+
 	"net/http"
 
-	"github.com/google/uuid"
+	"github.com/labstack/echo/v4"
+	_ "gorm.io/gorm"
 )
 
-func PostReservation(w http.ResponseWriter, r *http.Request) {
-	var reservation models.Reservation
+// @Summary add reservation
+// @Tags Reservation
+// @Accept json
+// @Produce json
+// @Param body body models.Reservation true "Reservation object"
+// @Success 201 {object} models.Reservation "Successfully created"
+// @Failure 400 {object} error "Bad request"
+// @Failure 500 {object} error "Internal server error"
+// @Router /reservations [post]
+func PostReservation(c echo.Context) error {
+	var reservationRequest models.Reservation
 
-	err := json.NewDecoder(r.Body).Decode(&reservation)
-	if err != nil {
-		http.Error(w, "Invalid request body", http.StatusBadRequest)
-		return
+	if err := c.Bind(&reservationRequest); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "Invalid request body")
 	}
 
-	if reservation.EventID == uuid.Nil {
-		http.Error(w, "EventID is required", http.StatusBadRequest)
-		return
+	reservation := models.Reservation{
+		CustomerID: reservationRequest.CustomerID,
+		EventID:    reservationRequest.EventID,
 	}
-
-	qr, _ := utils.GenerateQRCode()
-	fmt.Println(qr)
-	// reservation.Qrcode = string(qr)
 
 	if err := db.DB().Create(&reservation).Error; err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
-	reservationJSON, err := json.Marshal(reservation)
-	if err != nil {
-		http.Error(w, "Error encoding reservation", http.StatusInternalServerError)
-		return
+	return c.JSON(http.StatusCreated, reservation)
+}
+
+// @Summary delete reservation
+// @Tags Reservation
+// @Accept json
+// @Produce json
+// @Param body body models.Reservation true "Reservation request object"
+// @Success 204 "Successfully deleted"
+// @Failure 400 {object} error "Bad request"
+// @Failure 500 {object} error "Internal server error"
+// @Router /reservations [delete]
+func DeleteReservation(c echo.Context) error {
+	var reservationRequest models.Reservation
+
+	if err := c.Bind(&reservationRequest); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "Invalid request body")
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
-	w.Write(reservationJSON)
+	// Suppose you have a function to find and delete the reservation based on event and customer IDs.
+	if err := db.DB().Where("event_id = ? AND customer_id = ?", reservationRequest.EventID, reservationRequest.CustomerID).Delete(&models.Reservation{}).Error; err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.NoContent(http.StatusNoContent)
+}
+
+// @Summary get reservation by user
+// @Tags Reservation
+// @Accept json
+// @Produce json
+// @Param customerId path string true "customerId"
+// @Success 204 "Successfully get"
+// @Failure 400 {object} error "Bad request"
+// @Failure 500 {object} error "Internal server error"
+// @Router /reservations/{customerId} [get]
+func GetReservationsbyUser(c echo.Context) error {
+	CustomerID := c.Param("customerId")
+
+	var events []models.Event
+
+	// Join reservations table with events table and filter by customer ID
+	if err := db.DB().Joins("JOIN reservations ON events.id = reservations.event_id").
+		Where("reservations.customer_id = ?", CustomerID).
+		Find(&events).Error; err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, events)
 }

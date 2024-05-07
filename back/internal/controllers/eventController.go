@@ -120,6 +120,16 @@ func GetEvent(c echo.Context) error {
 	return c.JSON(http.StatusOK, event)
 }
 
+// @Summary Get events
+// @Tags Event
+// @Accept json
+// @Produce json
+// @Param name query string false "Event name"
+// @Success 200 {object} interface{} "Event found"
+// @Failure 400 {object} error "Bad request"
+// @Failure 404 {object} error "Event not found"
+// @Failure 500 {object} error "Internal server error"
+// @Router /events [get]
 func GetAllEvents(c echo.Context) error {
 	var events []models.Event
 	var nameFilter string
