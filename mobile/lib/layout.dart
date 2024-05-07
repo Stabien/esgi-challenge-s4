@@ -4,6 +4,7 @@ import 'package:mobile/screens/home_screen.dart';
 import 'package:mobile/screens/login_screen.dart';
 import 'package:mobile/screens/organizer_register_screen.dart';
 import 'components/navigation/bottom_bar.dart';
+import 'package:mobile/events/screen_events.dart';
 
 class Layout extends StatefulWidget {
   const Layout({super.key});
@@ -20,6 +21,8 @@ class _LayoutState extends State<Layout> {
     LoginScreen(),
     CustomerRegisterScreen(),
     OrganizerRegisterScreen(),
+    ScreenEvent(),
+
   ];
 
   void _onBottomBarItemTapped(int index) {

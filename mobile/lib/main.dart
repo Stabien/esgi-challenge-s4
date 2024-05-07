@@ -3,8 +3,6 @@ import 'package:mobile/theme_data.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mobile/layout.dart';
 
-import 'events/screen_events.dart';
-
 
 void main() async {
   await dotenv.load();
@@ -19,8 +17,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      // home: const Layout(),
-      home: const ScreenEvent(),
+      home: const Layout(),
+      // home: const ScreenEvent(),
       debugShowCheckedModeBanner: false,
       theme: easyTheme,
       themeMode: ThemeMode.dark,

@@ -32,6 +32,10 @@ class _BottomBarState extends State<BottomBar> {
           icon: Icon(Icons.login),
           label: 'Inscription organisateur',
         ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.home),
+          label: 'Evenements',
+        ),
       ],
       currentIndex: widget.selectedIndex,
       onTap: widget.onItemTapped,

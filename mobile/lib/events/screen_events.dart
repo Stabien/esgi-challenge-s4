@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-
+import 'package:mobile/events/blocs/event_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'blocs/event_bloc.dart';
 
 class ScreenEvent extends StatelessWidget {
   const ScreenEvent({super.key});
@@ -15,6 +14,7 @@ class ScreenEvent extends StatelessWidget {
         child: Scaffold(
           backgroundColor: Colors.white,
           body: BlocBuilder<EventBloc, EventState>(
+            
             builder: (context, state) {
               if (state is EventLoading) {
                 return const Center(
