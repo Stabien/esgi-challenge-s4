@@ -8,6 +8,7 @@ import (
 	"easynight/internal/db"
 	"easynight/internal/models"
 
+	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 )
 
@@ -120,6 +121,16 @@ func GetEvent(c echo.Context) error {
 	return c.JSON(http.StatusOK, event)
 }
 
+type SimpleEvent struct {
+	ID          uuid.UUID `json:"id"`
+	Title       string    `json:"title"`
+	Description string    `json:"description"`
+	Tag         string    `json:"tag"`
+	Banner      string    `json:"banner"`
+	Image       string    `json:"image"`
+	Date        time.Time `json:"date"`
+}
+
 // @Summary Get events
 // @Tags Event
 // @Accept json
@@ -147,5 +158,19 @@ func GetAllEvents(c echo.Context) error {
 		}
 	}
 
-	return c.JSON(http.StatusOK, events)
+	// Convert events to SimpleEvent
+	var simpleEvents []SimpleEvent
+	for _, event := range events {
+		simpleEvents = append(simpleEvents, SimpleEvent{
+			ID:          event.ID,
+			Title:       event.Title,
+			Description: event.Description,
+			Tag:         event.Tag,
+			Banner:      event.Banner,
+			Image:       event.Image,
+			Date:        event.Date,
+		})
+	}
+
+	return c.JSON(http.StatusOK, simpleEvents)
 }
