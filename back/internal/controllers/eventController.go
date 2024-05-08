@@ -100,6 +100,21 @@ func UpdateEvent(c echo.Context) error {
 	return c.String(http.StatusOK, "Event updated successfully!")
 }
 
+type EventDetails struct {
+	ID                uuid.UUID `json:"id"`
+	Title             string    `json:"title"`
+	Description       string    `json:"description"`
+	Tag               string    `json:"tag"`
+	Banner            string    `json:"banner"`
+	Image             string    `json:"image"`
+	Date              time.Time `json:"date"`
+	Place             string    `json:"place"`
+	Lat               float32   `json:"lat"`
+	Lng               float32   `json:"lng"`
+	Location          string    `json:"location"`
+	ParticipantNumber *int      `json:"participant_number"`
+}
+
 // @Summary Get an event by ID
 // @Tags Event
 // @Accept json
@@ -118,7 +133,23 @@ func GetEvent(c echo.Context) error {
 		return err
 	}
 
-	return c.JSON(http.StatusOK, event)
+	// Map fields from Event to EventDetails
+	eventDetails := EventDetails{
+		ID:                event.ID,
+		Title:             event.Title,
+		Description:       event.Description,
+		Tag:               event.Tag,
+		Banner:            event.Banner,
+		Image:             event.Image,
+		Date:              event.Date,
+		Place:             event.Place,
+		Lat:               event.Lat,
+		Lng:               event.Lng,
+		Location:          event.Location,
+		ParticipantNumber: event.ParticipantNumber,
+	}
+
+	return c.JSON(http.StatusOK, eventDetails)
 }
 
 type SimpleEvent struct {

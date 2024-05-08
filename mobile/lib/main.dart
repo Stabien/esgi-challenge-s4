@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:mobile/theme_data.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mobile/layout.dart';
+import 'package:mobile/eventDetail/detail_screen.dart';
+import 'package:mobile/events/screen_events.dart';
 
 
 void main() async {
@@ -17,11 +19,33 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: const Layout(),
+      // home: const Layout(),
       // home: const ScreenEvent(),
       debugShowCheckedModeBanner: false,
       theme: easyTheme,
       themeMode: ThemeMode.dark,
+      routes: {
+        '/': (context) => const Layout(),
+      },
+      onGenerateRoute: (settings) {
+        final args = settings.arguments;
+        switch (settings.name) {
+          case '/event':
+            return MaterialPageRoute(
+              builder: (context) {
+                return const ScreenEvent();
+              },
+            );
+          case '/event/detail':
+            return MaterialPageRoute(
+              builder: (context) {
+                return DetailScreen(id: args as String);
+              },
+            );
+
+        }
+        return null;
+      }
     );
   }
 }
