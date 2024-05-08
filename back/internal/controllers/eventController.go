@@ -129,6 +129,7 @@ type SimpleEvent struct {
 	Banner      string    `json:"banner"`
 	Image       string    `json:"image"`
 	Date        time.Time `json:"date"`
+	Place       string    `json:"place"`
 }
 
 // @Summary Get events
@@ -169,6 +170,7 @@ func GetAllEvents(c echo.Context) error {
 			Banner:      event.Banner,
 			Image:       event.Image,
 			Date:        event.Date,
+			Place:       event.Place,
 		})
 	}
 
