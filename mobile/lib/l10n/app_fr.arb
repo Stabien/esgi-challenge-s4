@@ -1,0 +1,7 @@
+{
+  "lastname": "Nom",
+  "firstname": "Prénom",
+  "email": "Email",
+  "password": "Mot de passe",
+  "register": "S'inscrire"
+}
