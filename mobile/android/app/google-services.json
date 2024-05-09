@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "817509474589",
+    "project_id": "challenges4notification",
+    "storage_bucket": "challenges4notification.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:817509474589:android:e8526e0193c7c2cbee41f4",
+        "android_client_info": {
+          "package_name": "com.example.mobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCS-mouLOxTPZANKrGBSYBzIAikfW73Xko"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
