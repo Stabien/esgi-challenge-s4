@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:mobile/models/eventDetail.dart';
@@ -69,6 +70,7 @@ ApiServices.getEventDetail(widget.id).then((data) {
                     const SizedBox(height: 20),
                     Container(
                       alignment: Alignment.topLeft,
+                      padding: const EdgeInsets.all(20),
                       child: Column(
                         children: [
                         Text(
@@ -89,13 +91,17 @@ ApiServices.getEventDetail(widget.id).then((data) {
                               ),
                             ),
                             SizedBox(width: 10),
-                            Text(
-                                "Il reste nbplace ",
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey,
+                            Expanded(
+                              child: Text(
+                                  "Il reste nbplace ",
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.grey,
+                                  ),
+                                  maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                                 ),
-                              )
+                            )
                           ],
                         ),
                         const SizedBox(height: 10),
@@ -106,53 +112,89 @@ ApiServices.getEventDetail(widget.id).then((data) {
                           ),
                         ),
                         const SizedBox(height: 10),
-                        Row(
-                          children: [
-                            const Icon(
-                              Icons.date_range,
-                              color: Colors.grey,
-                            ),
-                            Text(
-                              eventDetail.date,
-                              style: const TextStyle(
-                                fontSize: 12,
+                        Container(
+                          padding: const EdgeInsets.all(20),
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.date_range,
                                 color: Colors.grey,
                               ),
-                            ),
-                          ],
+                              const SizedBox(width: 15),
+                              Text(
+                                eventDetail.date,
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                         const SizedBox(height: 10),
-                        Row(
-                          children: [
-                            const Icon(
-                              Icons.location_on,
-                              color: Colors.grey,
-                            ),
-                            Text(
-                              eventDetail.location,
-                              style: const TextStyle(
-                                fontSize: 12,
+                        Container(
+                          padding: const EdgeInsets.all(20),
+                           decoration: const BoxDecoration(
+                            border: Border(
+                              top: BorderSide(
                                 color: Colors.grey,
+                                width: 1, // Épaisseur de la bordure
                               ),
                             ),
-                          ],
+                          ),
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.location_on,
+                                color: Colors.grey,
+                              ),
+                              const SizedBox(width: 15),
+                              Expanded(
+                                child: Text(
+                                  eventDetail.location,
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.grey,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                         const SizedBox(height: 10),
-                        Row(
-                          children: [
-                            const Icon(
-                              Icons.home,
-                              color: Colors.grey,
-                            ),
-                            Text(
-                              eventDetail.place,
-                              style: const TextStyle(
-                                fontSize: 12,
+                        Container(
+                        padding: const EdgeInsets.all(20),
+                        decoration: const BoxDecoration(
+                            border: Border(
+                              top: BorderSide(
                                 color: Colors.grey,
+                                width: 1, // Épaisseur de la bordure
                               ),
                             ),
-                          ],
-                          
+                          ),
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.home,
+                                color: Colors.grey,
+                              ),
+                              const SizedBox(width: 15),
+                              Expanded(
+                                child: Text(
+                                  eventDetail.place,
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.grey,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                            
+                          ),
                         ),
                          ElevatedButton(
                           onPressed: () => Navigator.of(context).pop(),
