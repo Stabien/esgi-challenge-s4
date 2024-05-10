@@ -27,7 +27,7 @@ class _DetailScreen extends State<DetailScreen> {
     });
     
 
-ApiServices.getEventDetail("285da4eb-3b00-4d8d-a6b7-e3c6cd1ec83d").then((data) {
+ApiServices.getEventDetail(widget.id).then((data) {
   setState(() {
     _error = null;
     _eventdetails = [data]; // Ajoutez les données dans une liste
@@ -152,9 +152,16 @@ ApiServices.getEventDetail("285da4eb-3b00-4d8d-a6b7-e3c6cd1ec83d").then((data) {
                               ),
                             ),
                           ],
+                          
+                        ),
+                         ElevatedButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: const Text('Go back'),
                         ),
                       ],
+                      
                       ),
+                      
                     ),
                   ],           
                 
