@@ -32,24 +32,26 @@ class ApiServices {
     }
   }
 
-   static Future<List<EventDetail>> getEventDetail(id) async {
-    try {
-      final response = await http.get(Uri.parse('$baseUrl/event/$id'));
-      await Future.delayed(const Duration(seconds: 1));
-      if (response.statusCode < 200 || response.statusCode >= 400) {
-        throw ApiException(message: 'Bad request');
-      }
-      final data = json.decode(response.body) as List<dynamic>;
-      log(data.toString());
-      return data.mapList((e) => EventDetail.fromJson(e));
-    } on SocketException catch (error) {
-      log('Network error.', error: error);
-      throw ApiException(message: 'Network error');
-    } catch (error) {
-      log('An error occurred while fetching events apirequete.', error: error);
-      throw ApiException(message: 'Unknown errors');
+static Future<EventDetail> getEventDetail(String id) async {
+  try {
+    final response = await http.get(Uri.parse('$baseUrl/event/$id'));
+    await Future.delayed(const Duration(seconds: 1));
+    if (response.statusCode < 200 || response.statusCode >= 400) {
+      throw ApiException(message: 'Bad request');
     }
+    final data = json.decode(response.body) as Map<String, dynamic>; // Correction ici
+    log(data.toString());
+    return EventDetail.fromJson(data); // Correction ici
+  } on SocketException catch (error) {
+    log('Network error.', error: error);
+    throw ApiException(message: 'Network error');
+  } catch (error) {
+    log('An error occurred while fetching events apirequete.', error: error);
+    throw ApiException(message: 'Unknown errors');
   }
+}
+
+
 }
 
 //   static final String baseUrl = dotenv.env['URL_BACK'].toString();
