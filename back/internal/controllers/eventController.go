@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"strings"
 	"time"
@@ -57,6 +58,8 @@ func CreateEvent(c echo.Context) error {
 	// Insert event into database
 	if err := db.DB().Create(&event).Error; err != nil {
 		return err
+	} else {
+		log.Println("New event: ", eventInput)
 	}
 
 	// Return success message
@@ -95,6 +98,8 @@ func UpdateEvent(c echo.Context) error {
 	// Save event to database
 	if err := db.DB().Save(&event).Error; err != nil {
 		return err
+	} else {
+		log.Println("Event updated: ", event)
 	}
 
 	return c.String(http.StatusOK, "Event updated successfully!")
