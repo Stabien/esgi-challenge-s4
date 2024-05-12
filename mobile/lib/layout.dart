@@ -3,6 +3,7 @@ import 'package:mobile/screens/customer_register_screen.dart';
 import 'package:mobile/screens/home_screen.dart';
 import 'package:mobile/screens/login_screen.dart';
 import 'package:mobile/screens/organizer_register_screen.dart';
+import 'package:mobile/screens/logs_screen.dart';
 import 'components/navigation/bottom_bar.dart';
 
 class Layout extends StatefulWidget {
@@ -20,6 +21,7 @@ class _LayoutState extends State<Layout> {
     LoginScreen(),
     CustomerRegisterScreen(),
     OrganizerRegisterScreen(),
+    LogsScreen(),
   ];
 
   void _onBottomBarItemTapped(int index) {
