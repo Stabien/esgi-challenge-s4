@@ -48,7 +48,7 @@ class MyApp extends StatelessWidget {
 
         }
         return null;
-      }
+      },
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
