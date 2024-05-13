@@ -29,6 +29,8 @@ definitions:
       token:
         type: string
     type: object
+  models.Reservation:
+    type: object
 host: localhost:3000
 info:
   contact: {}
@@ -96,6 +98,63 @@ paths:
       summary: Register as customer
       tags:
       - Users
+  /event/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Event ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Event found
+          schema:
+            type: object
+        "400":
+          description: Bad request
+          schema: {}
+        "404":
+          description: Event not found
+          schema: {}
+        "500":
+          description: Internal server error
+          schema: {}
+      summary: Get an event by ID
+      tags:
+      - Event
+  /events:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Event name
+        in: query
+        name: name
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Event found
+          schema:
+            type: object
+        "400":
+          description: Bad request
+          schema: {}
+        "404":
+          description: Event not found
+          schema: {}
+        "500":
+          description: Internal server error
+          schema: {}
+      summary: Get events
+      tags:
+      - Event
   /organizers:
     post:
       consumes:
@@ -126,4 +185,104 @@ paths:
       summary: Register as organizer
       tags:
       - Users
+  /reservations:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Reservation request object
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.Reservation'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: Successfully deleted
+        "400":
+          description: Bad request
+          schema: {}
+        "500":
+          description: Internal server error
+          schema: {}
+      summary: delete reservation
+      tags:
+      - Reservation
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Reservation object
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.Reservation'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Successfully created
+          schema:
+            $ref: '#/definitions/models.Reservation'
+        "400":
+          description: Bad request
+          schema: {}
+        "500":
+          description: Internal server error
+          schema: {}
+      summary: add reservation
+      tags:
+      - Reservation
+  /reservations/{customerId}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: customerId
+        in: path
+        name: customerId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: Successfully get
+        "400":
+          description: Bad request
+          schema: {}
+        "500":
+          description: Internal server error
+          schema: {}
+      summary: get reservation by user
+      tags:
+      - Reservation
+  /reservations/isreserv:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Reservation object
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.Reservation'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: Successfully get
+        "400":
+          description: Bad request
+          schema: {}
+        "500":
+          description: Internal server error
+          schema: {}
+      summary: get reservation by user exist
+      tags:
+      - Reservation
 swagger: "2.0"

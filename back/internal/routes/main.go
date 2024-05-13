@@ -13,6 +13,11 @@ func InitRouter(e *echo.Echo) {
 	e.POST("/event", controllers.CreateEvent)
 	e.PATCH("/event/:id", controllers.UpdateEvent)
 	e.GET("/event/:id", controllers.GetEvent)
+	e.GET("/events", controllers.GetAllEvents)
+
+	e.POST("/reservations", controllers.PostReservation)
+	e.DELETE("/reservations", controllers.DeleteReservation)
+	e.GET("/reservations/:customerId", controllers.GetReservationsbyUser)
 
 	e.POST("/auth", controllers.Authentication)
 	e.POST("/customers", controllers.CustomerRegistration)
