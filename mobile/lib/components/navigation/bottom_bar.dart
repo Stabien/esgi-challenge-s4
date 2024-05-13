@@ -36,6 +36,11 @@ class _BottomBarState extends State<BottomBar> {
           icon: Icon(Icons.home),
           label: 'Evenements',
         ),
+        BottomNavigationBarItem(
+                  icon: Icon(Icons.insert_drive_file_outlined),
+                  label: 'Logs',
+                ),
+
       ],
       currentIndex: widget.selectedIndex,
       onTap: widget.onItemTapped,

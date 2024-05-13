@@ -5,6 +5,9 @@ import 'package:mobile/layout.dart';
 import 'package:mobile/eventDetail/detail_screen.dart';
 import 'package:mobile/events/screen_events.dart';
 
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 void main() async {
   await dotenv.load();
@@ -46,6 +49,16 @@ class MyApp extends StatelessWidget {
         }
         return null;
       }
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('en'),
+        Locale('fr'),
+      ],
     );
   }
 }
