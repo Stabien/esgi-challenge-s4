@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:mobile/models/eventDetail.dart';
 import 'package:mobile/services/api_event_services.dart';
+import 'package:mobile/services/api_reservation_services.dart' as ApiReserervation;
+
 
 class DetailScreen extends StatefulWidget {
   final String id;
@@ -199,6 +201,12 @@ ApiServices.getEventDetail(widget.id).then((data) {
                          ElevatedButton(
                           onPressed: () => Navigator.of(context).pop(),
                           child: const Text('Go back'),
+                        ),
+                         ElevatedButton(
+                          onPressed: () {
+                            ApiReserervation.reserveEvent(eventDetail.id,"3e8aa051-4321-49a0-8bc1-f697585756a4");
+                          },
+                          child: const Text('Reserver'),
                         ),
                       ],
                       

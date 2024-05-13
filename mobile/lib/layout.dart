@@ -35,10 +35,6 @@ class _LayoutState extends State<Layout> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: const PreferredSize(
-        preferredSize: Size.fromHeight(100),
-        child: Placeholder(),
-      ),
       bottomNavigationBar: BottomBar(
         selectedIndex: _selectedPageIndex,
         onItemTapped: _onBottomBarItemTapped,

@@ -79,7 +79,8 @@ class ScreenEvent extends StatelessWidget {
                               ),
                             ),
                           ],
-                        ),  
+                        ),
+                          
                         );
                       },
                       itemCount: state.events.length,
