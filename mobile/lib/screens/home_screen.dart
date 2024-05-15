@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -7,17 +8,22 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.white,
-      child: const Center(
+      child: Center(
         child: Directionality(
           textDirection: TextDirection.ltr,
-          child: Text(
-            "EASY NIGHT",
-            style: TextStyle(
-              color: Colors.red,
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-            ),
+          child: QrImageView(
+            data: "ca marche",
+            version: QrVersions.auto,
+            size: 200.0,
           ),
+          // Text(
+          //   "EASY NIGHT",
+          //   style: TextStyle(
+          //     color: Colors.red,
+          //     fontSize: 22,
+          //     fontWeight: FontWeight.bold,
+          //   ),
+          // ),
         ),
       ),
     );
