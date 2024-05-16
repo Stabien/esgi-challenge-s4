@@ -260,29 +260,4 @@ paths:
       summary: get reservation by user
       tags:
       - Reservation
-  /reservations/isreserv:
-    get:
-      consumes:
-      - application/json
-      parameters:
-      - description: Reservation object
-        in: body
-        name: body
-        required: true
-        schema:
-          $ref: '#/definitions/models.Reservation'
-      produces:
-      - application/json
-      responses:
-        "204":
-          description: Successfully get
-        "400":
-          description: Bad request
-          schema: {}
-        "500":
-          description: Internal server error
-          schema: {}
-      summary: get reservation by user exist
-      tags:
-      - Reservation
 swagger: "2.0"
