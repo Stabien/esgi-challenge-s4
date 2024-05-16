@@ -173,6 +173,7 @@ type SimpleEvent struct {
 // @Accept json
 // @Produce json
 // @Param name query string false "Event name"
+// @Param tag query string false "Event tag"
 // @Success 200 {object} interface{} "Event found"
 // @Failure 400 {object} error "Bad request"
 // @Failure 404 {object} error "Event not found"
@@ -183,8 +184,17 @@ func GetAllEvents(c echo.Context) error {
 	var nameFilter string
 
 	nameFilter = c.QueryParam("name")
+	tagFilter := c.QueryParam("tag")
 
-	if nameFilter != "" {
+	if tagFilter != "" && nameFilter != "" {
+		if err := db.DB().Where("LOWER(title) LIKE ? AND tag = ?", "%"+strings.ToLower(nameFilter)+"%", tagFilter).Find(&events).Error; err != nil {
+			return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+		}
+	} else if tagFilter != "" && nameFilter == "" {
+		if err := db.DB().Where("tag = ?", tagFilter).Find(&events).Error; err != nil {
+			return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+		}
+	} else if tagFilter == "" && nameFilter != "" {
 		nameFilter = "%" + strings.ToLower(nameFilter) + "%"
 		if err := db.DB().Where("LOWER(title) LIKE ?", nameFilter).Find(&events).Error; err != nil {
 			return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
@@ -193,6 +203,10 @@ func GetAllEvents(c echo.Context) error {
 		if err := db.DB().Find(&events).Error; err != nil {
 			return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 		}
+	}
+
+	if len(events) == 0 {
+		return c.JSON(http.StatusOK, []SimpleEvent{})
 	}
 
 	// Convert events to SimpleEvent

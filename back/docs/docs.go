@@ -166,6 +166,12 @@ const docTemplate = `{
                         "description": "Event name",
                         "name": "name",
                         "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Event tag",
+                        "name": "tag",
+                        "in": "query"
                     }
                 ],
                 "responses": {

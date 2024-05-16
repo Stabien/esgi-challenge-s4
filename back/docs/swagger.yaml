@@ -136,6 +136,10 @@ paths:
         in: query
         name: name
         type: string
+      - description: Event tag
+        in: query
+        name: tag
+        type: string
       produces:
       - application/json
       responses:
