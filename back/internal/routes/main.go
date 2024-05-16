@@ -17,4 +17,6 @@ func InitRouter(e *echo.Echo) {
 	e.POST("/auth", controllers.Authentication)
 	e.POST("/customers", controllers.CustomerRegistration)
 	e.POST("/organizers", controllers.OrganizerRegistration)
+
+	e.GET("/send-notification", controllers.SendNotification)
 }
