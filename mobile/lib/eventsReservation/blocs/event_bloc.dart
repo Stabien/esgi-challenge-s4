@@ -10,11 +10,11 @@ part 'event_state.dart';
 
 class EventBloc extends Bloc<EventEvent, EventState> {
   EventBloc() : super(EventInitial()) {
-    on<LoadEventData>((event, emit) async { // Modifier le type de l'événement
+    on<EventEvent>((event, emit) async {
       emit(EventLoading());
 
       try {
-        final events = await ApiServices.getEvents(event.search); // Utiliser event.search
+        final events = await ApiServices.getMyEvent("3e8aa051-4321-49a0-8bc1-f697585756a4");
         emit(EventDataLoadingSuccess(events: events));
       } on ApiException catch (error) {
         emit(EventDataLoadingError(errorMessage: error.message));

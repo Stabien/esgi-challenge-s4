@@ -1,6 +1,14 @@
 part of 'event_bloc.dart';
 
 @immutable
-sealed class EventEvent {}
+abstract class EventEvent {
+}
+class EventDataLoaded extends EventEvent {}
 
-final class EventDataLoaded extends EventEvent {}
+
+class LoadEventData extends EventEvent {
+  final String search; // Définissez le paramètre nécessaire
+
+  LoadEventData(this.search);
+}
+

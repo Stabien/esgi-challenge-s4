@@ -37,6 +37,10 @@ class _BottomBarState extends State<BottomBar> {
           label: 'Evenements',
         ),
         BottomNavigationBarItem(
+          icon: Icon(Icons.home),
+          label: 'Mes evenements',
+        ),
+        BottomNavigationBarItem(
                   icon: Icon(Icons.insert_drive_file_outlined),
                   label: 'Logs',
                 ),
