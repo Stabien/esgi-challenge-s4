@@ -166,6 +166,12 @@ const docTemplate = `{
                         "description": "Event name",
                         "name": "name",
                         "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Event tag",
+                        "name": "tag",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -300,44 +306,6 @@ const docTemplate = `{
                 "responses": {
                     "204": {
                         "description": "Successfully deleted"
-                    },
-                    "400": {
-                        "description": "Bad request",
-                        "schema": {}
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "schema": {}
-                    }
-                }
-            }
-        },
-        "/reservations/isreserv": {
-            "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Reservation"
-                ],
-                "summary": "get reservation by user exist",
-                "parameters": [
-                    {
-                        "description": "Reservation object",
-                        "name": "body",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/models.Reservation"
-                        }
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": "Successfully get"
                     },
                     "400": {
                         "description": "Bad request",

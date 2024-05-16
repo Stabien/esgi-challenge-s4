@@ -50,6 +50,10 @@ func PostReservation(c echo.Context) error {
 // @Failure 500 {object} error "Internal server error"
 // @Router /reservations [delete]
 func DeleteReservation(c echo.Context) error {
+	// {
+	// 	"eventID": "7ae9dcae-08b4-4cee-aa60-5bfde44b6b1e",
+	// 	"customerID":"3e8aa051-4321-49a0-8bc1-f697585756a4"
+	//    }
 	var reservationRequest models.Reservation
 
 	if err := c.Bind(&reservationRequest); err != nil {
@@ -85,32 +89,50 @@ func GetReservationsbyUser(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
-	return c.JSON(http.StatusOK, events)
-}
-
-// @Summary Check if reservation exists for a user
-// @Description Check if a reservation exists for a specific user with given customerID and eventID
-// @Tags Reservation
-// @Accept json
-// @Produce json
-// @Param customerId path string true "Customer ID"
-// @Param eventId path string true "Event ID"
-// @Success 200 {object} map[string]bool{"exists":true} "Successfully checked"
-// @Failure 400 {object} error "Bad request"
-// @Failure 500 {object} error "Internal server error"
-// @Router /reservations/isreserv/{customerId}/{eventId} [get]
-func isReservByUser(c echo.Context) error {
-	CustomerID := c.Param("customerId")
-	EventID := c.Param("eventId")
-
-	// Vérifie si une réservation existe avec l'event ID et l'utilisateur ID donnés
-	var count int64
-	if err := db.DB().Model(&models.Reservation{}).Where("event_id = ? AND customer_id = ?", EventID, CustomerID).Error; err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	// Convert events to SimpleEvent
+	var simpleEvents []SimpleEvent
+	for _, event := range events {
+		simpleEvents = append(simpleEvents, SimpleEvent{
+			ID:          event.ID,
+			Title:       event.Title,
+			Description: event.Description,
+			Tag:         event.Tag,
+			Banner:      event.Banner,
+			Image:       event.Image,
+			Date:        event.Date,
+			Place:       event.Place,
+		})
 	}
 
-	// Si count > 0, cela signifie qu'une réservation existe pour cet événement et cet utilisateur
-	exists := count > 0
+	return c.JSON(http.StatusOK, simpleEvents)
 
-	return c.JSON(http.StatusOK, exists)
 }
+
+// // @Summary Check if reservation exists for a user
+// // @Description Check if a reservation exists for a specific user with given customerID and eventID
+// // @Tags Reservation
+// // @Accept json
+// // @Produce json
+// // @Param customerId path string true "Customer ID"
+// // @Param eventId path string true "Event ID"
+// // @Success 200 {object} map[string]bool{"exists":true} "Successfully checked"
+// // @Failure 400 {object} error "Bad request"
+// // @Failure 500 {object} error "Internal server error"
+// // @Router /reservations/isreserv/{customerId}/{eventId} [get]
+// func isReservByUser(c echo.Context) error {
+// 	CustomerID := c.Param("customerId")
+// 	EventID := c.Param("eventId")
+// 	var exists bool
+
+// 	// Vérifie si une réservation existe avec l'event ID et l'utilisateur ID donnés
+// 	var reservation models.Reservation
+// 	if err := db.DB().First(&reservation).Where("event_id = ? AND customer_id = ?", EventID, CustomerID).Error; err != nil {
+// 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+// 	}
+
+// 	type ReservationCheckResponse struct {
+// 		Exists bool `json:"exists"`
+// 	}
+// 	return c.JSON(http.StatusOK, ReservationCheckResponse{Exists: exists})
+
+// }
