@@ -16,7 +16,6 @@ class ApiServices {
     static Future<List<Event>> getEvents(search,tag) async {
       
 
-
     try {
       final response = await http.get(Uri.parse('$baseUrl/events?name=$search&tag=$tag'));
       await Future.delayed(const Duration(seconds: 1));
@@ -42,9 +41,9 @@ static Future<EventDetail> getEventDetail(String id) async {
     if (response.statusCode < 200 || response.statusCode >= 400) {
       throw ApiException(message: 'Bad request');
     }
-    final data = json.decode(response.body) as Map<String, dynamic>; // Correction ici
+    final data = json.decode(response.body) as Map<String, dynamic>; 
     log(data.toString());
-    return EventDetail.fromJson(data); // Correction ici
+    return EventDetail.fromJson(data);
   } on SocketException catch (error) {
     log('Network error.', error: error);
     throw ApiException(message: 'Network error');

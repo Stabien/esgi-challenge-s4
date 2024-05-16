@@ -34,7 +34,7 @@ class _ScreenEventState extends State<ScreenEvent> {
     ApiServices.getEvents(search,tag).then((data) {
       setState(() {
         _error = null;
-        _events = data; // Mettez à jour la liste d'événements avec les données récupérées
+        _events = data;
         _loading = false;
       });
     }).catchError((error) {
@@ -52,54 +52,68 @@ class _ScreenEventState extends State<ScreenEvent> {
       backgroundColor: Colors.black,
       body: Column(
         children: [
+          const SizedBox(height: 50),
           Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextFormField(
-                    decoration: const InputDecoration(
-                      hintText: 'Rechercher...',
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(),
-                    ),
-                    onChanged: (value) {
-                      search = value;
-                    },
+            padding: const EdgeInsets.all(1.0),
+            child: Padding(
+              padding: const EdgeInsets.all(3.0),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                            hintText: 'Rechercher un event...',
+                            filled: true,
+                            fillColor: const Color.fromARGB(255, 100, 98, 98),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                            hintStyle:const TextStyle(color: Colors.white),
+                            contentPadding:const EdgeInsets.symmetric(vertical: 1.0),
+
+                          ),
+                          style: const TextStyle(color: Colors.white, fontSize: 16,),
+                          onChanged: (value) {
+                            search = value;
+                          },
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.search),
+                        color: Colors.white,
+                        onPressed: () {
+                          _fetchEvents();
+                        },
+                      ),
+                    ],
                   ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.search),
-                  color: Colors.white,
-                  onPressed: () {
-                    _fetchEvents();
-                  },
-                ),
-                DropdownButton<String>(
-                  value: tag,
-                  icon: const Icon(Icons.arrow_downward),
-                  iconSize: 24,
-                  elevation: 16,
-                  style: const TextStyle(color: Colors.white),
-                  underline: Container(
-                    height: 2,
-                    color: Colors.white,
-                  ),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      tag = newValue!;
-                     _fetchEvents();
-                    });
-                  },
-                  items: list.map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                ),
-              ],
+                   DropdownButton<String>(
+                        value: tag,
+                        icon: const Icon(Icons.arrow_downward),
+                        iconSize: 24,
+                        elevation: 16,
+                        style: const TextStyle(color: Colors.white),
+                        underline: Container(
+                          height: 2,
+                          color: Colors.white,
+                        ),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            tag = newValue!;
+                           _fetchEvents();
+                          });
+                        },
+                        items: list.map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                      ),
+                ],
+              ),
             ),
           ),
           Expanded(
