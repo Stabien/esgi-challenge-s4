@@ -40,7 +40,6 @@ dependencies:
   http: ^1.2.1
   bloc: ^8.1.4
   flutter_bloc: ^8.1.5
-  intl: ^0.18.1
   qr_flutter: ^4.1.0
   intl: any
   firebase_core: ^2.31.0
