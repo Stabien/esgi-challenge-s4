@@ -159,6 +159,29 @@ paths:
       summary: Get events
       tags:
       - Event
+  /events/today:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Event found
+          schema:
+            type: object
+        "400":
+          description: Bad request
+          schema: {}
+        "404":
+          description: Event not found
+          schema: {}
+        "500":
+          description: Internal server error
+          schema: {}
+      summary: Get events today
+      tags:
+      - Event
   /organizers:
     post:
       consumes:

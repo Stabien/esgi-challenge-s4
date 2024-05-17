@@ -14,6 +14,7 @@ func InitRouter(e *echo.Echo) {
 	e.PATCH("/event/:id", controllers.UpdateEvent)
 	e.GET("/event/:id", controllers.GetEvent)
 	e.GET("/events", controllers.GetAllEvents)
+	e.GET("/events/today", controllers.GetAllEventsToday)
 
 	e.POST("/reservations", controllers.PostReservation)
 	e.DELETE("/reservations", controllers.DeleteReservation)
