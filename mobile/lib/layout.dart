@@ -7,6 +7,7 @@ import 'package:mobile/screens/logs_screen.dart';
 import 'components/navigation/bottom_bar.dart';
 import 'package:mobile/events/screen_events.dart';
 import 'package:mobile/eventsReservation/screen_eventsReserv.dart';
+import 'package:mobile/events/screen_eventsToday.dart';
 
 class Layout extends StatefulWidget {
   const Layout({super.key});
@@ -23,6 +24,7 @@ class _LayoutState extends State<Layout> {
     LoginScreen(),
     CustomerRegisterScreen(),
     OrganizerRegisterScreen(),
+    ScreenEventToday(),
     ScreenEvent(),
     ScreenEventReservation(),
 

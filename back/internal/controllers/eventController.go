@@ -226,3 +226,45 @@ func GetAllEvents(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, simpleEvents)
 }
+
+// @Summary Get events today
+// @Tags Event
+// @Accept json
+// @Produce json
+// @Success 200 {object} interface{} "Event found"
+// @Failure 400 {object} error "Bad request"
+// @Failure 404 {object} error "Event not found"
+// @Failure 500 {object} error "Internal server error"
+// @Router /events/today [get]
+func GetAllEventsToday(c echo.Context) error {
+	var events []models.Event
+
+	currentDate := time.Now().Format("2006-01-02")
+
+	dateStart := currentDate + " 00:00:00"
+	dateEnd := currentDate + " 23:59:59"
+
+	if err := db.DB().Where("date BETWEEN ? AND ?", dateStart, dateEnd).Find(&events).Error; err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+	}
+
+	if len(events) == 0 {
+		return c.JSON(http.StatusOK, []SimpleEvent{})
+	}
+
+	var simpleEvents []SimpleEvent
+	for _, event := range events {
+		simpleEvents = append(simpleEvents, SimpleEvent{
+			ID:          event.ID,
+			Title:       event.Title,
+			Description: event.Description,
+			Tag:         event.Tag,
+			Banner:      event.Banner,
+			Image:       event.Image,
+			Date:        event.Date,
+			Place:       event.Place,
+		})
+	}
+
+	return c.JSON(http.StatusOK, simpleEvents)
+}
