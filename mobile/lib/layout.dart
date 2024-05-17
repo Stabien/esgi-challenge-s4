@@ -3,7 +3,10 @@ import 'package:mobile/screens/customer_register_screen.dart';
 import 'package:mobile/screens/home_screen.dart';
 import 'package:mobile/screens/login_screen.dart';
 import 'package:mobile/screens/organizer_register_screen.dart';
+import 'package:mobile/screens/logs_screen.dart';
 import 'components/navigation/bottom_bar.dart';
+import 'package:mobile/events/screen_events.dart';
+import 'package:mobile/eventsReservation/screen_eventsReserv.dart';
 
 class Layout extends StatefulWidget {
   const Layout({super.key});
@@ -20,6 +23,10 @@ class _LayoutState extends State<Layout> {
     LoginScreen(),
     CustomerRegisterScreen(),
     OrganizerRegisterScreen(),
+    ScreenEvent(),
+    ScreenEventReservation(),
+
+    LogsScreen(),
   ];
 
   void _onBottomBarItemTapped(int index) {
@@ -32,10 +39,6 @@ class _LayoutState extends State<Layout> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: const PreferredSize(
-        preferredSize: Size.fromHeight(100),
-        child: Placeholder(),
-      ),
       bottomNavigationBar: BottomBar(
         selectedIndex: _selectedPageIndex,
         onItemTapped: _onBottomBarItemTapped,
