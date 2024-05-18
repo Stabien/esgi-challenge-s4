@@ -8,52 +8,55 @@ class EventListTile extends StatelessWidget {
   final Event event;
   final String eventDate;
 
-  const EventListTile({Key? key, required this.event, required this.eventDate}) : super(key: key);
+  const EventListTile({super.key, required this.event, required this.eventDate});
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      onTap: () => Navigator.of(context).pushNamed(
-        '/event/detail',
-        arguments: event.id,
-      ),
-      contentPadding: const EdgeInsets.symmetric(vertical: 15.0),
-      leading: Image.network(
-        event.image,
-        width: 100,
-        height: 100,
-        fit: BoxFit.cover,
-      ),
-      title: Text(
-        event.title,
-        style: const TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 16,
-          color: Colors.white,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: ListTile(
+        onTap: () => Navigator.of(context).pushNamed(
+          '/event/detail',
+          arguments: event.id,
         ),
-      ),
-      subtitle: Row(
-        children: [
-          Text(
-            eventDate,
-            style: const TextStyle(
-              fontSize: 10,
-              color: Colors.orange,
-            ),
+        contentPadding: const EdgeInsets.symmetric(vertical: 15.0),
+        leading: Image.network(
+          event.image,
+          width: 100,
+          height: 100,
+          fit: BoxFit.cover,
+        ),
+        title: Text(
+          event.title,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+            color: Colors.white,
           ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Text(
-              event.place,
+        ),
+        subtitle: Row(
+          children: [
+            Text(
+              eventDate,
               style: const TextStyle(
                 fontSize: 10,
-                color: Colors.grey,
+                color: Colors.orange,
               ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
             ),
-          ),
-        ],
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                event.place,
+                style: const TextStyle(
+                  fontSize: 10,
+                  color: Colors.grey,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
