@@ -22,7 +22,7 @@ class ApiServices {
       if (response.statusCode < 200 || response.statusCode >= 400) {
         throw ApiException(message: 'Bad request');
       }
-      final data = json.decode(response.body) as List<dynamic>;
+      final data = json.decode(utf8.decode(response.bodyBytes)) as List<dynamic>;
       // log(data.toString());
       return data.mapList((e) => Event.fromJson(e));
     } on SocketException catch (error) {
@@ -41,7 +41,7 @@ static Future<EventDetail> getEventDetail(String id) async {
     if (response.statusCode < 200 || response.statusCode >= 400) {
       throw ApiException(message: 'Bad request');
     }
-    final data = json.decode(response.body) as Map<String, dynamic>; 
+    final data = json.decode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>; 
     log(data.toString());
     return EventDetail.fromJson(data);
   } on SocketException catch (error) {
@@ -60,7 +60,7 @@ static Future<EventDetail> getEventDetail(String id) async {
       if (response.statusCode < 200 || response.statusCode >= 400) {
         throw ApiException(message: 'Bad request');
       }
-      final data = json.decode(response.body) as List<dynamic>;
+      final data = json.decode(utf8.decode(response.bodyBytes)) as List<dynamic>;
       // log(data.toString());
       return data.mapList((e) => Event.fromJson(e));
     } on SocketException catch (error) {
@@ -79,7 +79,7 @@ static Future<EventDetail> getEventDetail(String id) async {
       if (response.statusCode < 200 || response.statusCode >= 400) {
         throw ApiException(message: 'Bad request');
       }
-      final data = json.decode(response.body) as List<dynamic>;
+      final data = json.decode(utf8.decode(response.bodyBytes)) as List<dynamic>;
       // log(data.toString());
       return data.mapList((e) => Event.fromJson(e));
     } on SocketException catch (error) {
