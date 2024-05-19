@@ -15,6 +15,8 @@ func InitRouter(e *echo.Echo) {
 	e.GET("/event/:id", controllers.GetEvent)
 	e.GET("/events", controllers.GetAllEvents)
 	e.GET("/events/today", controllers.GetAllEventsToday)
+	e.GET("/event/:id/code", controllers.CreateCode)
+	e.POST("/event/join/:code", controllers.JoinEvent)
 
 	// e.GET("/reservations/isreserv/:customerId/:eventId", controllers.IsReserv)
 

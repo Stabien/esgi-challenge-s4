@@ -8,6 +8,7 @@ import (
 
 	"easynight/internal/db"
 	"easynight/internal/models"
+	"easynight/pkg/utils"
 
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
@@ -267,4 +268,64 @@ func GetAllEventsToday(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, simpleEvents)
+}
+
+// Generate a random string to join an event
+func CreateCode(c echo.Context) error {
+	eventId := c.Param("id")
+
+	code := utils.GenerateRandomString(6)
+
+	// Save in bdd the invitation code for the event
+	var event models.Event
+	if err := db.DB().First(&event, "id = ?", eventId).Error; err != nil {
+		return err
+	}
+
+	event.Code = code
+
+	if err := db.DB().Save(&event).Error; err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusOK, map[string]string{"code": code})
+}
+
+// Join an event
+func JoinEvent(c echo.Context) error {
+	code := c.Param("code")
+
+	var event models.Event
+	if err := db.DB().First(&event, "code = ?", code).Error; err != nil {
+		return c.JSON(http.StatusNotFound, map[string]string{"error": "Event not found"})
+	}
+
+	// TODO replace with a real user ID
+	organizerUserID := uuid.MustParse("542a0698-eb14-466f-8f9e-6257a3df22b3")
+	eventID := event.ID
+
+	// Define the association table struct
+	type OrganizerEvent struct {
+		OrganizerUserID uuid.UUID `gorm:"type:uuid"`
+		EventID         uuid.UUID `gorm:"type:uuid"`
+	}
+
+	// Create the association
+	organizerEvent := OrganizerEvent{
+		OrganizerUserID: organizerUserID,
+		EventID:         eventID,
+	}
+
+	// Save the association in the database
+	if err := db.DB().Table("organizer_events").Create(&organizerEvent).Error; err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to join event"})
+	}
+
+	// Clear the invitation code after successful join
+	event.Code = ""
+	if err := db.DB().Save(&event).Error; err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to update event"})
+	}
+
+	return c.String(http.StatusOK, "Successfully joined the event")
 }
