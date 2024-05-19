@@ -50,6 +50,7 @@ void _fetchEvents() {
       _loading = false;
     });
   });
+  
 
   ApiReservation.isreserv(widget.id, "3e8aa051-4321-49a0-8bc1-f697585756a4").then((data){
     print(data);
@@ -68,6 +69,13 @@ void _fetchEvents() {
       _loading = false;
     });
     });
+}
+
+void _updateReservationStatus() {
+  setState(() {
+    _isReserv = !_isReserv; 
+    _textReserv = _isReserv ? "Annuler" : "Reserver";
+  });
 }
     
 
@@ -233,12 +241,13 @@ void _fetchEvents() {
                           onPressed: () {
                             if(!_isReserv){
                               ApiReservation.reserveEvent(eventDetail.id,"3e8aa051-4321-49a0-8bc1-f697585756a4");
-                              _isReserv = true;
-                              _fetchEvents();
+                              _updateReservationStatus();
+                              print(_textReserv);
+                              
                             }else{
                               ApiReservation.cancelReservation(eventDetail.id,"3e8aa051-4321-49a0-8bc1-f697585756a4");
-                              _isReserv = false;
-                              _fetchEvents();
+                              _updateReservationStatus();
+                              print(_textReserv);
                               
                             }
                           },
