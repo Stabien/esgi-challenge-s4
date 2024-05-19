@@ -9,6 +9,29 @@ definitions:
     required:
     - email
     type: object
+  controllers.EventInput:
+    properties:
+      banner:
+        type: string
+      date:
+        type: string
+      description:
+        type: string
+      image:
+        type: string
+      lat:
+        type: number
+      lng:
+        type: number
+      location:
+        type: string
+      participant_number:
+        type: integer
+      tag:
+        type: string
+      title:
+        type: string
+    type: object
   controllers.RegistrationPayload:
     properties:
       email:
@@ -98,6 +121,33 @@ paths:
       summary: Register as customer
       tags:
       - Users
+  /event:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Event input
+        in: body
+        name: event
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.EventInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Event created successfully!
+          schema:
+            type: string
+        "400":
+          description: Bad request
+          schema: {}
+        "500":
+          description: Internal server error
+          schema: {}
+      summary: Create a new event
+      tags:
+      - Event
   /event/{id}:
     get:
       consumes:
@@ -125,6 +175,94 @@ paths:
           description: Internal server error
           schema: {}
       summary: Get an event by ID
+      tags:
+      - Event
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Event ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Event input
+        in: body
+        name: event
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.EventInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Event updated successfully!
+          schema:
+            type: string
+        "400":
+          description: Bad request
+          schema: {}
+        "500":
+          description: Internal server error
+          schema: {}
+      summary: Update an existing event
+      tags:
+      - Event
+  /event/{id}/code:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Event ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Generated code
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad request
+          schema: {}
+        "500":
+          description: Internal server error
+          schema: {}
+      summary: Generate a random code to join an event
+      tags:
+      - Event
+  /event/join/{code}:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Invitation code
+        in: path
+        name: code
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully joined the event
+          schema:
+            type: string
+        "400":
+          description: Bad request
+          schema: {}
+        "404":
+          description: Event not found
+          schema: {}
+        "500":
+          description: Internal server error
+          schema: {}
+      summary: Join an event using a code
       tags:
       - Event
   /events:
@@ -287,30 +425,24 @@ paths:
       summary: get reservation by user
       tags:
       - Reservation
-  /reservations/isreserv/{customerId}/{eventId}:
-    get:
+  /send-notification:
+    post:
       consumes:
       - application/json
-      parameters:
-      - description: customerId
-        in: path
-        name: customerId
-        required: true
-        type: string
-      - description: eventId
-        in: path
-        name: eventId
-        required: true
-        type: string
       produces:
       - application/json
       responses:
-        "204":
-          description: Successfully get
+        "200":
+          description: Notification sent successfully
+          schema:
+            type: string
         "400":
           description: Bad request
           schema: {}
-      summary: get reservation by user
+        "500":
+          description: Internal server error
+          schema: {}
+      summary: Send a notification using Firebase Cloud Messaging
       tags:
-      - Reservation
+      - Notification
 swagger: "2.0"

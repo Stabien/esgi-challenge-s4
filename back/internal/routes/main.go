@@ -15,7 +15,7 @@ func InitRouter(e *echo.Echo) {
 	e.GET("/event/:id", controllers.GetEvent)
 	e.GET("/events", controllers.GetAllEvents)
 	e.GET("/events/today", controllers.GetAllEventsToday)
-	e.GET("/event/:id/code", controllers.CreateCode)
+	e.POST("/event/:id/code", controllers.CreateCode)
 	e.POST("/event/join/:code", controllers.JoinEvent)
 
 	// e.GET("/reservations/isreserv/:customerId/:eventId", controllers.IsReserv)
@@ -28,6 +28,6 @@ func InitRouter(e *echo.Echo) {
 	e.POST("/customers", controllers.CustomerRegistration)
 	e.POST("/organizers", controllers.OrganizerRegistration)
 
-	e.GET("/send-notification", controllers.SendNotification)
+	e.POST("/send-notification", controllers.SendNotification)
 	e.GET("/logs", controllers.GetAllLogs) // TODO: add middleware to check if user is admin
 }

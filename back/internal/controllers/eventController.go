@@ -27,6 +27,15 @@ type EventInput struct {
 	Tag               string  `json:"tag"`
 }
 
+// @Summary Create a new event
+// @Tags Event
+// @Accept json
+// @Produce json
+// @Param event body EventInput true "Event input"
+// @Success 200 {string} string "Event created successfully!"
+// @Failure 400 {object} error "Bad request"
+// @Failure 500 {object} error "Internal server error"
+// @Router /event [post]
 func CreateEvent(c echo.Context) error {
 	// Define EventInput struct
 	var eventInput EventInput
@@ -67,6 +76,16 @@ func CreateEvent(c echo.Context) error {
 	return c.String(http.StatusOK, "Event created successfully!")
 }
 
+// @Summary Update an existing event
+// @Tags Event
+// @Accept json
+// @Produce json
+// @Param id path string true "Event ID"
+// @Param event body EventInput true "Event input"
+// @Success 200 {string} string "Event updated successfully!"
+// @Failure 400 {object} error "Bad request"
+// @Failure 500 {object} error "Internal server error"
+// @Router /event/{id} [patch]
 func UpdateEvent(c echo.Context) error {
 	// Get event ID from URL
 	eventID := c.Param("id")
@@ -270,7 +289,15 @@ func GetAllEventsToday(c echo.Context) error {
 	return c.JSON(http.StatusOK, simpleEvents)
 }
 
-// Generate a random string to join an event
+// @Summary Generate a random code to join an event
+// @Tags Event
+// @Accept json
+// @Produce json
+// @Param id path string true "Event ID"
+// @Success 200 {object} map[string]string "Generated code"
+// @Failure 400 {object} error "Bad request"
+// @Failure 500 {object} error "Internal server error"
+// @Router /event/{id}/code [post]
 func CreateCode(c echo.Context) error {
 	eventId := c.Param("id")
 
@@ -291,7 +318,16 @@ func CreateCode(c echo.Context) error {
 	return c.JSON(http.StatusOK, map[string]string{"code": code})
 }
 
-// Join an event
+// @Summary Join an event using a code
+// @Tags Event
+// @Accept json
+// @Produce json
+// @Param code path string true "Invitation code"
+// @Success 200 {string} string "Successfully joined the event"
+// @Failure 400 {object} error "Bad request"
+// @Failure 404 {object} error "Event not found"
+// @Failure 500 {object} error "Internal server error"
+// @Router /event/join/{code} [post]
 func JoinEvent(c echo.Context) error {
 	code := c.Param("code")
 
