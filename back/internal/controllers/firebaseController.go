@@ -12,7 +12,14 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-// SendNotification sends a notification using Firebase Cloud Messaging
+// @Summary Send a notification using Firebase Cloud Messaging
+// @Tags Notification
+// @Accept json
+// @Produce json
+// @Success 200 {string} string "Notification sent successfully"
+// @Failure 400 {object} error "Bad request"
+// @Failure 500 {object} error "Internal server error"
+// @Router /send-notification [post]
 func SendNotification(c echo.Context) error {
 	// Firebase Cloud Messaging endpoint URL
 	url := "https://fcm.googleapis.com/v1/projects/challenges4notification/messages:send"

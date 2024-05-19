@@ -25,4 +25,5 @@ type Event struct {
 	Location          string
 	Place             string
 	Tag               string
+	Code              string
 }

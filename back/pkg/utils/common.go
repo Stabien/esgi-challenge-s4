@@ -3,6 +3,8 @@ package utils
 import (
 	"log"
 	"os"
+	"math/rand"
+	"time"
 
 	"github.com/joho/godotenv"
 	"golang.org/x/crypto/bcrypt"
@@ -48,4 +50,14 @@ func HashPassword(password string) (string, error) {
 func IsPasswordMatchingHash(password, hash string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 	return err == nil
+}
+
+func GenerateRandomString(length int) string {
+	charset := "ABCDEFGHIJKLMNPQRSTUVWXYZ123456789"
+	seededRand := rand.New(rand.NewSource(time.Now().UnixNano()))
+	b := make([]byte, length)
+	for i := range b {
+		b[i] = charset[seededRand.Intn(len(charset))]
+	}
+	return string(b)
 }
