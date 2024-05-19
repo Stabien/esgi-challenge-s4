@@ -18,6 +18,8 @@ void main() async {
   await dotenv.load(fileName: ".env.local");
   runApp(const MyApp());
 
+print("la var =");
+print(dotenv.env['FIREBASE_API_KEY']);
   if (dotenv.env['FIREBASE_API_KEY'] != "default") {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
