@@ -41,7 +41,6 @@ class ScreenEventReservation extends StatelessWidget {
                   child: CircularProgressIndicator(),
                 );
               }
-
               if (state is EventDataLoadingError) {
                 return Center(
                   child: Text(
@@ -50,7 +49,6 @@ class ScreenEventReservation extends StatelessWidget {
                   ),
                 );
               }
-
               if (state is EventDataLoadingSuccess) {
                 return ListView.builder(
                       itemBuilder: (context, index) {
