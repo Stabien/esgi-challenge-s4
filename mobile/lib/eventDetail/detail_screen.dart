@@ -1,9 +1,11 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:mobile/models/eventDetail.dart';
 import 'package:mobile/services/api_event_services.dart';
-import 'package:mobile/services/api_reservation_services.dart' as ApiReserervation;
+import 'package:mobile/services/api_reservation_services.dart';
 
 
 class DetailScreen extends StatefulWidget {
@@ -20,29 +22,54 @@ class _DetailScreen extends State<DetailScreen> {
 
   bool _loading = false;
   Error? _error;
+  bool _isReserv = false;
+  String _textReserv = "";
 
   @override
   void initState() {
     super.initState();
+    _fetchEvents();
 
     setState(() {
       _loading = true;
     });
-    
 
-ApiServices.getEventDetail(widget.id).then((data) {
-  setState(() {
-    _error = null;
-    _eventdetails = [data]; // Ajoutez les données dans une liste
-    _loading = false;
-  });
-}).catchError((error) {
-  setState(() {
-    _error = error;
-    _loading = false;
-  });
-});
   }
+
+void _fetchEvents() {
+    
+  ApiServices.getEventDetail(widget.id).then((data) {
+    setState(() {
+      _error = null;
+      _eventdetails = [data]; // Ajoutez les données dans une liste
+      _loading = false;
+    });
+  }).catchError((error) {
+    setState(() {
+      _error = error;
+      _loading = false;
+    });
+  });
+
+  ApiReservation.isreserv(widget.id, "3e8aa051-4321-49a0-8bc1-f697585756a4").then((data){
+    print(data);
+    setState(() {
+      if(data.isEmpty){
+        _isReserv = false;
+        _textReserv = "Reserver";
+      }else{
+        _isReserv = true;
+        _textReserv = "Annuler";
+      }
+    });
+  }).catchError((error) {
+    setState(() {
+      _error = error;
+      _loading = false;
+    });
+    });
+}
+    
 
   @override
   Widget build(BuildContext context) {
@@ -204,9 +231,19 @@ ApiServices.getEventDetail(widget.id).then((data) {
                         ),
                          ElevatedButton(
                           onPressed: () {
-                            ApiReserervation.reserveEvent(eventDetail.id,"3e8aa051-4321-49a0-8bc1-f697585756a4");
+                            if(!_isReserv){
+                              ApiReservation.reserveEvent(eventDetail.id,"3e8aa051-4321-49a0-8bc1-f697585756a4");
+                              _isReserv = true;
+                              _fetchEvents();
+                            }else{
+                              ApiReservation.cancelReservation(eventDetail.id,"3e8aa051-4321-49a0-8bc1-f697585756a4");
+                              _isReserv = false;
+                              _fetchEvents();
+                              
+                            }
                           },
-                          child: const Text('Reserver'),
+                          child: Text(_textReserv),
+
                         ),
                       ],
                       

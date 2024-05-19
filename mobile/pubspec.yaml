@@ -46,6 +46,7 @@ dependencies:
   firebase_messaging: ^14.9.2
   flutter_localizations:
     sdk: flutter
+  logging: ^1.2.0
 
 dev_dependencies:
   flutter_test:

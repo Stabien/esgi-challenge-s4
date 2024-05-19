@@ -14,8 +14,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 class ApiServices {
   static final String baseUrl = dotenv.env['URL_BACK'].toString();
     static Future<List<Event>> getEvents(search,tag) async {
-      
-
     try {
       final response = await http.get(Uri.parse('$baseUrl/events?name=$search&tag=$tag'));
       await Future.delayed(const Duration(seconds: 1));
@@ -42,7 +40,7 @@ static Future<EventDetail> getEventDetail(String id) async {
       throw ApiException(message: 'Bad request');
     }
     final data = json.decode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>; 
-    log(data.toString());
+    // log(data.toString());
     return EventDetail.fromJson(data);
   } on SocketException catch (error) {
     log('Network error.', error: error);

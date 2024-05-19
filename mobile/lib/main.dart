@@ -18,10 +18,10 @@ void main() async {
   await dotenv.load(fileName: ".env.local");
   runApp(const MyApp());
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  await FirebaseApi().initNotifications();
+//   await Firebase.initializeApp(
+//     options: DefaultFirebaseOptions.currentPlatform,
+//   );
+//   await FirebaseApi().initNotifications();
 }
 
 class MyApp extends StatelessWidget {

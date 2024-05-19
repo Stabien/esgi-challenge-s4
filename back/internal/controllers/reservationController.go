@@ -84,7 +84,7 @@ func GetReservationsbyUser(c echo.Context) error {
 
 	// Join reservations table with events table and filter by customer ID
 	if err := db.DB().Joins("JOIN reservations ON events.id = reservations.event_id").
-		Where("reservations.customer_id = ?", CustomerID).
+		Where("reservations.customer_id = ? AND reservations.deleted_at IS NULL", CustomerID).
 		Find(&events).Error; err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
@@ -122,27 +122,25 @@ type SimpleReservation struct {
 // @Failure 400 {object} error "Bad request"
 // @Failure 500 {object} error "Internal server error"
 // @Router /reservations/isreserv/{customerId}/{eventId} [get]
-// func IsReserv(c echo.Context) error {
-// 	customerID := c.Param("customerId")
-// 	eventID := c.Param("eventId")
+func IsReserv(c echo.Context) error {
+	customerID := c.Param("customerId")
+	eventID := c.Param("eventId")
 
-// 	var reservation []models.Reservation
-// 	if err := db.DB().Where("customer_id = ? AND event_id = ?", customerID, eventID).Find(&reservation).Error; err != nil {
-// 		// Une erreur interne s'est produite
-// 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
-// 	}
+	var reservations []models.Reservation
+	if err := db.DB().Where("customer_id = ? AND event_id = ?", customerID, eventID).Find(&reservations).Error; err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+	}
 
-// 	// Si aucune réservation n'est trouvée, retourner un tableau vide
-// 	if len(reservation) == 0 {
-// 		return c.JSON(http.StatusOK, []SimpleReservation{})
-// 	}
+	if len(reservations) == 0 {
+		return c.JSON(http.StatusOK, []SimpleReservation{})
+	}
 
-// 	var simpleReservation []SimpleReservation
-// 	for _, reservation := range reservations {
-// 		simpleReservation = append(simpleReservation, simpleReservation{
-// 			ID: reservation.ID,
-// 		})
-// 	}
+	var simpleReservation []SimpleReservation
+	for _, reservation := range reservations {
+		simpleReservation = append(simpleReservation, SimpleReservation{
+			ID: reservation.ID,
+		})
+	}
 
-// 	return c.JSON(http.StatusOK, simpleReservation)
-// }
+	return c.JSON(http.StatusOK, simpleReservation)
+}
