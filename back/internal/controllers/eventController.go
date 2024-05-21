@@ -115,11 +115,8 @@ func UpdateEvent(c echo.Context) error {
 	event.Lng = float32(updateInput.Lng)
 	event.Tag = updateInput.Tag
 
-	// Save event to database
-	if err := db.DB().Save(&event).Error; err != nil {
+	if err := db.DB().Model(&event).Updates(&event).Error; err != nil {
 		return err
-	} else {
-		log.Println("Event updated: ", event)
 	}
 
 	return c.String(http.StatusOK, "Event updated successfully!")
@@ -364,4 +361,53 @@ func JoinEvent(c echo.Context) error {
 	}
 
 	return c.String(http.StatusOK, "Successfully joined the event")
+}
+
+// func /events/organizer/$id
+func GetEventsByOrganizer(c echo.Context) error {
+	organizerID := c.Param("id")
+
+	var events []models.Event
+
+	if err := db.DB().Table("events").Joins("JOIN organizer_events ON events.id = organizer_events.event_id").Where("organizer_events.organizer_user_id = ?", organizerID).Find(&events).Error; err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+	}
+
+	if len(events) == 0 {
+		return c.JSON(http.StatusOK, []SimpleEvent{})
+	}
+
+	var simpleEvents []SimpleEvent
+	for _, event := range events {
+		simpleEvents = append(simpleEvents, SimpleEvent{
+			ID:          event.ID,
+			Title:       event.Title,
+			Description: event.Description,
+			Tag:         event.Tag,
+			Banner:      event.Banner,
+			Image:       event.Image,
+			Date:        event.Date,
+			Place:       event.Place,
+		})
+	}
+
+	return c.JSON(http.StatusOK, simpleEvents)
+}
+
+func DeleteEvent(c echo.Context) error {
+	eventID := c.Param("id")
+
+	var event models.Event
+	if err := db.DB().First(&event, "id = ?", eventID).Error; err != nil {
+		return err
+	}
+
+	currentDate := time.Now()
+	event.DeletedAt = &currentDate
+
+	if err := db.DB().Save(&event).Error; err != nil {
+		return err
+	}
+
+	return c.String(http.StatusOK, "Event deleted successfully!")
 }
