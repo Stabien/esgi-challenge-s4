@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/api/firebase_api.dart';
+import 'package:mobile/events/create_event_form.dart';
+import 'package:mobile/events/update_event_form.dart';
 import 'package:mobile/theme_data.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mobile/layout.dart';
@@ -18,7 +20,8 @@ void main() async {
   await dotenv.load(fileName: ".env.local");
   runApp(const MyApp());
 
-  if (dotenv.env['FIREBASE_API_KEY'] != "default" && dotenv.env['FIREBASE_API_KEY'] != null) {
+  if (dotenv.env['FIREBASE_API_KEY'] != "default" &&
+      dotenv.env['FIREBASE_API_KEY'] != null) {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
@@ -56,7 +59,18 @@ class MyApp extends StatelessWidget {
                 return DetailScreen(id: args as String);
               },
             );
-
+          case '/event/update':
+            return MaterialPageRoute(
+              builder: (context) {
+                return UpdateEventForm(eventId: args as String);
+              },
+            );
+          case '/event/create':
+            return MaterialPageRoute(
+              builder: (context) {
+                return const CreateEventForm();
+              },
+            );
         }
         return null;
       },

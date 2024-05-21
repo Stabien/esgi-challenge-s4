@@ -45,9 +45,13 @@ class _UpdateEventFormState extends State<UpdateEventForm> {
       dio.options.connectTimeout = const Duration(milliseconds: 10000);
       String? apiUrl = '${dotenv.env['URL_BACK']}/event/${widget.eventId}';
       var response = await dio.get(apiUrl);
+      print("---------------------------------------------------------------");
+      print(response.statusCode);
       if (response.statusCode == 200) {
         setState(() {
+          print(response.data);
           _event = Event.fromJson(response.data);
+          print(_event.title);
           _titleController.text = _event.title;
           _descriptionController.text = _event.description;
           _dateController.text = _event.date;
@@ -208,15 +212,15 @@ class Event {
   // Factory method to create Event object from JSON
   factory Event.fromJson(Map<String, dynamic> json) {
     return Event(
-      id: json['ID'],
-      title: json['Title'],
-      description: json['Description'],
-      date: json['Date'],
-      banner: json['Banner'],
-      participantNumber: json['ParticipantNumber'],
-      lat: json['Lat'],
-      lng: json['Lng'],
-      location: json['Location'],
+      id: json['id'] ?? '',
+      title: json['title'] ?? '',
+      description: json['description'] ?? '',
+      date: json['date'] ?? '',
+      banner: json['banner'] ?? '',
+      participantNumber: json['participant_number'] ?? 0,
+      lat: json['lat'] ?? 0.0,
+      lng: json['lng'] ?? 0.0,
+      location: json['location'] ?? '',
     );
   }
 
