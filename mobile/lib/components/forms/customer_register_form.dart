@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/models/user.dart';
 import 'package:mobile/services/userServices.dart';
+import 'package:mobile/utils/translate.dart';
 
 class CustomerRegisterForm extends StatefulWidget {
   const CustomerRegisterForm({super.key});
@@ -65,31 +66,33 @@ class _CustomerRegisterFormState extends State<CustomerRegisterForm> {
         children: [
           TextFormField(
             onChanged: _onLastnameInputChange,
-            decoration: const InputDecoration(
-              labelText: 'Nom',
+            decoration: InputDecoration(
+              labelText: t(context)!.lastname,
             ),
           ),
           TextFormField(
             onChanged: _onFirstnameInputChange,
-            decoration: const InputDecoration(
-              labelText: 'Prénom',
+            decoration: InputDecoration(
+              labelText: t(context)!.firstname,
             ),
           ),
           TextFormField(
             onChanged: _onEmailInputChange,
-            decoration: const InputDecoration(
-              labelText: 'Email',
+            decoration: InputDecoration(
+              labelText: t(context)!.email,
             ),
           ),
           TextFormField(
             onChanged: _onPasswordInputChange,
-            decoration: const InputDecoration(
-              labelText: 'Mot de passe',
+            decoration: InputDecoration(
+              labelText: t(context)!.password,
             ),
           ),
           TextButton(
             onPressed: _onSubmit,
-            child: const Text("Envoyer"),
+            child: Text(
+              t(context)!.register,
+            ),
           ),
         ],
       ),

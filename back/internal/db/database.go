@@ -45,12 +45,16 @@ func DatabaseInit() {
 
 	if err != nil {
 		log.Fatal(err)
+	} else {
+		log.Println("Database connected")
 	}
 
 	err = migrate(database)
 
 	if err != nil {
 		log.Fatal(err)
+	} else {
+		log.Println("Database migrated")
 	}
 
 	dbGorm, err := database.DB()

@@ -101,7 +101,7 @@ class _CreateEventFormState extends State<CreateEventForm> {
             TextField(
               controller: _bannerController,
               decoration: InputDecoration(
-                labelText: "Banière (URL)",
+                labelText: "Bannière (URL)",
               ),
             ),
             TextField(
