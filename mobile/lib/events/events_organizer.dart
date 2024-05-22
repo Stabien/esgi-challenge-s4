@@ -49,11 +49,14 @@ class _EventsOrganizerState extends State<EventsOrganizer> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     // button to create an event
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).pushNamed('/event/create');
-                      },
-                      child: const Text('Créer un événement'),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pushNamed('/event/create');
+                        },
+                        child: const Text('Créer un événement'),
+                      ),
                     ),
                     Expanded(
                       child: ListView.builder(
@@ -114,6 +117,7 @@ class _EventsOrganizerState extends State<EventsOrganizer> {
                                     ),
                                   ),
                                   Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       ElevatedButton(
                                         onPressed: () {
