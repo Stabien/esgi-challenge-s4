@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/models/user.dart';
 import 'package:mobile/services/userServices.dart';
+import 'package:mobile/utils/secureStorage.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
@@ -31,7 +34,8 @@ class _LoginFormState extends State<LoginForm> {
   void _onSubmit() async {
     final userCredentials = UserCredentials(_email, _password);
     final Response response = await _userServices.auth(userCredentials);
-    print(response);
+
+    await SecureStorage.addStorageItem('token', response.data['token']);
   }
 
   @override

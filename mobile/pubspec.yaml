@@ -47,6 +47,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   logging: ^1.2.0
+  flutter_secure_storage: ^9.2.2
 
 dev_dependencies:
   flutter_test:
