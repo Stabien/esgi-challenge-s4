@@ -25,6 +25,7 @@ type EventInput struct {
 	Lng               float64 `json:"lng"`
 	Location          string  `json:"location"`
 	Tag               string  `json:"tag"`
+	Place             string  `json:"place"`
 }
 
 // @Summary Create a new event
@@ -63,6 +64,8 @@ func CreateEvent(c echo.Context) error {
 		Lng:               float32(eventInput.Lng),
 		Location:          eventInput.Location,
 		Tag:               eventInput.Tag,
+		Place:             eventInput.Place,
+		Code: utils.GenerateRandomString(6),
 	}
 
 	// Insert event into database
@@ -114,6 +117,7 @@ func UpdateEvent(c echo.Context) error {
 	event.Lat = float32(updateInput.Lat)
 	event.Lng = float32(updateInput.Lng)
 	event.Tag = updateInput.Tag
+	event.Place = updateInput.Place
 
 	if err := db.DB().Model(&event).Updates(&event).Error; err != nil {
 		return err
