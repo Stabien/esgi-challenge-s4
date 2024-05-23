@@ -65,7 +65,7 @@ func CreateEvent(c echo.Context) error {
 		Location:          eventInput.Location,
 		Tag:               eventInput.Tag,
 		Place:             eventInput.Place,
-		Code: utils.GenerateRandomString(6),
+		Code:              utils.GenerateRandomString(6),
 	}
 
 	// Insert event into database
@@ -139,6 +139,7 @@ type EventDetails struct {
 	Lng               float32   `json:"lng"`
 	Location          string    `json:"location"`
 	ParticipantNumber *int      `json:"participant_number"`
+	PlaceRestante     int       `json:"place_restante"`
 }
 
 // @Summary Get an event by ID
@@ -159,6 +160,12 @@ func GetEvent(c echo.Context) error {
 		return err
 	}
 
+	var reservations models.Reservation
+	var count int64
+	if err := db.DB().Model(&reservations).Where("event_id = ? AND deleted_at IS NULL", eventID).Count(&count).Error; err != nil {
+		return err
+	}
+
 	// Map fields from Event to EventDetails
 	eventDetails := EventDetails{
 		ID:                event.ID,
@@ -173,6 +180,7 @@ func GetEvent(c echo.Context) error {
 		Lng:               event.Lng,
 		Location:          event.Location,
 		ParticipantNumber: event.ParticipantNumber,
+		PlaceRestante:     *event.ParticipantNumber - int(count),
 	}
 
 	return c.JSON(http.StatusOK, eventDetails)

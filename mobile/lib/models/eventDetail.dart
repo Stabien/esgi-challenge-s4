@@ -11,6 +11,7 @@ class EventDetail {
   final int participantNumber;
   final double lat;
   final double lng;
+  final int placerestante;
 
   EventDetail({
     required this.id,
@@ -25,6 +26,7 @@ class EventDetail {
     required this.lat,
     required this.lng,
     required this.banner,
+    required this.placerestante,
 
   });
 
@@ -42,6 +44,7 @@ class EventDetail {
       lat: json['lat'],
       lng: json['lng'],
       banner: json['banner'],
+      placerestante: json['place_restante'],
       
       
     );
