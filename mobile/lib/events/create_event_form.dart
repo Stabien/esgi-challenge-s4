@@ -21,6 +21,9 @@ class _CreateEventFormState extends State<CreateEventForm> {
   final TextEditingController _latController = TextEditingController();
   final TextEditingController _lngController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
+  final TextEditingController _tagController = TextEditingController();
+  final TextEditingController _imageController = TextEditingController();
+  final TextEditingController _placeController = TextEditingController();
 
   void _createEvent() async {
     var dio = Dio();
@@ -36,6 +39,9 @@ class _CreateEventFormState extends State<CreateEventForm> {
         'lat': double.parse(_latController.text),
         'lng': double.parse(_lngController.text),
         'location': _locationController.text,
+        'tag': _tagController.text,
+        'image': _imageController.text,
+        'place': _placeController.text,
       });
 
       if (response.statusCode == 200) {
@@ -101,7 +107,7 @@ class _CreateEventFormState extends State<CreateEventForm> {
             TextField(
               controller: _bannerController,
               decoration: InputDecoration(
-                labelText: "Banière (URL)",
+                labelText: "Bannière (URL)",
               ),
             ),
             TextField(
@@ -126,6 +132,24 @@ class _CreateEventFormState extends State<CreateEventForm> {
               controller: _locationController,
               decoration: InputDecoration(
                 labelText: "Location",
+              ),
+            ),
+            TextField(
+              controller: _tagController,
+              decoration: InputDecoration(
+                labelText: "Tag",
+              ),
+            ),
+            TextField(
+              controller: _imageController,
+              decoration: InputDecoration(
+                labelText: "Image (URL)",
+              ),
+            ),
+            TextField(
+              controller: _placeController,
+              decoration: InputDecoration(
+                labelText: "Place",
               ),
             ),
             SizedBox(height: 20),

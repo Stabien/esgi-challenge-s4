@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/events/events_organizer.dart';
 import 'package:mobile/screens/customer_register_screen.dart';
 import 'package:mobile/screens/home_screen.dart';
 import 'package:mobile/screens/login_screen.dart';
@@ -27,7 +28,7 @@ class _LayoutState extends State<Layout> {
     ScreenEventToday(),
     ScreenEvent(),
     ScreenEventReservation(),
-
+    EventsOrganizer(),
     LogsScreen(),
   ];
 

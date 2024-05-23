@@ -24,6 +24,9 @@ class _UpdateEventFormState extends State<UpdateEventForm> {
   late TextEditingController _latController;
   late TextEditingController _lngController;
   late TextEditingController _locationController;
+  late TextEditingController _tagController;
+  late TextEditingController _imageController;
+  late TextEditingController _placeController;
 
   @override
   void initState() {
@@ -36,6 +39,9 @@ class _UpdateEventFormState extends State<UpdateEventForm> {
     _latController = TextEditingController();
     _lngController = TextEditingController();
     _locationController = TextEditingController();
+    _tagController = TextEditingController();
+    _imageController = TextEditingController();
+    _placeController = TextEditingController();
     _fetchEventDetails();
   }
 
@@ -57,6 +63,9 @@ class _UpdateEventFormState extends State<UpdateEventForm> {
           _latController.text = _event.lat.toString();
           _lngController.text = _event.lng.toString();
           _locationController.text = _event.location;
+          _tagController.text = _event.tag;
+          _imageController.text = _event.image;
+          _placeController.text = _event.place;
         });
       }
     } catch (e) {
@@ -78,6 +87,9 @@ class _UpdateEventFormState extends State<UpdateEventForm> {
         'lat': double.parse(_latController.text),
         'lng': double.parse(_lngController.text),
         'location': _locationController.text,
+        'tag': _tagController.text,
+        'image': _imageController.text,
+        'place': _placeController.text,
       });
 
       if (response.statusCode == 200) {
@@ -170,6 +182,24 @@ class _UpdateEventFormState extends State<UpdateEventForm> {
                 labelText: "Location",
               ),
             ),
+            TextField(
+              controller: _tagController,
+              decoration: const InputDecoration(
+                labelText: "Tag",
+              ),
+            ),
+            TextField(
+              controller: _imageController,
+              decoration: const InputDecoration(
+                labelText: "Image",
+              ),
+            ),
+            TextField(
+              controller: _placeController,
+              decoration: const InputDecoration(
+                labelText: "Place",
+              ),
+            ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: _updateEvent,
@@ -192,6 +222,9 @@ class Event {
   double lat;
   double lng;
   String location;
+  String tag;
+  String image;
+  String place;
 
   Event({
     required this.id,
@@ -203,20 +236,26 @@ class Event {
     required this.lat,
     required this.lng,
     required this.location,
+    required this.tag,
+    required this.image,
+    required this.place,
   });
 
   // Factory method to create Event object from JSON
   factory Event.fromJson(Map<String, dynamic> json) {
     return Event(
-      id: json['ID'],
-      title: json['Title'],
-      description: json['Description'],
-      date: json['Date'],
-      banner: json['Banner'],
-      participantNumber: json['ParticipantNumber'],
-      lat: json['Lat'],
-      lng: json['Lng'],
-      location: json['Location'],
+      id: json['id'] ?? '',
+      title: json['title'] ?? '',
+      description: json['description'] ?? '',
+      date: json['date'] ?? '',
+      banner: json['banner'] ?? '',
+      participantNumber: json['participant_number'] ?? 0,
+      lat: json['lat'] ?? 0.0,
+      lng: json['lng'] ?? 0.0,
+      location: json['location'] ?? '',
+      tag: json['tag'] ?? '',
+      image: json['image'] ?? '',
+      place: json['place'] ?? '',
     );
   }
 
@@ -232,6 +271,9 @@ class Event {
       lat: 0.0,
       lng: 0.0,
       location: '',
+      tag: '',
+      image: '',
+      place: '',
     );
   }
 }
