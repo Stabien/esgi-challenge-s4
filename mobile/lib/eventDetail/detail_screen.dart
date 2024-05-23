@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:mobile/models/event.dart';
 import 'package:mobile/models/eventDetail.dart';
 import 'package:mobile/services/api_event_services.dart';
 import 'package:mobile/services/api_reservation_services.dart';
@@ -118,20 +119,20 @@ void _updateReservationStatus() {
                           ),
                         ),
                         const SizedBox(height: 10),
-                        const Row(
+                         Row(
                           children: [
-                            Text(
+                            const Text(
                               "Par recupe l'organisateur",
                               style: TextStyle(
                                 fontSize: 12,
                                 color: Colors.grey,
                               ),
                             ),
-                            SizedBox(width: 10),
+                            const SizedBox(width: 10),
                             Expanded(
                               child: Text(
-                                  "Il reste nbplace ",
-                                  style: TextStyle(
+                                 eventDetail.placerestante.toString(),
+                                  style: const TextStyle(
                                     fontSize: 12,
                                     color: Colors.grey,
                                   ),
@@ -239,15 +240,19 @@ void _updateReservationStatus() {
                         ),
                          ElevatedButton(
                           onPressed: () {
-                            if(!_isReserv){
+                            if(!_isReserv && eventDetail.placerestante > 0){
                               ApiReservation.reserveEvent(eventDetail.id,"3e8aa051-4321-49a0-8bc1-f697585756a4");
                               _updateReservationStatus();
                               print(_textReserv);
-                              
+                              _fetchEvents();
+
+                            }else if(_isReserv && eventDetail.placerestante <= 0){
+
                             }else{
                               ApiReservation.cancelReservation(eventDetail.id,"3e8aa051-4321-49a0-8bc1-f697585756a4");
                               _updateReservationStatus();
                               print(_textReserv);
+                              _fetchEvents();
                               
                             }
                           },
