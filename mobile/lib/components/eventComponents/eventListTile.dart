@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/models/event.dart';
-import 'package:mobile/services/formatDate.dart';
-
-
+import 'package:mobile/components/qr-code-button.dart';
 
 class EventListTile extends StatelessWidget {
   final Event event;
   final String eventDate;
 
-  const EventListTile({super.key, required this.event, required this.eventDate});
+  const EventListTile(
+      {super.key, required this.event, required this.eventDate});
 
   @override
   Widget build(BuildContext context) {
@@ -26,14 +25,19 @@ class EventListTile extends StatelessWidget {
           height: 100,
           fit: BoxFit.cover,
         ),
-        title: Text(
-          event.title,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-            color: Colors.white,
+        title: Row(children: [
+          Text(
+            event.title,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+              color: Colors.white,
+            ),
           ),
-        ),
+          const SizedBox(width: 10),
+          QRButton(
+              text: event.title) // TODO: Change qr code text for reservation ID
+        ]),
         subtitle: Row(
           children: [
             Text(
@@ -60,5 +64,4 @@ class EventListTile extends StatelessWidget {
       ),
     );
   }
-
 }
