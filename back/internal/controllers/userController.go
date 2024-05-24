@@ -47,10 +47,16 @@ func CustomerRegistration(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusUnprocessableEntity, "User already exists")
 	}
 
+	hashedPassword, err := utils.HashPassword(body.Password)
+
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+
 	user, err := services.CreateUser(
 		models.User{
 			Email:    body.Email,
-			Password: body.Password,
+			Password: hashedPassword,
 		},
 	)
 
