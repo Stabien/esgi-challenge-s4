@@ -55,6 +55,7 @@ class ApiServices {
 
   static Future<List<Event>> getMyEvent(String id) async {
     try {
+      print(id);
       final response = await http.get(Uri.parse('$baseUrl/reservations/$id'));
       await Future.delayed(const Duration(seconds: 1));
       if (response.statusCode < 200 || response.statusCode >= 400) {

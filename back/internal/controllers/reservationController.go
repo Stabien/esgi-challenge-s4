@@ -82,15 +82,18 @@ func GetReservationsbyUser(c echo.Context) error {
 
 	var events []models.Event
 
-	// Join reservations table with events table and filter by customer ID
 	if err := db.DB().Joins("JOIN reservations ON events.id = reservations.event_id").
 		Where("reservations.customer_id = ? AND reservations.deleted_at IS NULL", CustomerID).
 		Find(&events).Error; err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
-	// Convert events to SimpleEvent
 	var simpleEvents []SimpleEvent
+
+	if len(events) == 0 {
+		return c.JSON(http.StatusOK, []SimpleEvent{})
+	}
+
 	for _, event := range events {
 		simpleEvents = append(simpleEvents, SimpleEvent{
 			ID:          event.ID,

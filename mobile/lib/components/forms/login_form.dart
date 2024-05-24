@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile/models/user.dart';
 import 'package:mobile/services/userServices.dart';
 import 'package:mobile/utils/secureStorage.dart';
+import 'package:mobile/utils/tradToken.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
@@ -36,6 +37,8 @@ class _LoginFormState extends State<LoginForm> {
     final Response response = await _userServices.auth(userCredentials);
 
     await SecureStorage.addStorageItem('token', response.data['token']);
+
+    await verifyAndDecodeJwt(response.data['token']);
   }
 
   @override
