@@ -524,6 +524,49 @@ const docTemplate = `{
                 }
             }
         },
+        "/reservations/isreserv/{customerId}/{eventId}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Reservation"
+                ],
+                "summary": "get reservation by user",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "customerId",
+                        "name": "customerId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "eventId",
+                        "name": "eventId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Successfully get"
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {}
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {}
+                    }
+                }
+            }
+        },
         "/reservations/{customerId}": {
             "get": {
                 "consumes": [
@@ -632,6 +675,9 @@ const docTemplate = `{
                 },
                 "participant_number": {
                     "type": "integer"
+                },
+                "place": {
+                    "type": "string"
                 },
                 "tag": {
                     "type": "string"

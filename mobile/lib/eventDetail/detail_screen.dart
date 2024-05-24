@@ -7,6 +7,8 @@ import 'package:mobile/models/event.dart';
 import 'package:mobile/models/eventDetail.dart';
 import 'package:mobile/services/api_event_services.dart';
 import 'package:mobile/services/api_reservation_services.dart';
+import 'package:mobile/utils/secureStorage.dart';
+
 
 
 class DetailScreen extends StatefulWidget {
@@ -25,10 +27,22 @@ class _DetailScreen extends State<DetailScreen> {
   Error? _error;
   bool _isReserv = false;
   String _textReserv = "";
+  String _userId = "";
+
+  Future<void> initUser() async {
+   await SecureStorage.getStorageItem('userId').then((value) {
+          print("le user id est");
+          print(value);
+          _userId = value!;
+        });
+  }
 
   @override
   void initState() {
     super.initState();
+    initUser();
+        
+
     _fetchEvents();
 
     setState(() {
@@ -42,7 +56,7 @@ void _fetchEvents() {
   ApiServices.getEventDetail(widget.id).then((data) {
     setState(() {
       _error = null;
-      _eventdetails = [data]; // Ajoutez les données dans une liste
+      _eventdetails = [data];
       _loading = false;
     });
   }).catchError((error) {
@@ -53,7 +67,7 @@ void _fetchEvents() {
   });
   
 
-  ApiReservation.isreserv(widget.id, "3e8aa051-4321-49a0-8bc1-f697585756a4").then((data){
+  ApiReservation.isreserv(widget.id, _userId).then((data){
     print(data);
     setState(() {
       if(data.isEmpty){
@@ -234,31 +248,49 @@ void _updateReservationStatus() {
                             
                           ),
                         ),
-                         ElevatedButton(
-                          onPressed: () => Navigator.of(context).pop(),
-                          child: const Text('Go back'),
-                        ),
-                         ElevatedButton(
-                          onPressed: () {
-                            if(!_isReserv && eventDetail.placerestante > 0){
-                              ApiReservation.reserveEvent(eventDetail.id,"3e8aa051-4321-49a0-8bc1-f697585756a4");
-                              _updateReservationStatus();
-                              print(_textReserv);
-                              _fetchEvents();
+                        const SizedBox(height: 100),
+                         Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                           children: [
+                             ElevatedButton(
+                               style: ElevatedButton.styleFrom(
+                                foregroundColor: Colors.black, backgroundColor: Colors.white,
+                                ),
+                              onPressed: () => Navigator.of(context).pop(),
+                              child: const Text('Retour'),
+                            ),
 
-                            }else if(_isReserv && eventDetail.placerestante <= 0){
+                            ElevatedButton(
+                               style: ElevatedButton.styleFrom(
+                                foregroundColor: Colors.black, backgroundColor: Colors.white,
+                                ),
+                              onPressed: () {
+                                if(!_isReserv && eventDetail.placerestante > 0){
+                                  ApiReservation.reserveEvent(eventDetail.id,_userId);
+                                  _updateReservationStatus();
+                                  print(_textReserv);
+                                  _fetchEvents();
 
-                            }else{
-                              ApiReservation.cancelReservation(eventDetail.id,"3e8aa051-4321-49a0-8bc1-f697585756a4");
-                              _updateReservationStatus();
-                              print(_textReserv);
-                              _fetchEvents();
-                              
-                            }
-                          },
-                          child: Text(_textReserv),
+                                }else if(_isReserv && eventDetail.placerestante <= 0){
 
-                        ),
+                                }else{
+                                  ApiReservation.cancelReservation(eventDetail.id,_userId);
+                                  _updateReservationStatus();
+                                  print(_textReserv);
+                                  _fetchEvents();
+                                  
+                                }
+                              },
+                              child: Text(
+                                _textReserv, 
+                                style: const TextStyle(color: Colors.black),
+                              ),
+
+                            ),
+
+                           ],
+                         ),
+                        
                       ],
                       
                       ),

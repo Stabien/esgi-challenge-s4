@@ -27,6 +27,8 @@ definitions:
         type: string
       participant_number:
         type: integer
+      place:
+        type: string
       tag:
         type: string
       title:
@@ -409,6 +411,35 @@ paths:
       - description: customerId
         in: path
         name: customerId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: Successfully get
+        "400":
+          description: Bad request
+          schema: {}
+        "500":
+          description: Internal server error
+          schema: {}
+      summary: get reservation by user
+      tags:
+      - Reservation
+  /reservations/isreserv/{customerId}/{eventId}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: customerId
+        in: path
+        name: customerId
+        required: true
+        type: string
+      - description: eventId
+        in: path
+        name: eventId
         required: true
         type: string
       produces:
