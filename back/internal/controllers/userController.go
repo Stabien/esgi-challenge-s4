@@ -57,6 +57,7 @@ func CustomerRegistration(c echo.Context) error {
 		models.User{
 			Email:    body.Email,
 			Password: hashedPassword,
+			Role:     "customer",
 		},
 	)
 
@@ -115,6 +116,7 @@ func OrganizerRegistration(c echo.Context) error {
 		models.User{
 			Email:    body.Email,
 			Password: hashedPassword,
+			Role:     "organizer",
 		},
 	)
 
