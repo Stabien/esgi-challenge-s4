@@ -13,13 +13,16 @@ Future<void> verifyAndDecodeJwt(String token) async {
     
     final id = jwt.payload['id'];
     final email = jwt.payload['email'];
+    final role = jwt.payload['role'];
 
     print('UserID: $id');
     await SecureStorage.addStorageItem('userId', id);
 
     print('UserEmail: $email');
     await SecureStorage.addStorageItem('userEmail', email);
-    
+
+    print("role: $role");
+    await SecureStorage.addStorageItem('userRole', role);    
 
 
 

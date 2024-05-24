@@ -23,6 +23,7 @@ type authSuccessResponse struct {
 type jwtClaims struct {
 	ID    uuid.UUID `json:"id"`
 	Email string    `json:"email"`
+	Role  string    `json:"role"`
 	jwt.StandardClaims
 }
 
@@ -55,7 +56,7 @@ func Authentication(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusNotFound, "User not found")
 	}
 
-	token, err := generateJwtToken(user.ID, user.Email, time.Now().AddDate(0, 0, 7))
+	token, err := generateJwtToken(user.ID, user.Email, user.Role, time.Now().AddDate(0, 0, 7))
 
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
@@ -64,10 +65,11 @@ func Authentication(c echo.Context) error {
 	return c.JSON(http.StatusOK, authSuccessResponse{Token: token})
 }
 
-func generateJwtToken(userID uuid.UUID, userEmail string, expirationTime time.Time) (string, error) {
+func generateJwtToken(userID uuid.UUID, userEmail string, userRole string, expirationTime time.Time) (string, error) {
 	claims := &jwtClaims{
 		ID:    userID,
 		Email: userEmail,
+		Role:  userRole,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expirationTime.Unix(),
 		},
