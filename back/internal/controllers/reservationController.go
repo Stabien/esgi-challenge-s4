@@ -91,7 +91,7 @@ func GetReservationsbyUser(c echo.Context) error {
 	var simpleEvents []SimpleEvent
 
 	if len(events) == 0 {
-		return c.JSON(http.StatusOK, simpleEvents)
+		return c.JSON(http.StatusOK, []SimpleEvent{})
 	}
 
 	for _, event := range events {

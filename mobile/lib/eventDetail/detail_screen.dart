@@ -66,7 +66,11 @@ void _fetchEvents() {
     });
   });
   
+_updateReservationStatus();
+  
+}
 
+void _updateReservationStatus() {
   ApiReservation.isreserv(widget.id, _userId).then((data){
     print(data);
     setState(() {
@@ -84,13 +88,6 @@ void _fetchEvents() {
       _loading = false;
     });
     });
-}
-
-void _updateReservationStatus() {
-  setState(() {
-    _isReserv = !_isReserv; 
-    _textReserv = _isReserv ? "Annuler" : "Reserver";
-  });
 }
     
 
@@ -268,16 +265,18 @@ void _updateReservationStatus() {
                                 if(!_isReserv && eventDetail.placerestante > 0){
                                   ApiReservation.reserveEvent(eventDetail.id,_userId);
                                   _updateReservationStatus();
+                                   _fetchEvents();
                                   print(_textReserv);
-                                  _fetchEvents();
+                                 
 
                                 }else if(_isReserv && eventDetail.placerestante <= 0){
 
                                 }else{
                                   ApiReservation.cancelReservation(eventDetail.id,_userId);
                                   _updateReservationStatus();
-                                  print(_textReserv);
                                   _fetchEvents();
+                                 print(_textReserv);
+
                                   
                                 }
                               },
