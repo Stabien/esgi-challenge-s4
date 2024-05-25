@@ -151,6 +151,31 @@ paths:
       tags:
       - Event
   /event/{id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Event ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Event deleted successfully!
+          schema:
+            type: string
+        "400":
+          description: Bad request
+          schema: {}
+        "500":
+          description: Internal server error
+          schema: {}
+      summary: Delete an event
+      tags:
+      - Event
     get:
       consumes:
       - application/json
@@ -297,6 +322,35 @@ paths:
           description: Internal server error
           schema: {}
       summary: Get events
+      tags:
+      - Event
+  /events/organizer/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Organizer ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Events found
+          schema:
+            type: object
+        "400":
+          description: Bad request
+          schema: {}
+        "404":
+          description: Events not found
+          schema: {}
+        "500":
+          description: Internal server error
+          schema: {}
+      summary: Get events by organizer
       tags:
       - Event
   /events/today:

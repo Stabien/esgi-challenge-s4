@@ -408,7 +408,16 @@ func JoinEvent(c echo.Context) error {
 	return c.String(http.StatusOK, "Successfully joined the event")
 }
 
-// func /events/organizer/$id
+// @Summary Get events by organizer
+// @Tags Event
+// @Accept json
+// @Produce json
+// @Param id path string true "Organizer ID"
+// @Success 200 {object} interface{} "Events found"
+// @Failure 400 {object} error "Bad request"
+// @Failure 404 {object} error "Events not found"
+// @Failure 500 {object} error "Internal server error"
+// @Router /events/organizer/{id} [get]
 func GetEventsByOrganizer(c echo.Context) error {
 	organizerID := c.Param("id")
 
@@ -439,6 +448,16 @@ func GetEventsByOrganizer(c echo.Context) error {
 	return c.JSON(http.StatusOK, simpleEvents)
 }
 
+
+// @Summary Delete an event
+// @Tags Event
+// @Accept json
+// @Produce json
+// @Param id path string true "Event ID"
+// @Success 200 {string} string "Event deleted successfully!"
+// @Failure 400 {object} error "Bad request"
+// @Failure 500 {object} error "Internal server error"
+// @Router /event/{id} [delete]
 func DeleteEvent(c echo.Context) error {
 	eventID := c.Param("id")
 
