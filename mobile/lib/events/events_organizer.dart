@@ -25,7 +25,7 @@ class _EventsOrganizerState extends State<EventsOrganizer> {
     setState(() {
       _loading = true;
     });
-    ApiServices.getEventsOrganizer('d55b3c7d-6c1e-4454-bebf-886dfea193c7')
+    ApiServices.getEventsOrganizer('9f3ef1e5-94e4-49c1-a9cc-9139c2a10178')
         .then((data) {
       setState(() {
         _loading = false;

@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"log"
 	"net/http"
 	"strings"
 	"time"
@@ -71,8 +70,14 @@ func CreateEvent(c echo.Context) error {
 	// Insert event into database
 	if err := db.DB().Create(&event).Error; err != nil {
 		return err
-	} else {
-		log.Println("New event: ", eventInput)
+	}
+
+	// Insert association between organizer and event
+	if err := db.DB().Table("organizer_events").Create(map[string]interface{}{
+		"organizer_user_id": "9f3ef1e5-94e4-49c1-a9cc-9139c2a10178",
+		"event_id":          event.ID,
+	}).Error; err != nil {
+		return err
 	}
 
 	// Return success message

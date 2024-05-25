@@ -27,7 +27,7 @@ func SendNotification(c echo.Context) error {
 	// Prepare message data
 	message := map[string]interface{}{
 		"message": map[string]interface{}{
-			"token": "eOVXJp-RQjmiabK7cT9Hi6:APA91bHqopkR-maI79mQzT2jpEY7Z4p4ca4cAfk369q8utwJM_CmEY5nADWkBcHCUplyCgN4XKbT6a0AE6GWgPrQgpsHAOptefbz-LPOiwCogXe0VR6hGDYJTdiza5HHF3-af5yTDvu-",
+			"token": "eKnJgd3bSq-YRPu8ljKUvo:APA91bFvhd2vgIHTbFVjx9C2LwmJbptZp9Ml680yvMvAfAxbODEj1lDj1DKU2qElsFIkuYSUPdja7EkMyxHVdQyyaXAumoUD2wArwi2_v1I1bAsskphGTrNN0J01tORJzybNZGUTEtlD",
 			"notification": map[string]interface{}{
 				"body":  "Découvrez nos nouveaux événements!",
 				"title": "Bienvenue sur notre application",
