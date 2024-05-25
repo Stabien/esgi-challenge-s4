@@ -15,6 +15,7 @@ Future<void> verifyAndDecodeJwt(String token) async {
     final email = jwt.payload['email'];
     final role = jwt.payload['role'];
 
+    print('------------------------------------------');
     print('UserID: $id');
     await SecureStorage.addStorageItem('userId', id);
 
@@ -23,9 +24,7 @@ Future<void> verifyAndDecodeJwt(String token) async {
 
     print("role: $role");
     await SecureStorage.addStorageItem('userRole', role);    
-
-
-
+    print('------------------------------------------');
   } catch (e) {
     // Gérez les erreurs de vérification
     print('Erreur de vérification du jeton: $e');

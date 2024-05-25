@@ -44,7 +44,7 @@ class _LayoutState extends State<Layout> {
     ScreenEventToday(),
     ScreenEvent(),
     ScreenEventReservation(),
-    EventsOrganizer(),
+    // EventsOrganizer(),
     // LogsScreen(),
   ];
 

@@ -1,8 +1,8 @@
-import 'package:flutter/widgets.dart';
 import 'package:mobile/services/api_event_services.dart';
 import 'package:mobile/models/event.dart';
 import 'package:mobile/services/formatDate.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile/utils/secureStorage.dart';
 
 class EventsOrganizer extends StatefulWidget {
   const EventsOrganizer({super.key});
@@ -14,6 +14,7 @@ class EventsOrganizer extends StatefulWidget {
 class _EventsOrganizerState extends State<EventsOrganizer> {
   late List<Event> _events = [];
   bool _loading = false;
+  String userId = "";
 
   @override
   void initState() {
@@ -21,12 +22,13 @@ class _EventsOrganizerState extends State<EventsOrganizer> {
     _fetchEvents();
   }
 
-  void _fetchEvents() {
+  void _fetchEvents() async {
+    String? userId = await SecureStorage.getStorageItem('userId');
     setState(() {
       _loading = true;
     });
-    ApiServices.getEventsOrganizer('9f3ef1e5-94e4-49c1-a9cc-9139c2a10178')
-        .then((data) {
+
+    ApiServices.getEventsOrganizer(userId ?? "").then((data) {
       setState(() {
         _loading = false;
         _events = data;
@@ -117,7 +119,8 @@ class _EventsOrganizerState extends State<EventsOrganizer> {
                                     ),
                                   ),
                                   Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       ElevatedButton(
                                         onPressed: () {
