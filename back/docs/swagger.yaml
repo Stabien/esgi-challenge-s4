@@ -235,34 +235,6 @@ paths:
       summary: Update an existing event
       tags:
       - Event
-  /event/{id}/code:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: Event ID
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Generated code
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-        "400":
-          description: Bad request
-          schema: {}
-        "500":
-          description: Internal server error
-          schema: {}
-      summary: Generate a random code to join an event
-      tags:
-      - Event
   /event/join/{code}:
     post:
       consumes:

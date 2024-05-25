@@ -9,6 +9,7 @@ import 'package:mobile/models/event.dart';
 import 'package:mobile/models/eventDetail.dart';
 import 'package:mobile/core/api_exception.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:mobile/utils/secureStorage.dart';
 
 class ApiServices {
   static final String baseUrl = dotenv.env['URL_BACK'].toString();
@@ -94,27 +95,38 @@ class ApiServices {
     }
   }
 
-  static Future<List<Event>> getEventsOrganizer(String id) async {
-      var dio = Dio();
-      dio.options.connectTimeout = const Duration(milliseconds: 10000);
-      String? apiUrl = '${dotenv.env['URL_BACK']}/events/organizer/$id';
-      var response = await dio.get(apiUrl);
-      List<dynamic> data = response.data;
-      // Convertissez les données en une liste d'objets Event
-      List<Event> events = data.map((json) => Event.fromJson(json)).toList();
-      return events;
+  static Future<List<Event>> getEventsOrganizer() async {
+    var dio = Dio();
+
+    String? token = await SecureStorage.getStorageItem('token');
+    dio.options.headers['Authorization'] = 'Bearer $token';
+    dio.options.connectTimeout = const Duration(milliseconds: 10000);
+
+    String? apiUrl = '${dotenv.env['URL_BACK']}/events/organizer';
+    var response = await dio.get(apiUrl);
+    List<dynamic> data = response.data;
+    // Convertissez les données en une liste d'objets Event
+    List<Event> events = data.map((json) => Event.fromJson(json)).toList();
+    return events;
   }
 
   static Future<void> deleteEvent(String id) async {
     var dio = Dio();
+
+    String? token = await SecureStorage.getStorageItem('token');
+
+    dio.options.headers['Authorization'] = 'Bearer $token';
     dio.options.connectTimeout = const Duration(milliseconds: 10000);
+
     String? apiUrl = '${dotenv.env['URL_BACK']}/event/$id';
-    var response = await dio.delete(apiUrl);
-    print(response);
-    if (response.statusCode == 200) {
-      print('----------Event deleted successfully----------');
-    } else {
-      print('----------Failed to delete event: ${response.statusCode}----------');
+    try {
+      var response = await dio.delete(apiUrl);
+      if (response.statusCode == 200) {
+        log('Event deleted successfully');
+      }
+    } on DioException catch (e) {
+      log('Error deleting event: $e');
+      throw ApiException(message: 'Error deleting event');
     }
   }
 }

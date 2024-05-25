@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:mobile/utils/secureStorage.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class CreateEventForm extends StatefulWidget {
@@ -25,8 +26,12 @@ class _CreateEventFormState extends State<CreateEventForm> {
   final TextEditingController _imageController = TextEditingController();
   final TextEditingController _placeController = TextEditingController();
 
-  void _createEvent() async {
+  void createEvent() async {
     var dio = Dio();
+
+    String? token = await SecureStorage.getStorageItem('token');
+    dio.options.headers['Authorization'] = 'Bearer $token';
+
     String? apiUrl = '${dotenv.env['URL_BACK']}/event';
 
     try {
@@ -154,7 +159,7 @@ class _CreateEventFormState extends State<CreateEventForm> {
             ),
             SizedBox(height: 20),
             ElevatedButton(
-              onPressed: _createEvent,
+              onPressed: createEvent,
               child: Text("Créer Événement"),
             ),
           ],
