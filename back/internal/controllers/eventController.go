@@ -9,7 +9,6 @@ import (
 	"easynight/internal/models"
 	"easynight/pkg/utils"
 
-	"github.com/golang-jwt/jwt"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 )
@@ -68,6 +67,13 @@ func CreateEvent(c echo.Context) error {
 		Code:              utils.GenerateRandomString(6),
 	}
 
+	claims, err := utils.GetTokenFromHeader(c)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+	}
+
+	userID := claims["id"].(string)
+
 	// Insert event into database
 	if err := db.DB().Create(&event).Error; err != nil {
 		return err
@@ -75,7 +81,7 @@ func CreateEvent(c echo.Context) error {
 
 	// Insert association between organizer and event
 	if err := db.DB().Table("organizer_events").Create(map[string]interface{}{
-		"organizer_user_id": "9f3ef1e5-94e4-49c1-a9cc-9139c2a10178",
+		"organizer_user_id": userID,
 		"event_id":          event.ID,
 	}).Error; err != nil {
 		return err
@@ -107,10 +113,27 @@ func UpdateEvent(c echo.Context) error {
 		return err
 	}
 
+	claims, err := utils.GetTokenFromHeader(c)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+	}
+
+	userID := claims["id"].(string)
+
 	// Get event from database
 	var event models.Event
 	if err := db.DB().First(&event, "id = ?", eventID).Error; err != nil {
+		return c.JSON(http.StatusNotFound, map[string]string{"error": "Event not found"})
+	}
+
+	// If the user is not the organizer of the event, return an error
+	var count int64
+	if err := db.DB().Table("organizer_events").Where("organizer_user_id = ? AND event_id = ?", userID, eventID).Count(&count).Error; err != nil {
 		return err
+	}
+
+	if count == 0 {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "You are not the organizer of this event"})
 	}
 
 	// Update event fields
@@ -408,11 +431,16 @@ func JoinEvent(c echo.Context) error {
 // @Failure 500 {object} error "Internal server error"
 // @Router /events/organizer/{id} [get]
 func GetEventsByOrganizer(c echo.Context) error {
-	organizerID := c.Param("id")
+	claims, err := utils.GetTokenFromHeader(c)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+	}
+
+	userID := claims["id"].(string)
 
 	var events []models.Event
 
-	if err := db.DB().Table("events").Joins("JOIN organizer_events ON events.id = organizer_events.event_id").Where("organizer_events.organizer_user_id = ?", organizerID).Find(&events).Error; err != nil {
+	if err := db.DB().Table("events").Joins("JOIN organizer_events ON events.id = organizer_events.event_id").Where("organizer_events.organizer_user_id = ? AND deleted_at IS NULL", userID).Find(&events).Error; err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 	}
 
@@ -437,7 +465,6 @@ func GetEventsByOrganizer(c echo.Context) error {
 	return c.JSON(http.StatusOK, simpleEvents)
 }
 
-
 // @Summary Delete an event
 // @Tags Event
 // @Accept json
@@ -449,6 +476,23 @@ func GetEventsByOrganizer(c echo.Context) error {
 // @Router /event/{id} [delete]
 func DeleteEvent(c echo.Context) error {
 	eventID := c.Param("id")
+
+	claims, err := utils.GetTokenFromHeader(c)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+	}
+
+	userID := claims["id"].(string)
+
+	// if the user is not the organizer of the event, return an error
+	var count int64
+	if err := db.DB().Table("organizer_events").Where("organizer_user_id = ? AND event_id = ?", userID, eventID).Count(&count).Error; err != nil {
+		return err
+	}
+
+	if count == 0 {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "You are not the organizer of this event"})
+	}
 
 	var event models.Event
 	if err := db.DB().First(&event, "id = ?", eventID).Error; err != nil {

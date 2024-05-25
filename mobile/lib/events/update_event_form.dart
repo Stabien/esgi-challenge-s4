@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:mobile/utils/secureStorage.dart';
 
 class UpdateEventForm extends StatefulWidget {
   final String eventId;
@@ -75,6 +76,10 @@ class _UpdateEventFormState extends State<UpdateEventForm> {
 
   void _updateEvent() async {
     var dio = Dio();
+
+    String? token = await SecureStorage.getStorageItem('token');
+    dio.options.headers['Authorization'] = 'Bearer $token';
+
     String? apiUrl = '${dotenv.env['URL_BACK']}/event/${widget.eventId}';
 
     try {
@@ -107,12 +112,32 @@ class _UpdateEventFormState extends State<UpdateEventForm> {
           ),
         );
       }
+    } on DioException catch (e) {
+      String errorMessage = '';
+      if (e.response != null && e.response?.data != null && e.response?.data['error'] != null) {
+        errorMessage += e.response!.data['error'];
+      } else {
+        errorMessage += e.message!;
+      }
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text("Erreur"),
+          content: Text("Erreur lors de la modification de l'événement : $errorMessage"),
+          actions: <Widget>[
+            TextButton(
+              child: const Text("OK"),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        ),
+      );
     } catch (e) {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
           title: const Text("Erreur"),
-          content: Text("Erreur lors de la modification de l'événement. $e"),
+          content: const Text("Erreur lors de la modification de l'événement."),
           actions: <Widget>[
             TextButton(
               child: const Text("OK"),

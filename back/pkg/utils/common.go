@@ -70,6 +70,11 @@ func GenerateRandomString(length int) string {
 
 func GetTokenFromHeader(c echo.Context) (jwt.MapClaims, error) {
 	tokenString := c.Request().Header.Get("Authorization")
+
+	if tokenString == "" {
+		return nil, echo.NewHTTPError(http.StatusBadRequest, "No token provided")
+	}
+
 	tokenString = strings.Replace(tokenString, "Bearer ", "", 1)
 
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
