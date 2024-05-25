@@ -9,6 +9,7 @@ import (
 	"easynight/internal/models"
 	"easynight/pkg/utils"
 
+	"github.com/golang-jwt/jwt"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 )
@@ -345,13 +346,30 @@ func CreateCode(c echo.Context) error {
 func JoinEvent(c echo.Context) error {
 	code := c.Param("code")
 
+	tokenString := c.Request().Header.Get("Authorization")
+	tokenString = strings.Replace(tokenString, "Bearer ", "", 1)
+
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		return []byte(utils.GetEnvVariable("JWT_SECRET")), nil
+	})
+
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid token"})
+	}
+
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok || !token.Valid {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid token"})
+	}
+
+	userID := claims["id"].(string)
+
 	var event models.Event
 	if err := db.DB().First(&event, "code = ?", code).Error; err != nil {
 		return c.JSON(http.StatusNotFound, map[string]string{"error": "Event not found"})
 	}
 
-	// TODO replace with a real user ID
-	organizerUserID := uuid.MustParse("542a0698-eb14-466f-8f9e-6257a3df22b3")
+	organizerUserID := uuid.MustParse(userID)
 	eventID := event.ID
 
 	// Define the association table struct
@@ -366,16 +384,26 @@ func JoinEvent(c echo.Context) error {
 		EventID:         eventID,
 	}
 
+	// Check if the user is already joined the event
+	var count int64
+	if err := db.DB().Table("organizer_events").Where("organizer_user_id = ? AND event_id = ?", organizerUserID, eventID).Count(&count).Error; err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to join event"})
+	}
+
+	if count > 0 {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "User already joined the event"})
+	}
+
 	// Save the association in the database
 	if err := db.DB().Table("organizer_events").Create(&organizerEvent).Error; err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to join event"})
 	}
 
 	// Clear the invitation code after successful join
-	event.Code = ""
-	if err := db.DB().Save(&event).Error; err != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to update event"})
-	}
+	// event.Code = ""
+	// if err := db.DB().Save(&event).Error; err != nil {
+	// 	return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to update event"})
+	// }
 
 	return c.String(http.StatusOK, "Successfully joined the event")
 }

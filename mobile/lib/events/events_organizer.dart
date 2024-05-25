@@ -60,6 +60,15 @@ class _EventsOrganizerState extends State<EventsOrganizer> {
                         child: const Text('Créer un événement'),
                       ),
                     ),
+                    Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pushNamed('/event/join');
+                        },
+                        child: const Text('Rejoindre un événement'),
+                      ),
+                    ),
                     Expanded(
                       child: ListView.builder(
                         itemBuilder: (context, index) {

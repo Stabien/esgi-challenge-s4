@@ -23,7 +23,9 @@ Future<void> verifyAndDecodeJwt(String token) async {
     await SecureStorage.addStorageItem('userEmail', email);
 
     print("role: $role");
-    await SecureStorage.addStorageItem('userRole', role);    
+    await SecureStorage.addStorageItem('userRole', role);
+    
+    print("jwt: $token");
     print('------------------------------------------');
   } catch (e) {
     // Gérez les erreurs de vérification
