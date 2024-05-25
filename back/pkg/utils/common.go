@@ -4,7 +4,13 @@ import (
 	"log"
 	"os"
 	"math/rand"
+	"strings"
 	"time"
+
+	"net/http"
+
+	"github.com/golang-jwt/jwt"
+	"github.com/labstack/echo/v4"
 
 	"github.com/joho/godotenv"
 	"golang.org/x/crypto/bcrypt"
@@ -60,4 +66,24 @@ func GenerateRandomString(length int) string {
 		b[i] = charset[seededRand.Intn(len(charset))]
 	}
 	return string(b)
+}
+
+func GetTokenFromHeader(c echo.Context) (jwt.MapClaims, error) {
+	tokenString := c.Request().Header.Get("Authorization")
+	tokenString = strings.Replace(tokenString, "Bearer ", "", 1)
+
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		return []byte(GetEnvVariable("JWT_SECRET")), nil
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok || !token.Valid {
+		return nil, echo.NewHTTPError(http.StatusBadRequest, "Invalid token")
+	}
+
+	return claims, nil
 }

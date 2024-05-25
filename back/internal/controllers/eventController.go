@@ -313,25 +313,25 @@ func GetAllEventsToday(c echo.Context) error {
 // @Failure 400 {object} error "Bad request"
 // @Failure 500 {object} error "Internal server error"
 // @Router /event/{id}/code [post]
-func CreateCode(c echo.Context) error {
-	eventId := c.Param("id")
+// func CreateCode(c echo.Context) error {
+// 	eventId := c.Param("id")
 
-	code := utils.GenerateRandomString(6)
+// 	code := utils.GenerateRandomString(6)
 
-	// Save in bdd the invitation code for the event
-	var event models.Event
-	if err := db.DB().First(&event, "id = ?", eventId).Error; err != nil {
-		return err
-	}
+// 	// Save in bdd the invitation code for the event
+// 	var event models.Event
+// 	if err := db.DB().First(&event, "id = ?", eventId).Error; err != nil {
+// 		return err
+// 	}
 
-	event.Code = code
+// 	event.Code = code
 
-	if err := db.DB().Save(&event).Error; err != nil {
-		return err
-	}
+// 	if err := db.DB().Save(&event).Error; err != nil {
+// 		return err
+// 	}
 
-	return c.JSON(http.StatusOK, map[string]string{"code": code})
-}
+// 	return c.JSON(http.StatusOK, map[string]string{"code": code})
+// }
 
 // @Summary Join an event using a code
 // @Tags Event
@@ -346,20 +346,9 @@ func CreateCode(c echo.Context) error {
 func JoinEvent(c echo.Context) error {
 	code := c.Param("code")
 
-	tokenString := c.Request().Header.Get("Authorization")
-	tokenString = strings.Replace(tokenString, "Bearer ", "", 1)
-
-	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-		return []byte(utils.GetEnvVariable("JWT_SECRET")), nil
-	})
-
+	claims, err := utils.GetTokenFromHeader(c)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid token"})
-	}
-
-	claims, ok := token.Claims.(jwt.MapClaims)
-	if !ok || !token.Valid {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid token"})
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
 	}
 
 	userID := claims["id"].(string)
