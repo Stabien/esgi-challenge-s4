@@ -68,6 +68,12 @@ func DeleteReservation(c echo.Context) error {
 	return c.NoContent(http.StatusNoContent)
 }
 
+type UserReservation struct {
+	Reservation models.Reservation `json:"reservation"`
+	Event SimpleEvent 
+}
+
+
 // @Summary get reservation by user
 // @Tags Reservation
 // @Accept json
@@ -80,6 +86,7 @@ func DeleteReservation(c echo.Context) error {
 func GetReservationsbyUser(c echo.Context) error {
 	CustomerID := c.Param("customerId")
 
+	
 	var events []models.Event
 
 	if err := db.DB().Joins("JOIN reservations ON events.id = reservations.event_id").
@@ -108,6 +115,20 @@ func GetReservationsbyUser(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, simpleEvents)
+
+
+	// TODO: Implement the function to get all reservations by user
+	// var userReservations []UserReservation
+
+	// err := db.Table("reservations").
+	// 	Select("reservations.*, events.id as event_id, events.name as event_name").
+	// 	Joins("JOIN events ON reservations.event_id = events.id").
+	// 	Where("reservations.customer_id = ? AND reservations.deleted_at IS NULL", CustomerID).
+	// 	Scan(&userReservations).Error
+
+	// if err != nil {
+	// 	return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	// }
 
 }
 

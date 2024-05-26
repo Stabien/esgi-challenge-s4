@@ -20,7 +20,7 @@ class EventBloc extends Bloc<EventEvent, EventState> {
         await initUser();
         print("a ce moment ");
         print(_userId);
-        final events = await ApiServices.getMyEvent(_userId);
+        final events = await ApiServices.getMyReservations(_userId);
         emit(EventDataLoadingSuccess(events: events));
       } on ApiException catch (error) {
         emit(EventDataLoadingError(errorMessage: error.message));

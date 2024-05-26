@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/components/eventComponents/eventListTile.dart';
+import 'package:mobile/components/eventComponents/reservationListTile.dart';
 import 'package:mobile/eventsReservation/blocs/event_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/services/formatDate.dart';
@@ -51,7 +51,7 @@ class ScreenEventReservation extends StatelessWidget {
                 return ListView.builder(
                   itemBuilder: (context, index) {
                     final event = state.events[index];
-                    return EventListTile(
+                    return ReservationListTile(
                         event: event, eventDate: transformerDate(event.date));
                   },
                   itemCount: state.events.length,

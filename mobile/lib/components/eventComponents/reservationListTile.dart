@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/models/event.dart';
+import 'package:mobile/components/qr-code-button.dart';
 
-class EventListTile extends StatelessWidget {
+class ReservationListTile extends StatelessWidget {
   final Event event;
   final String eventDate;
 
-  const EventListTile(
+  const ReservationListTile(
       {super.key, required this.event, required this.eventDate});
 
   @override
@@ -33,6 +34,9 @@ class EventListTile extends StatelessWidget {
               color: Colors.white,
             ),
           ),
+          const SizedBox(width: 10),
+          QRButton(
+              text: event.title) // TODO: Change qr code text for reservation ID
         ]),
         subtitle: Row(
           children: [
