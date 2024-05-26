@@ -87,6 +87,7 @@ class _OrganizerRegisterFormState extends State<OrganizerRegisterForm> {
           ),
           TextFormField(
             onChanged: _onPasswordInputChange,
+            obscureText: true,
             decoration: const InputDecoration(
               labelText: 'Mot de passe',
             ),

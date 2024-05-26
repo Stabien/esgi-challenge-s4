@@ -61,6 +61,7 @@ class _LoginFormState extends State<LoginForm> {
           ),
           TextFormField(
             onChanged: _onPasswordInputChange,
+            obscureText: true,
             decoration: const InputDecoration(
               labelText: 'Mot de passe',
             ),

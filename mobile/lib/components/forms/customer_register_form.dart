@@ -88,6 +88,7 @@ class _CustomerRegisterFormState extends State<CustomerRegisterForm> {
           ),
           TextFormField(
             onChanged: _onPasswordInputChange,
+            obscureText: true,
             decoration: InputDecoration(
               labelText: t(context)!.password,
             ),
