@@ -56,7 +56,7 @@ class _CustomerRegisterFormState extends State<CustomerRegisterForm> {
       userCredentials,
     );
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201) {
       redirectToPath(context, '/auth');
     }
   }

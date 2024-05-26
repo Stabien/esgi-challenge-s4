@@ -78,7 +78,7 @@ func CustomerRegistration(c echo.Context) error {
 		return c.String(http.StatusUnprocessableEntity, "Unprocessable entity")
 	}
 
-	return c.JSON(http.StatusOK, customer)
+	return c.JSON(http.StatusCreated, customer)
 }
 
 // @Summary	Register as organizer
@@ -137,5 +137,5 @@ func OrganizerRegistration(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
-	return c.JSON(http.StatusOK, organizer)
+	return c.JSON(http.StatusCreated, organizer)
 }

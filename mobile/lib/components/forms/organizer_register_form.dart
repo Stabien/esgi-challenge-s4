@@ -55,7 +55,7 @@ class _OrganizerRegisterFormState extends State<OrganizerRegisterForm> {
       userCredentials,
     );
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201) {
       redirectToPath(context, '/auth');
     }
   }
