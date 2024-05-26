@@ -1,5 +1,3 @@
-import 'dart:convert';
-import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:logging/logging.dart';
@@ -20,14 +18,16 @@ class ApiReservation {
 
       Response response = await dio.post(url, data: data);
     } catch (error) {
-        print('Erreur inconnue lors de la réservation de l\'événement: $error');
+      print('Erreur inconnue lors de la réservation de l\'événement: $error');
     }
   }
 
-  static Future<List<Reservation>> isreserv(String eventId, String customerID) async {
+  static Future<List<Reservation>> isreserv(
+      String eventId, String customerID) async {
     try {
       Dio dio = Dio();
-      String url = '${dotenv.env['URL_BACK']}/reservations/isreserv/$customerID/$eventId';
+      String url =
+          '${dotenv.env['URL_BACK']}/reservations/isreserv/$customerID/$eventId';
 
       Response response = await dio.get(url);
       print("Response data: ${response.data}");
@@ -40,7 +40,8 @@ class ApiReservation {
     }
   }
 
-  static Future<void> cancelReservation(String eventId, String customerID) async {
+  static Future<void> cancelReservation(
+      String eventId, String customerID) async {
     try {
       Dio dio = Dio();
       String url = '${dotenv.env['URL_BACK']}/reservations';
@@ -52,7 +53,8 @@ class ApiReservation {
 
       Response response = await dio.delete(url, data: data);
     } catch (error) {
-      print('Erreur inconnue lors de l\'annulation de la réservation de l\'événement: $error');
+      print(
+          'Erreur inconnue lors de l\'annulation de la réservation de l\'événement: $error');
     }
   }
 }

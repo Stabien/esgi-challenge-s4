@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:mobile/models/event.dart';
 import 'package:mobile/services/api_event_services.dart';
@@ -19,7 +17,6 @@ class _ScreenEventState extends State<ScreenEventToday> {
   bool _loading = false;
   dynamic _error;
 
-  
   @override
   void initState() {
     super.initState();
@@ -43,8 +40,7 @@ class _ScreenEventState extends State<ScreenEventToday> {
       });
     });
   }
-  
- 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,7 +54,8 @@ class _ScreenEventState extends State<ScreenEventToday> {
               padding: EdgeInsets.all(3.0),
               child: Column(
                 children: [
-                  Text("Aujourd'hui", style: TextStyle(fontSize: 20, color: Colors.white)),
+                  Text("Aujourd'hui",
+                      style: TextStyle(fontSize: 20, color: Colors.white)),
                 ],
               ),
             ),
@@ -82,20 +79,23 @@ class _ScreenEventState extends State<ScreenEventToday> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Image(image: NetworkImage(event.image)),
-                                  Text(event.title, 
+                                  Text(
+                                    event.title,
                                     style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16,
                                       color: Colors.white,
                                     ),
                                   ),
-                                  Text(event.place, 
+                                  Text(
+                                    event.place,
                                     style: const TextStyle(
                                       fontSize: 10,
                                       color: Colors.grey,
                                     ),
                                   ),
-                                  Text(transformerDate(event.date), 
+                                  Text(
+                                    transformerDate(event.date),
                                     style: const TextStyle(
                                       fontSize: 10,
                                       color: Colors.orange,
@@ -103,19 +103,24 @@ class _ScreenEventState extends State<ScreenEventToday> {
                                   ),
                                   const SizedBox(height: 10),
                                   Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                        decoration: BoxDecoration(
-                                          border: Border.all(color: Colors.white, width: 1), // Bordure blanche fine
-                                          borderRadius: BorderRadius.circular(8), // Bordures arrondies
-                                        ),
-                                        child: Text(
-                                          event.tag,
-                                          style: const TextStyle(
-                                            fontSize: 10,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ),                                ],
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8, vertical: 4),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: Colors.white,
+                                          width: 1), // Bordure blanche fine
+                                      borderRadius: BorderRadius.circular(
+                                          8), // Bordures arrondies
+                                    ),
+                                    child: Text(
+                                      event.tag,
+                                      style: const TextStyle(
+                                        fontSize: 10,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           );

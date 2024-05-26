@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:mobile/models/event.dart';
@@ -12,7 +10,6 @@ part 'event_event.dart';
 part 'event_state.dart';
 
 class EventBloc extends Bloc<EventEvent, EventState> {
-
   String _userId = "";
 
   EventBloc() : super(EventInitial()) {
@@ -27,17 +24,16 @@ class EventBloc extends Bloc<EventEvent, EventState> {
         emit(EventDataLoadingSuccess(events: events));
       } on ApiException catch (error) {
         emit(EventDataLoadingError(errorMessage: error.message));
-      }catch (error) {
+      } catch (error) {
         emit(EventDataLoadingError(errorMessage: "Unhandled error"));
       }
-
     });
   }
-   Future<void> initUser() async {
-        await SecureStorage.getStorageItem('userId').then((value) {
-          print("le user id est");
-          print(value);
-          _userId = value!;
-        });
+  Future<void> initUser() async {
+    await SecureStorage.getStorageItem('userId').then((value) {
+      print("le user id est");
+      print(value);
+      _userId = value!;
+    });
   }
 }

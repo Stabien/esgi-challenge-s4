@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class BottomBarOrga extends StatefulWidget {
-  const BottomBarOrga({super.key, required this.selectedIndex, this.onItemTapped});
+  const BottomBarOrga(
+      {super.key, required this.selectedIndex, this.onItemTapped});
 
   final int selectedIndex;
   final ValueChanged<int>? onItemTapped;
@@ -14,10 +15,13 @@ class _BottomBarOrgaState extends State<BottomBarOrga> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        decoration: const BoxDecoration(
+      decoration: const BoxDecoration(
         color: Colors.black,
         border: Border(
-          top: BorderSide(color: Colors.white, width: 2.0),
+          top: BorderSide(
+            color: Colors.white,
+            width: 2.0,
+          ),
         ),
       ),
       child: BottomNavigationBar(

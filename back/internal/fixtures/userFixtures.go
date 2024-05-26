@@ -18,7 +18,7 @@ func getDefaultPassword() string {
 	return password
 }
 
-var BaseAdmins = []models.User{{ID: uuid.New(), Email: "admin@test.fr", Password: getDefaultPassword()}}
+var BaseAdmins = []models.User{{ID: uuid.New(), Email: "admin@test.fr", Password: getDefaultPassword(), Role: "admin"}}
 var BaseCustomers = []models.User{
 	{ID: uuid.New(), Email: "customer@test.fr", Password: getDefaultPassword(), Role: "customer"},
 	{ID: uuid.New(), Email: "antoine.dupont@test.fr", Password: getDefaultPassword(), Role: "customer"},

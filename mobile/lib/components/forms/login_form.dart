@@ -1,9 +1,8 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/models/user.dart';
 import 'package:mobile/services/userServices.dart';
+import 'package:mobile/utils/navigation.dart';
 import 'package:mobile/utils/secureStorage.dart';
 import 'package:mobile/utils/tradToken.dart';
 
@@ -32,13 +31,19 @@ class _LoginFormState extends State<LoginForm> {
     });
   }
 
-  void _onSubmit() async {
+  void _onSubmit(BuildContext context) async {
     final userCredentials = UserCredentials(_email, _password);
     final Response response = await _userServices.auth(userCredentials);
+    print('test');
+
+    if (response.data['token'] == null) {
+      return;
+    }
 
     await SecureStorage.addStorageItem('token', response.data['token']);
-
     await verifyAndDecodeJwt(response.data['token']);
+
+    redirectToPath(context, '/');
   }
 
   @override
@@ -60,8 +65,20 @@ class _LoginFormState extends State<LoginForm> {
               labelText: 'Mot de passe',
             ),
           ),
+          const SizedBox(height: 16.0),
           TextButton(
-            onPressed: _onSubmit,
+            onPressed: () => _onSubmit(context),
+            style: TextButton.styleFrom(
+              backgroundColor: Colors.orange,
+              foregroundColor: Colors.white, // Couleur de fond du bouton
+              padding: const EdgeInsets.all(
+                8.0,
+              ), // Padding autour du texte du bouton
+              shape: RoundedRectangleBorder(
+                borderRadius:
+                    BorderRadius.circular(12.0), // Border radius du bouton
+              ),
+            ),
             child: const Text("Envoyer"),
           ),
         ],

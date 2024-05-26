@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/models/user.dart';
 import 'package:mobile/services/userServices.dart';
+import 'package:mobile/utils/navigation.dart';
 
 class OrganizerRegisterForm extends StatefulWidget {
   const OrganizerRegisterForm({super.key});
@@ -53,7 +54,10 @@ class _OrganizerRegisterFormState extends State<OrganizerRegisterForm> {
     final Response response = await _userServices.registerOrganizer(
       userCredentials,
     );
-    print(response);
+
+    if (response.statusCode == 200) {
+      redirectToPath(context, '/auth');
+    }
   }
 
   @override
@@ -89,6 +93,17 @@ class _OrganizerRegisterFormState extends State<OrganizerRegisterForm> {
           ),
           TextButton(
             onPressed: _onSubmit,
+            style: TextButton.styleFrom(
+              backgroundColor: Colors.orange,
+              foregroundColor: Colors.white, // Couleur de fond du bouton
+              padding: const EdgeInsets.all(
+                8.0,
+              ), // Padding autour du texte du bouton
+              shape: RoundedRectangleBorder(
+                borderRadius:
+                    BorderRadius.circular(12.0), // Border radius du bouton
+              ),
+            ),
             child: const Text("Envoyer"),
           ),
         ],

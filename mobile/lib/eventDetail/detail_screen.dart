@@ -1,21 +1,15 @@
-import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:mobile/models/event.dart';
 import 'package:mobile/models/eventDetail.dart';
 import 'package:mobile/services/api_event_services.dart';
 import 'package:mobile/services/api_reservation_services.dart';
 import 'package:mobile/utils/secureStorage.dart';
 
-
-
 class DetailScreen extends StatefulWidget {
   final String id;
   const DetailScreen({super.key, required this.id});
 
-    
   @override
   State<DetailScreen> createState() => _DetailScreen();
 }
@@ -30,66 +24,61 @@ class _DetailScreen extends State<DetailScreen> {
   String _userId = "";
 
   Future<void> initUser() async {
-   await SecureStorage.getStorageItem('userId').then((value) {
-          print("le user id est");
-          print(value);
-          _userId = value!;
-        });
+    await SecureStorage.getStorageItem('userId').then((value) {
+      print("le user id est");
+      print(value);
+      _userId = value!;
+    });
   }
 
   @override
   void initState() {
     super.initState();
     initUser();
-        
 
     _fetchEvents();
 
     setState(() {
       _loading = true;
     });
-
   }
 
-void _fetchEvents() {
-    
-  ApiServices.getEventDetail(widget.id).then((data) {
-    setState(() {
-      _error = null;
-      _eventdetails = [data];
-      _loading = false;
+  void _fetchEvents() {
+    ApiServices.getEventDetail(widget.id).then((data) {
+      setState(() {
+        _error = null;
+        _eventdetails = [data];
+        _loading = false;
+      });
+    }).catchError((error) {
+      setState(() {
+        _error = error;
+        _loading = false;
+      });
     });
-  }).catchError((error) {
-    setState(() {
-      _error = error;
-      _loading = false;
-    });
-  });
-  
-_updateReservationStatus();
-  
-}
 
-void _updateReservationStatus() {
-  ApiReservation.isreserv(widget.id, _userId).then((data){
-    print(data);
-    setState(() {
-      if(data.isEmpty){
-        _isReserv = false;
-        _textReserv = "Reserver";
-      }else{
-        _isReserv = true;
-        _textReserv = "Annuler";
-      }
+    _updateReservationStatus();
+  }
+
+  void _updateReservationStatus() {
+    ApiReservation.isreserv(widget.id, _userId).then((data) {
+      print(data);
+      setState(() {
+        if (data.isEmpty) {
+          _isReserv = false;
+          _textReserv = "Reserver";
+        } else {
+          _isReserv = true;
+          _textReserv = "Annuler";
+        }
+      });
+    }).catchError((error) {
+      setState(() {
+        _error = error;
+        _loading = false;
+      });
     });
-  }).catchError((error) {
-    setState(() {
-      _error = error;
-      _loading = false;
-    });
-    });
-}
-    
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -108,7 +97,7 @@ void _updateReservationStatus() {
           } else {
             return ListView.builder(
               itemBuilder: (context, index) {
-                final eventDetail  = _eventdetails[index];
+                final eventDetail = _eventdetails[index];
                 return Column(
                   children: [
                     Image.network(
@@ -122,85 +111,27 @@ void _updateReservationStatus() {
                       padding: const EdgeInsets.all(20),
                       child: Column(
                         children: [
-                        Text(
-                          eventDetail.title,
-                          style: const TextStyle(
-                            fontSize: 30,
-                            color: Colors.white,
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                         Row(
-                          children: [
-                            const Text(
-                              "Par recupe l'organisateur",
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey,
-                              ),
+                          Text(
+                            eventDetail.title,
+                            style: const TextStyle(
+                              fontSize: 30,
+                              color: Colors.white,
                             ),
-                            const SizedBox(width: 10),
-                            Expanded(
-                              child: Text(
-                                 eventDetail.placerestante.toString(),
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.grey,
-                                  ),
-                                  maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                ),
-                            )
-                          ],
-                        ),
-                        const SizedBox(height: 10),
-                        Text(eventDetail.description,
-                          style: const TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey,
                           ),
-                        ),
-                        const SizedBox(height: 10),
-                        Container(
-                          padding: const EdgeInsets.all(20),
-                          child: Row(
+                          const SizedBox(height: 10),
+                          Row(
                             children: [
-                              const Icon(
-                                Icons.date_range,
-                                color: Colors.grey,
-                              ),
-                              const SizedBox(width: 15),
-                              Text(
-                                eventDetail.date,
-                                style: const TextStyle(
+                              const Text(
+                                "Par recupe l'organisateur",
+                                style: TextStyle(
                                   fontSize: 12,
                                   color: Colors.grey,
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        Container(
-                          padding: const EdgeInsets.all(20),
-                           decoration: const BoxDecoration(
-                            border: Border(
-                              top: BorderSide(
-                                color: Colors.grey,
-                                width: 1, // Épaisseur de la bordure
-                              ),
-                            ),
-                          ),
-                          child: Row(
-                            children: [
-                              const Icon(
-                                Icons.location_on,
-                                color: Colors.grey,
-                              ),
-                              const SizedBox(width: 15),
+                              const SizedBox(width: 10),
                               Expanded(
                                 child: Text(
-                                  eventDetail.location,
+                                  eventDetail.placerestante.toString(),
                                   style: const TextStyle(
                                     fontSize: 12,
                                     color: Colors.grey,
@@ -208,96 +139,148 @@ void _updateReservationStatus() {
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                 ),
-                              ),
+                              )
                             ],
                           ),
-                        ),
-                        const SizedBox(height: 10),
-                        Container(
-                        padding: const EdgeInsets.all(20),
-                        decoration: const BoxDecoration(
-                            border: Border(
-                              top: BorderSide(
-                                color: Colors.grey,
-                                width: 1, // Épaisseur de la bordure
-                              ),
+                          const SizedBox(height: 10),
+                          Text(
+                            eventDetail.description,
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey,
                             ),
                           ),
-                          child: Row(
-                            children: [
-                              const Icon(
-                                Icons.home,
-                                color: Colors.grey,
-                              ),
-                              const SizedBox(width: 15),
-                              Expanded(
-                                child: Text(
-                                  eventDetail.place,
+                          const SizedBox(height: 10),
+                          Container(
+                            padding: const EdgeInsets.all(20),
+                            child: Row(
+                              children: [
+                                const Icon(
+                                  Icons.date_range,
+                                  color: Colors.grey,
+                                ),
+                                const SizedBox(width: 15),
+                                Text(
+                                  eventDetail.date,
                                   style: const TextStyle(
                                     fontSize: 12,
                                     color: Colors.grey,
                                   ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Container(
+                            padding: const EdgeInsets.all(20),
+                            decoration: const BoxDecoration(
+                              border: Border(
+                                top: BorderSide(
+                                  color: Colors.grey,
+                                  width: 1, // Épaisseur de la bordure
                                 ),
                               ),
-                            ],
-                            
+                            ),
+                            child: Row(
+                              children: [
+                                const Icon(
+                                  Icons.location_on,
+                                  color: Colors.grey,
+                                ),
+                                const SizedBox(width: 15),
+                                Expanded(
+                                  child: Text(
+                                    eventDetail.location,
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.grey,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 100),
-                         Row(
+                          const SizedBox(height: 10),
+                          Container(
+                            padding: const EdgeInsets.all(20),
+                            decoration: const BoxDecoration(
+                              border: Border(
+                                top: BorderSide(
+                                  color: Colors.grey,
+                                  width: 1, // Épaisseur de la bordure
+                                ),
+                              ),
+                            ),
+                            child: Row(
+                              children: [
+                                const Icon(
+                                  Icons.home,
+                                  color: Colors.grey,
+                                ),
+                                const SizedBox(width: 15),
+                                Expanded(
+                                  child: Text(
+                                    eventDetail.place,
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.grey,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 100),
+                          Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                           children: [
-                             ElevatedButton(
-                               style: ElevatedButton.styleFrom(
-                                foregroundColor: Colors.black, backgroundColor: Colors.white,
+                            children: [
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  foregroundColor: Colors.black,
+                                  backgroundColor: Colors.white,
                                 ),
-                              onPressed: () => Navigator.of(context).pop(),
-                              child: const Text('Retour'),
-                            ),
-
-                            ElevatedButton(
-                               style: ElevatedButton.styleFrom(
-                                foregroundColor: Colors.black, backgroundColor: Colors.white,
-                                ),
-                              onPressed: () {
-                                if(!_isReserv && eventDetail.placerestante > 0){
-                                  ApiReservation.reserveEvent(eventDetail.id,_userId);
-                                  _updateReservationStatus();
-                                   _fetchEvents();
-                                  print(_textReserv);
-                                 
-
-                                }else if(_isReserv && eventDetail.placerestante <= 0){
-
-                                }else{
-                                  ApiReservation.cancelReservation(eventDetail.id,_userId);
-                                  _updateReservationStatus();
-                                  _fetchEvents();
-                                 print(_textReserv);
-
-                                  
-                                }
-                              },
-                              child: Text(
-                                _textReserv, 
-                                style: const TextStyle(color: Colors.black),
+                                onPressed: () => Navigator.of(context).pop(),
+                                child: const Text('Retour'),
                               ),
-
-                            ),
-
-                           ],
-                         ),
-                        
-                      ],
-                      
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  foregroundColor: Colors.black,
+                                  backgroundColor: Colors.white,
+                                ),
+                                onPressed: () {
+                                  if (!_isReserv &&
+                                      eventDetail.placerestante > 0) {
+                                    ApiReservation.reserveEvent(
+                                        eventDetail.id, _userId);
+                                    _updateReservationStatus();
+                                    _fetchEvents();
+                                    print(_textReserv);
+                                  } else if (_isReserv &&
+                                      eventDetail.placerestante <= 0) {
+                                  } else {
+                                    ApiReservation.cancelReservation(
+                                        eventDetail.id, _userId);
+                                    _updateReservationStatus();
+                                    _fetchEvents();
+                                    print(_textReserv);
+                                  }
+                                },
+                                child: Text(
+                                  _textReserv,
+                                  style: const TextStyle(color: Colors.black),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                      
                     ),
-                  ],           
-                
-              );
+                  ],
+                );
               },
               itemCount: _eventdetails.length,
             );
