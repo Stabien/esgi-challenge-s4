@@ -69,7 +69,9 @@ func DeleteReservation(c echo.Context) error {
 }
 
 type UserReservation struct {
-	Reservation models.Reservation `json:"reservation"`
+	ID uuid.UUID `json:"id"`
+	CustomerID uuid.UUID `json:"customer_id"`
+	Qrcode     string
 	Event SimpleEvent 
 }
 
@@ -86,49 +88,38 @@ type UserReservation struct {
 func GetReservationsbyUser(c echo.Context) error {
 	CustomerID := c.Param("customerId")
 
-	
-	var events []models.Event
+	var reservations []models.Reservation
 
-	if err := db.DB().Joins("JOIN reservations ON events.id = reservations.event_id").
-		Where("reservations.customer_id = ? AND reservations.deleted_at IS NULL", CustomerID).
-		Find(&events).Error; err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	err := db.DB().Preload("Customer").Preload("Event").Where("reservations.customer_id = ? AND reservations.deleted_at IS NULL", CustomerID).Find(&reservations).Error;
+
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error());
 	}
 
-	var simpleEvents []SimpleEvent
-
-	if len(events) == 0 {
-		return c.JSON(http.StatusOK, []SimpleEvent{})
+	if len(reservations) == 0 {
+		return c.JSON(http.StatusOK, []UserReservation{})
 	}
+	var userReservations []UserReservation
 
-	for _, event := range events {
-		simpleEvents = append(simpleEvents, SimpleEvent{
-			ID:          event.ID,
-			Title:       event.Title,
-			Description: event.Description,
-			Tag:         event.Tag,
-			Banner:      event.Banner,
-			Image:       event.Image,
-			Date:        event.Date,
-			Place:       event.Place,
+	for _, reservation := range reservations {
+		var reservationEvent SimpleEvent = SimpleEvent{
+			ID:          reservation.Event.ID,
+			Title:       reservation.Event.Title,
+			Description: reservation.Event.Description,
+			Tag:         reservation.Event.Tag,
+			Banner:      reservation.Event.Banner,
+			Image:       reservation.Event.Image,
+			Date:        reservation.Event.Date,
+			Place:       reservation.Event.Place,
+		}
+		userReservations = append(userReservations, UserReservation{
+			Event: reservationEvent,
+			ID: reservation.ID,
+			CustomerID: reservation.CustomerID,
+			Qrcode: reservation.Qrcode,
 		})
 	}
-
-	return c.JSON(http.StatusOK, simpleEvents)
-
-
-	// TODO: Implement the function to get all reservations by user
-	// var userReservations []UserReservation
-
-	// err := db.Table("reservations").
-	// 	Select("reservations.*, events.id as event_id, events.name as event_name").
-	// 	Joins("JOIN events ON reservations.event_id = events.id").
-	// 	Where("reservations.customer_id = ? AND reservations.deleted_at IS NULL", CustomerID).
-	// 	Scan(&userReservations).Error
-
-	// if err != nil {
-	// 	return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
-	// }
+	return c.JSON(http.StatusOK, userReservations)
 
 }
 

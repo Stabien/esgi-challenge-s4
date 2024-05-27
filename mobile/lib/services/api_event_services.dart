@@ -9,6 +9,7 @@ import 'package:mobile/models/event.dart';
 import 'package:mobile/models/eventDetail.dart';
 import 'package:mobile/core/api_exception.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:mobile/models/reservation.dart';
 import 'package:mobile/utils/secureStorage.dart';
 
 class ApiServices {
@@ -54,9 +55,8 @@ class ApiServices {
     }
   }
 
-  static Future<List<Event>> getMyReservations(String id) async {
+  static Future<List<UserReservation>> getMyReservations(String id) async {
     try {
-      print(id);
       final response = await http.get(Uri.parse('$baseUrl/reservations/$id'));
       await Future.delayed(const Duration(seconds: 1));
       if (response.statusCode < 200 || response.statusCode >= 400) {
@@ -64,8 +64,8 @@ class ApiServices {
       }
       final data =
           json.decode(utf8.decode(response.bodyBytes)) as List<dynamic>;
-      // log(data.toString());
-      return data.mapList((e) => Event.fromJson(e));
+      log(data.toString());
+      return data.mapList((e) => UserReservation.fromJson(e));
     } on SocketException catch (error) {
       log('Network error.', error: error);
       throw ApiException(message: 'Network error');
