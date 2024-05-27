@@ -91,70 +91,114 @@ class _CreateEventFormState extends State<CreateEventForm> {
         padding: EdgeInsets.all(20.0),
         child: Column(
           children: [
-            TextField(
-              controller: _titleController,
-              decoration: InputDecoration(
-                labelText: "Titre",
+            Container(
+              margin: const EdgeInsets.only(bottom: 16.0),
+              child: TextField(
+                style: TextStyle(color: Colors.white),
+                controller: _titleController,
+                decoration: InputDecoration(
+                  labelText: "Titre",
+                ),
               ),
             ),
-            TextField(
-              controller: _descriptionController,
-              decoration: InputDecoration(
-                labelText: "Description",
+            Container(
+              margin: const EdgeInsets.only(bottom: 16.0),
+              child: TextField(
+                style: TextStyle(color: Colors.white),
+                controller: _descriptionController,
+                decoration: InputDecoration(
+                  labelText: "Description",
+                ),
               ),
             ),
-            TextField(
-              controller: _dateController,
-              decoration: InputDecoration(
-                labelText: "Date (YYYY-MM-DD)",
+            Container(
+              margin: const EdgeInsets.only(bottom: 16.0),
+              child: TextField(
+                style: TextStyle(color: Colors.white),
+                controller: _dateController,
+                decoration: InputDecoration(
+                  labelText: "Date (YYYY-MM-DD)",
+                ),
               ),
             ),
-            TextField(
-              controller: _bannerController,
-              decoration: InputDecoration(
-                labelText: "Bannière (URL)",
+            Container(
+              margin: const EdgeInsets.only(bottom: 16.0),
+              child: TextField(
+                style: TextStyle(color: Colors.white),
+                controller: _bannerController,
+                decoration: InputDecoration(
+                  labelText: "Bannière (URL)",
+                ),
               ),
             ),
-            TextField(
-              controller: _participantNumberController,
-              decoration: InputDecoration(
-                labelText: "Nombre de participants",
+            Container(
+              margin: const EdgeInsets.only(bottom: 16.0),
+              child: TextField(
+                style: TextStyle(color: Colors.white),
+                controller: _participantNumberController,
+                decoration: InputDecoration(
+                  labelText: "Nombre de participants",
+                ),
               ),
             ),
-            TextField(
-              controller: _latController,
-              decoration: InputDecoration(
-                labelText: "Latitude",
+            Container(
+              margin: const EdgeInsets.only(bottom: 16.0),
+              child: TextField(
+                style: TextStyle(color: Colors.white),
+                controller: _latController,
+                decoration: InputDecoration(
+                  labelText: "Latitude",
+                ),
               ),
             ),
-            TextField(
-              controller: _lngController,
-              decoration: InputDecoration(
-                labelText: "Longitude",
+            Container(
+              margin: const EdgeInsets.only(bottom: 16.0),
+              child: TextField(
+                style: TextStyle(color: Colors.white),
+                controller: _lngController,
+                decoration: InputDecoration(
+                  labelText: "Longitude",
+                ),
               ),
             ),
-            TextField(
-              controller: _locationController,
-              decoration: InputDecoration(
-                labelText: "Location",
+            Container(
+              margin: const EdgeInsets.only(bottom: 16.0),
+              child: TextField(
+                style: TextStyle(color: Colors.white),
+                controller: _locationController,
+                decoration: InputDecoration(
+                  labelText: "Location",
+                ),
               ),
             ),
-            TextField(
-              controller: _tagController,
-              decoration: InputDecoration(
-                labelText: "Tag",
+            Container(
+              margin: const EdgeInsets.only(bottom: 16.0),
+              child: TextField(
+                style: TextStyle(color: Colors.white),
+                controller: _tagController,
+                decoration: InputDecoration(
+                  labelText: "Tag",
+                ),
               ),
             ),
-            TextField(
-              controller: _imageController,
-              decoration: InputDecoration(
-                labelText: "Image (URL)",
+            Container(
+              margin: const EdgeInsets.only(bottom: 16.0),
+              child: TextField(
+                style: TextStyle(color: Colors.white),
+                controller: _imageController,
+                decoration: InputDecoration(
+                  labelText: "Image (URL)",
+                ),
               ),
             ),
-            TextField(
-              controller: _placeController,
-              decoration: InputDecoration(
-                labelText: "Place",
+            Container(
+              margin: const EdgeInsets.only(bottom: 16.0),
+              child: TextField(
+                style: TextStyle(color: Colors.white),
+                controller: _placeController,
+                decoration: InputDecoration(
+                  labelText: "Place",
+                ),
               ),
             ),
             SizedBox(height: 20),

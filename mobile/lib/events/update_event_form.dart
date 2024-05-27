@@ -114,7 +114,9 @@ class _UpdateEventFormState extends State<UpdateEventForm> {
       }
     } on DioException catch (e) {
       String errorMessage = '';
-      if (e.response != null && e.response?.data != null && e.response?.data['error'] != null) {
+      if (e.response != null &&
+          e.response?.data != null &&
+          e.response?.data['error'] != null) {
         errorMessage += e.response!.data['error'];
       } else {
         errorMessage += e.message!;
@@ -123,7 +125,8 @@ class _UpdateEventFormState extends State<UpdateEventForm> {
         context: context,
         builder: (context) => AlertDialog(
           title: const Text("Erreur"),
-          content: Text("Erreur lors de la modification de l'événement : $errorMessage"),
+          content: Text(
+              "Erreur lors de la modification de l'événement : $errorMessage"),
           actions: <Widget>[
             TextButton(
               child: const Text("OK"),
@@ -159,70 +162,114 @@ class _UpdateEventFormState extends State<UpdateEventForm> {
         padding: const EdgeInsets.all(20.0),
         child: Column(
           children: [
-            TextField(
-              controller: _titleController,
-              decoration: const InputDecoration(
-                labelText: "Titre",
+            Container(
+              margin: const EdgeInsets.only(bottom: 16.0),
+              child: TextField(
+                style: const TextStyle(color: Colors.white),
+                controller: _titleController,
+                decoration: const InputDecoration(
+                  labelText: "Titre",
+                ),
               ),
             ),
-            TextField(
-              controller: _descriptionController,
-              decoration: const InputDecoration(
-                labelText: "Description",
+            Container(
+              margin: const EdgeInsets.only(bottom: 16.0),
+              child: TextField(
+                style: const TextStyle(color: Colors.white),
+                controller: _descriptionController,
+                decoration: const InputDecoration(
+                  labelText: "Description",
+                ),
               ),
             ),
-            TextField(
-              controller: _dateController,
-              decoration: const InputDecoration(
-                labelText: "Date (YYYY-MM-DD)",
+            Container(
+              margin: const EdgeInsets.only(bottom: 16.0),
+              child: TextField(
+                style: const TextStyle(color: Colors.white),
+                controller: _dateController,
+                decoration: const InputDecoration(
+                  labelText: "Date (YYYY-MM-DD)",
+                ),
               ),
             ),
-            TextField(
-              controller: _bannerController,
-              decoration: const InputDecoration(
-                labelText: "Bannière (URL)",
+            Container(
+              margin: const EdgeInsets.only(bottom: 16.0),
+              child: TextField(
+                style: const TextStyle(color: Colors.white),
+                controller: _bannerController,
+                decoration: const InputDecoration(
+                  labelText: "Bannière (URL)",
+                ),
               ),
             ),
-            TextField(
-              controller: _participantNumberController,
-              decoration: const InputDecoration(
-                labelText: "Nombre de participants",
+            Container(
+              margin: const EdgeInsets.only(bottom: 16.0),
+              child: TextField(
+                style: const TextStyle(color: Colors.white),
+                controller: _participantNumberController,
+                decoration: const InputDecoration(
+                  labelText: "Nombre de participants",
+                ),
               ),
             ),
-            TextField(
-              controller: _latController,
-              decoration: const InputDecoration(
-                labelText: "Latitude",
+            Container(
+              margin: const EdgeInsets.only(bottom: 16.0),
+              child: TextField(
+                style: const TextStyle(color: Colors.white),
+                controller: _latController,
+                decoration: const InputDecoration(
+                  labelText: "Latitude",
+                ),
               ),
             ),
-            TextField(
-              controller: _lngController,
-              decoration: const InputDecoration(
-                labelText: "Longitude",
+            Container(
+              margin: const EdgeInsets.only(bottom: 16.0),
+              child: TextField(
+                style: const TextStyle(color: Colors.white),
+                controller: _lngController,
+                decoration: const InputDecoration(
+                  labelText: "Longitude",
+                ),
               ),
             ),
-            TextField(
-              controller: _locationController,
-              decoration: const InputDecoration(
-                labelText: "Location",
+            Container(
+              margin: const EdgeInsets.only(bottom: 16.0),
+              child: TextField(
+                style: const TextStyle(color: Colors.white),
+                controller: _locationController,
+                decoration: const InputDecoration(
+                  labelText: "Location",
+                ),
               ),
             ),
-            TextField(
-              controller: _tagController,
-              decoration: const InputDecoration(
-                labelText: "Tag",
+            Container(
+              margin: const EdgeInsets.only(bottom: 16.0),
+              child: TextField(
+                style: const TextStyle(color: Colors.white),
+                controller: _tagController,
+                decoration: const InputDecoration(
+                  labelText: "Tag",
+                ),
               ),
             ),
-            TextField(
-              controller: _imageController,
-              decoration: const InputDecoration(
-                labelText: "Image",
+            Container(
+              margin: const EdgeInsets.only(bottom: 16.0),
+              child: TextField(
+                style: const TextStyle(color: Colors.white),
+                controller: _imageController,
+                decoration: const InputDecoration(
+                  labelText: "Image",
+                ),
               ),
             ),
-            TextField(
-              controller: _placeController,
-              decoration: const InputDecoration(
-                labelText: "Place",
+            Container(
+              margin: const EdgeInsets.only(bottom: 16.0),
+              child: TextField(
+                style: const TextStyle(color: Colors.white),
+                controller: _placeController,
+                decoration: const InputDecoration(
+                  labelText: "Place",
+                ),
               ),
             ),
             const SizedBox(height: 20),

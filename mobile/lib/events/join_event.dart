@@ -86,6 +86,7 @@ class JoinEventState extends State<JoinEvent> {
             children: [
               TextField(
                 controller: _controller,
+                style: const TextStyle(color: Colors.white),
                 decoration: const InputDecoration(
                   labelText: "Entrer le code",
                 ),

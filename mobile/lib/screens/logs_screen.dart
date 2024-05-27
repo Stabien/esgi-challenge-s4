@@ -50,7 +50,10 @@ class _LogsScreenState extends State<LogsScreen> {
             return ListTile(
               title: Text(
                 logs[index],
-                style: const TextStyle(fontSize: 12.0),
+                style: const TextStyle(
+                  fontSize: 12.0,
+                  color: Colors.white70,
+                ),
               ),
             );
           },
