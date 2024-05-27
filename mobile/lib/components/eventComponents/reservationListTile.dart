@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/models/event.dart';
+import 'package:mobile/components/qr-code-button.dart';
+import 'package:mobile/models/reservation.dart';
+import 'package:mobile/services/formatDate.dart';
 
-class EventListTile extends StatelessWidget {
-  final Event event;
-  final String eventDate;
+class ReservationListTile extends StatelessWidget {
+  final UserReservation reservation;
 
-  const EventListTile(
-      {super.key, required this.event, required this.eventDate});
+  const ReservationListTile({super.key, required this.reservation});
 
   @override
   Widget build(BuildContext context) {
@@ -15,29 +15,33 @@ class EventListTile extends StatelessWidget {
       child: ListTile(
         onTap: () => Navigator.of(context).pushNamed(
           '/event/detail',
-          arguments: event.id,
+          arguments: reservation.event.id,
         ),
         contentPadding: const EdgeInsets.symmetric(vertical: 15.0),
         leading: Image.network(
-          event.image,
+          reservation.event.image,
           width: 100,
           height: 100,
           fit: BoxFit.cover,
         ),
         title: Row(children: [
           Text(
-            event.title,
+            reservation.event.title,
             style: const TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 16,
               color: Colors.white,
             ),
           ),
+          const SizedBox(width: 10),
+          QRButton(
+              text: reservation
+                  .event.title) // TODO: Change qr code text for reservation ID
         ]),
         subtitle: Row(
           children: [
             Text(
-              eventDate,
+              transformerDate(reservation.event.date),
               style: const TextStyle(
                 fontSize: 10,
                 color: Colors.orange,
@@ -46,7 +50,7 @@ class EventListTile extends StatelessWidget {
             const SizedBox(width: 10),
             Expanded(
               child: Text(
-                event.place,
+                reservation.customerId,
                 style: const TextStyle(
                   fontSize: 10,
                   color: Colors.grey,

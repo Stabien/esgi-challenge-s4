@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
-import 'package:mobile/models/event.dart';
+import 'package:mobile/models/reservation.dart';
 import 'package:mobile/services/api_event_services.dart';
 import 'package:mobile/core/api_exception.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,10 +18,8 @@ class EventBloc extends Bloc<EventEvent, EventState> {
 
       try {
         await initUser();
-        print("a ce moment ");
-        print(_userId);
-        final events = await ApiServices.getMyEvent(_userId);
-        emit(EventDataLoadingSuccess(events: events));
+        final reservations = await ApiServices.getMyReservations(_userId);
+        emit(EventDataLoadingSuccess(reservations: reservations));
       } on ApiException catch (error) {
         emit(EventDataLoadingError(errorMessage: error.message));
       } catch (error) {

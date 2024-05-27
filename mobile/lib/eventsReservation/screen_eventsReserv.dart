@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/components/eventComponents/eventListTile.dart';
+import 'package:mobile/components/eventComponents/reservationListTile.dart';
 import 'package:mobile/eventsReservation/blocs/event_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mobile/services/formatDate.dart';
 
 class ScreenEventReservation extends StatelessWidget {
   const ScreenEventReservation({super.key});
@@ -50,11 +49,10 @@ class ScreenEventReservation extends StatelessWidget {
               if (state is EventDataLoadingSuccess) {
                 return ListView.builder(
                   itemBuilder: (context, index) {
-                    final event = state.events[index];
-                    return EventListTile(
-                        event: event, eventDate: transformerDate(event.date));
+                    final reservations = state.reservations[index];
+                    return ReservationListTile(reservation: reservations);
                   },
-                  itemCount: state.events.length,
+                  itemCount: state.reservations.length,
                 );
               }
 
