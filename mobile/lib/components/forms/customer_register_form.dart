@@ -70,28 +70,55 @@ class _CustomerRegisterFormState extends State<CustomerRegisterForm> {
         children: [
           TextFormField(
             onChanged: _onLastnameInputChange,
+            style: TextStyle(
+              fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+            ),
             decoration: InputDecoration(
               labelText: t(context)!.lastname,
+              labelStyle: TextStyle(
+                fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+              ),
             ),
           ),
           TextFormField(
             onChanged: _onFirstnameInputChange,
+            style: TextStyle(
+              fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+            ),
             decoration: InputDecoration(
               labelText: t(context)!.firstname,
+              labelStyle: TextStyle(
+                fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+              ),
             ),
           ),
           TextFormField(
             onChanged: _onEmailInputChange,
+            style: TextStyle(
+              fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+            ),
             decoration: InputDecoration(
               labelText: t(context)!.email,
+              labelStyle: TextStyle(
+                fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+              ),
             ),
           ),
           TextFormField(
             onChanged: _onPasswordInputChange,
             obscureText: true,
+            style: TextStyle(
+              fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+            ),
             decoration: InputDecoration(
               labelText: t(context)!.password,
+              labelStyle: TextStyle(
+                fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+              ),
             ),
+          ),
+          const SizedBox(
+            height: 16,
           ),
           TextButton(
             onPressed: _onSubmit,
@@ -107,6 +134,9 @@ class _CustomerRegisterFormState extends State<CustomerRegisterForm> {
               ),
             ),
             child: Text(
+              style: TextStyle(
+                fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+              ),
               t(context)!.register,
             ),
           ),

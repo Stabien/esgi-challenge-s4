@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/models/user.dart';
 import 'package:mobile/services/userServices.dart';
+import 'package:mobile/theme_data.dart';
 import 'package:mobile/utils/navigation.dart';
 import 'package:mobile/utils/secureStorage.dart';
 import 'package:mobile/utils/tradToken.dart';
@@ -55,15 +56,27 @@ class _LoginFormState extends State<LoginForm> {
         children: [
           TextFormField(
             onChanged: _onEmailInputChange,
-            decoration: const InputDecoration(
+            style: TextStyle(
+              fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+            ),
+            decoration: InputDecoration(
               labelText: 'Email',
+              labelStyle: TextStyle(
+                fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+              ),
             ),
           ),
           TextFormField(
             onChanged: _onPasswordInputChange,
             obscureText: true,
-            decoration: const InputDecoration(
+            style: TextStyle(
+              fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+            ),
+            decoration: InputDecoration(
               labelText: 'Mot de passe',
+              labelStyle: TextStyle(
+                fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+              ),
             ),
           ),
           const SizedBox(height: 16.0),

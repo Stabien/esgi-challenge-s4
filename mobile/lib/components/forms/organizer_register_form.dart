@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile/models/user.dart';
 import 'package:mobile/services/userServices.dart';
 import 'package:mobile/utils/navigation.dart';
+import 'package:mobile/utils/translate.dart';
 
 class OrganizerRegisterForm extends StatefulWidget {
   const OrganizerRegisterForm({super.key});
@@ -69,27 +70,51 @@ class _OrganizerRegisterFormState extends State<OrganizerRegisterForm> {
         children: [
           TextFormField(
             onChanged: _onLastnameInputChange,
-            decoration: const InputDecoration(
-              labelText: 'Nom',
+            style: TextStyle(
+              fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+            ),
+            decoration: InputDecoration(
+              labelText: t(context)!.lastname,
+              labelStyle: TextStyle(
+                fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+              ),
             ),
           ),
           TextFormField(
             onChanged: _onFirstnameInputChange,
-            decoration: const InputDecoration(
-              labelText: 'Prénom',
+            style: TextStyle(
+              fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+            ),
+            decoration: InputDecoration(
+              labelText: t(context)!.firstname,
+              labelStyle: TextStyle(
+                fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+              ),
             ),
           ),
           TextFormField(
             onChanged: _onEmailInputChange,
-            decoration: const InputDecoration(
-              labelText: 'Email',
+            style: TextStyle(
+              fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+            ),
+            decoration: InputDecoration(
+              labelText: t(context)!.email,
+              labelStyle: TextStyle(
+                fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+              ),
             ),
           ),
           TextFormField(
             onChanged: _onPasswordInputChange,
             obscureText: true,
-            decoration: const InputDecoration(
-              labelText: 'Mot de passe',
+            style: TextStyle(
+              fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+            ),
+            decoration: InputDecoration(
+              labelText: t(context)!.password,
+              labelStyle: TextStyle(
+                fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+              ),
             ),
           ),
           TextButton(
@@ -105,7 +130,12 @@ class _OrganizerRegisterFormState extends State<OrganizerRegisterForm> {
                     BorderRadius.circular(12.0), // Border radius du bouton
               ),
             ),
-            child: const Text("Envoyer"),
+            child: Text(
+              "Envoyer",
+              style: TextStyle(
+                fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+              ),
+            ),
           ),
         ],
       ),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 const ColorScheme colorScheme = ColorScheme(
   primary: Color(0xFFAF06FF),
   secondary: Color(0xFFFF9900),
@@ -16,28 +15,31 @@ const ColorScheme colorScheme = ColorScheme(
 );
 
 final ThemeData easyTheme = ThemeData(
-  fontFamily: 'MonumentExtended',
-  hintColor: Colors.green,
-  canvasColor: Colors.blue,
-  scaffoldBackgroundColor: Colors.green,
-  primarySwatch: Colors.red,
-  colorScheme: colorScheme,
-    textTheme:TextTheme(
-
-      bodyLarge: TextStyle( fontSize: 25,
-          color: Colors.red,
-          fontFamily: 'MonumentExtended'),
-        bodyMedium: TextStyle(
-
-            fontSize: 25,
-            color: Colors.blue,
-            fontFamily: 'MonumentExtended'
-        ),
+    fontFamily: 'MonumentExtended',
+    hintColor: Colors.green,
+    canvasColor: Colors.blue,
+    scaffoldBackgroundColor: Colors.green,
+    primarySwatch: Colors.red,
+    colorScheme: colorScheme,
+    textTheme: const TextTheme(
+      bodySmall: TextStyle(
+        fontSize: 16,
+        color: Colors.black,
+        fontFamily: 'MonumentExtended',
+      ),
+      bodyLarge: TextStyle(
+        fontSize: 14,
+        color: Colors.red,
+        fontFamily: 'MonumentExtended',
+      ),
+      bodyMedium: TextStyle(
+        fontSize: 14,
+        color: Colors.blue,
+        fontFamily: 'MonumentExtended',
+      ),
       titleLarge: TextStyle(
         fontFamily: 'Grotesk',
-        fontSize: 25,
+        fontSize: 24,
         color: Colors.green,
       ),
-
-    )
-);
+    ));
