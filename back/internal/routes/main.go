@@ -29,6 +29,8 @@ func InitRouter(e *echo.Echo) {
 	e.POST("/auth", controllers.Authentication)
 	e.POST("/customers", controllers.CustomerRegistration)
 	e.POST("/organizers", controllers.OrganizerRegistration)
+	// e.GET("/role", controllers.GetRole)
+	e.GET("/users/custom/:id", controllers.GetUserByIdCustomer)
 
 	e.POST("/send-notification", controllers.SendNotification)
 	e.GET("/logs", controllers.GetAllLogs) // TODO: add middleware to check if user is admin
