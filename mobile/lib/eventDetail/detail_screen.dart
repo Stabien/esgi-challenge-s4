@@ -28,6 +28,7 @@ class _DetailScreen extends State<DetailScreen> {
       print("le user id est");
       print(value);
       _userId = value!;
+      _fetchEvents();
     });
   }
 
