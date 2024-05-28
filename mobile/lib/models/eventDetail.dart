@@ -12,6 +12,7 @@ class EventDetail {
   final double lat;
   final double lng;
   final int placerestante;
+  final String code;
 
   EventDetail({
     required this.id,
@@ -27,12 +28,12 @@ class EventDetail {
     required this.lng,
     required this.banner,
     required this.placerestante,
-
+    required this.code,
   });
 
   factory EventDetail.fromJson(Map<String, dynamic> json) {
     return EventDetail(
-      id : json['id'],
+      id: json['id'],
       title: json['title'],
       description: json['description'],
       tag: json['tag'],
@@ -45,8 +46,7 @@ class EventDetail {
       lng: json['lng'],
       banner: json['banner'],
       placerestante: json['place_restante'],
-      
-      
+      code: json['code'],
     );
   }
 }

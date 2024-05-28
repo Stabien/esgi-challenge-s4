@@ -5,6 +5,7 @@ import 'package:mobile/models/eventDetail.dart';
 import 'package:mobile/services/api_event_services.dart';
 import 'package:mobile/services/api_reservation_services.dart';
 import 'package:mobile/utils/secureStorage.dart';
+import 'package:flutter/services.dart';
 
 class DetailScreen extends StatefulWidget {
   final String id;
@@ -22,6 +23,7 @@ class _DetailScreen extends State<DetailScreen> {
   bool _isReserv = false;
   String _textReserv = "";
   String _userId = "";
+  String _userRole = "";
 
   Future<void> initUser() async {
     await SecureStorage.getStorageItem('userId').then((value) {
@@ -29,6 +31,10 @@ class _DetailScreen extends State<DetailScreen> {
       print(value);
       _userId = value!;
       _fetchEvents();
+    });
+
+    await SecureStorage.getStorageItem('userRole').then((value) {
+      _userRole = value!;
     });
   }
 
@@ -63,7 +69,6 @@ class _DetailScreen extends State<DetailScreen> {
 
   void _updateReservationStatus() {
     ApiReservation.isreserv(widget.id, _userId).then((data) {
-      print(data);
       setState(() {
         if (data.isEmpty) {
           _isReserv = false;
@@ -247,34 +252,46 @@ class _DetailScreen extends State<DetailScreen> {
                                 onPressed: () => Navigator.of(context).pop(),
                                 child: const Text('Retour'),
                               ),
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  foregroundColor: Colors.black,
-                                  backgroundColor: Colors.white,
-                                ),
-                                onPressed: () {
-                                  if (!_isReserv &&
-                                      eventDetail.placerestante > 0) {
-                                    ApiReservation.reserveEvent(
-                                        eventDetail.id, _userId);
-                                    _updateReservationStatus();
-                                    _fetchEvents();
-                                    print(_textReserv);
-                                  } else if (_isReserv &&
-                                      eventDetail.placerestante <= 0) {
-                                  } else {
-                                    ApiReservation.cancelReservation(
-                                        eventDetail.id, _userId);
-                                    _updateReservationStatus();
-                                    _fetchEvents();
-                                    print(_textReserv);
-                                  }
-                                },
-                                child: Text(
-                                  _textReserv,
-                                  style: const TextStyle(color: Colors.black),
-                                ),
-                              ),
+                              _userRole == 'organizer'
+                                  ? ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        foregroundColor: Colors.black,
+                                        backgroundColor: Colors.white,
+                                      ),
+                                      onPressed: () async {
+                                        await Clipboard.setData(
+                                          ClipboardData(text: eventDetail.code),
+                                        );
+                                      },
+                                      child: const Text('Copier le code'),
+                                    )
+                                  : ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        foregroundColor: Colors.black,
+                                        backgroundColor: Colors.white,
+                                      ),
+                                      onPressed: () {
+                                        if (!_isReserv &&
+                                            eventDetail.placerestante > 0) {
+                                          ApiReservation.reserveEvent(
+                                              eventDetail.id, _userId);
+                                          _updateReservationStatus();
+                                          _fetchEvents();
+                                        } else if (_isReserv &&
+                                            eventDetail.placerestante <= 0) {
+                                        } else {
+                                          ApiReservation.cancelReservation(
+                                              eventDetail.id, _userId);
+                                          _updateReservationStatus();
+                                          _fetchEvents();
+                                        }
+                                      },
+                                      child: Text(
+                                        _textReserv,
+                                        style: const TextStyle(
+                                            color: Colors.black),
+                                      ),
+                                    ),
                             ],
                           ),
                         ],

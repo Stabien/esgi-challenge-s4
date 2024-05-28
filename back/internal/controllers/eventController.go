@@ -169,6 +169,7 @@ type EventDetails struct {
 	Location          string    `json:"location"`
 	ParticipantNumber *int      `json:"participant_number"`
 	PlaceRestante     int       `json:"place_restante"`
+	Code              string    `json:"code"`
 }
 
 // @Summary Get an event by ID
@@ -210,6 +211,7 @@ func GetEvent(c echo.Context) error {
 		Location:          event.Location,
 		ParticipantNumber: event.ParticipantNumber,
 		PlaceRestante:     *event.ParticipantNumber - int(count),
+		Code:              event.Code,
 	}
 
 	return c.JSON(http.StatusOK, eventDetails)
