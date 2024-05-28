@@ -9,6 +9,31 @@ definitions:
     required:
     - email
     type: object
+  controllers.EventInput:
+    properties:
+      banner:
+        type: string
+      date:
+        type: string
+      description:
+        type: string
+      image:
+        type: string
+      lat:
+        type: number
+      lng:
+        type: number
+      location:
+        type: string
+      participant_number:
+        type: integer
+      place:
+        type: string
+      tag:
+        type: string
+      title:
+        type: string
+    type: object
   controllers.RegistrationPayload:
     properties:
       email:
@@ -28,6 +53,8 @@ definitions:
     properties:
       token:
         type: string
+    type: object
+  models.Reservation:
     type: object
 host: localhost:3000
 info:
@@ -96,6 +123,231 @@ paths:
       summary: Register as customer
       tags:
       - Users
+  /event:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Event input
+        in: body
+        name: event
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.EventInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Event created successfully!
+          schema:
+            type: string
+        "400":
+          description: Bad request
+          schema: {}
+        "500":
+          description: Internal server error
+          schema: {}
+      summary: Create a new event
+      tags:
+      - Event
+  /event/{id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Event ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Event deleted successfully!
+          schema:
+            type: string
+        "400":
+          description: Bad request
+          schema: {}
+        "500":
+          description: Internal server error
+          schema: {}
+      summary: Delete an event
+      tags:
+      - Event
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Event ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Event found
+          schema:
+            type: object
+        "400":
+          description: Bad request
+          schema: {}
+        "404":
+          description: Event not found
+          schema: {}
+        "500":
+          description: Internal server error
+          schema: {}
+      summary: Get an event by ID
+      tags:
+      - Event
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Event ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Event input
+        in: body
+        name: event
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.EventInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Event updated successfully!
+          schema:
+            type: string
+        "400":
+          description: Bad request
+          schema: {}
+        "500":
+          description: Internal server error
+          schema: {}
+      summary: Update an existing event
+      tags:
+      - Event
+  /event/join/{code}:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Invitation code
+        in: path
+        name: code
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully joined the event
+          schema:
+            type: string
+        "400":
+          description: Bad request
+          schema: {}
+        "404":
+          description: Event not found
+          schema: {}
+        "500":
+          description: Internal server error
+          schema: {}
+      summary: Join an event using a code
+      tags:
+      - Event
+  /events:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Event name
+        in: query
+        name: name
+        type: string
+      - description: Event tag
+        in: query
+        name: tag
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Event found
+          schema:
+            type: object
+        "400":
+          description: Bad request
+          schema: {}
+        "404":
+          description: Event not found
+          schema: {}
+        "500":
+          description: Internal server error
+          schema: {}
+      summary: Get events
+      tags:
+      - Event
+  /events/organizer/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Organizer ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Events found
+          schema:
+            type: object
+        "400":
+          description: Bad request
+          schema: {}
+        "404":
+          description: Events not found
+          schema: {}
+        "500":
+          description: Internal server error
+          schema: {}
+      summary: Get events by organizer
+      tags:
+      - Event
+  /events/today:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Event found
+          schema:
+            type: object
+        "400":
+          description: Bad request
+          schema: {}
+        "404":
+          description: Event not found
+          schema: {}
+        "500":
+          description: Internal server error
+          schema: {}
+      summary: Get events today
+      tags:
+      - Event
   /organizers:
     post:
       consumes:
@@ -126,4 +378,128 @@ paths:
       summary: Register as organizer
       tags:
       - Users
+  /reservations:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Reservation request object
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.Reservation'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: Successfully deleted
+        "400":
+          description: Bad request
+          schema: {}
+        "500":
+          description: Internal server error
+          schema: {}
+      summary: delete reservation
+      tags:
+      - Reservation
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Reservation object
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.Reservation'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Successfully created
+          schema:
+            $ref: '#/definitions/models.Reservation'
+        "400":
+          description: Bad request
+          schema: {}
+        "500":
+          description: Internal server error
+          schema: {}
+      summary: add reservation
+      tags:
+      - Reservation
+  /reservations/{customerId}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: customerId
+        in: path
+        name: customerId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: Successfully get
+        "400":
+          description: Bad request
+          schema: {}
+        "500":
+          description: Internal server error
+          schema: {}
+      summary: get reservation by user
+      tags:
+      - Reservation
+  /reservations/isreserv/{customerId}/{eventId}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: customerId
+        in: path
+        name: customerId
+        required: true
+        type: string
+      - description: eventId
+        in: path
+        name: eventId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: Successfully get
+        "400":
+          description: Bad request
+          schema: {}
+        "500":
+          description: Internal server error
+          schema: {}
+      summary: get reservation by user
+      tags:
+      - Reservation
+  /send-notification:
+    post:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Notification sent successfully
+          schema:
+            type: string
+        "400":
+          description: Bad request
+          schema: {}
+        "500":
+          description: Internal server error
+          schema: {}
+      summary: Send a notification using Firebase Cloud Messaging
+      tags:
+      - Notification
 swagger: "2.0"

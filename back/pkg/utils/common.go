@@ -3,6 +3,14 @@ package utils
 import (
 	"log"
 	"os"
+	"math/rand"
+	"strings"
+	"time"
+
+	"net/http"
+
+	"github.com/golang-jwt/jwt"
+	"github.com/labstack/echo/v4"
 
 	"github.com/joho/godotenv"
 	"golang.org/x/crypto/bcrypt"
@@ -48,4 +56,39 @@ func HashPassword(password string) (string, error) {
 func IsPasswordMatchingHash(password, hash string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 	return err == nil
+}
+
+func GenerateRandomString(length int) string {
+	charset := "ABCDEFGHIJKLMNPQRSTUVWXYZ123456789"
+	seededRand := rand.New(rand.NewSource(time.Now().UnixNano()))
+	b := make([]byte, length)
+	for i := range b {
+		b[i] = charset[seededRand.Intn(len(charset))]
+	}
+	return string(b)
+}
+
+func GetTokenFromHeader(c echo.Context) (jwt.MapClaims, error) {
+	tokenString := c.Request().Header.Get("Authorization")
+
+	if tokenString == "" {
+		return nil, echo.NewHTTPError(http.StatusBadRequest, "No token provided")
+	}
+
+	tokenString = strings.Replace(tokenString, "Bearer ", "", 1)
+
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		return []byte(GetEnvVariable("JWT_SECRET")), nil
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok || !token.Valid {
+		return nil, echo.NewHTTPError(http.StatusBadRequest, "Invalid token")
+	}
+
+	return claims, nil
 }

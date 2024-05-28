@@ -25,4 +25,6 @@ type Event struct {
 	Location          string
 	Place             string
 	Tag               string
+	Code              string
+	DeletedAt         *time.Time `gorm:"index"`
 }

@@ -47,10 +47,17 @@ func CustomerRegistration(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusUnprocessableEntity, "User already exists")
 	}
 
+	hashedPassword, err := utils.HashPassword(body.Password)
+
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+
 	user, err := services.CreateUser(
 		models.User{
 			Email:    body.Email,
-			Password: body.Password,
+			Password: hashedPassword,
+			Role:     "customer",
 		},
 	)
 
@@ -71,7 +78,7 @@ func CustomerRegistration(c echo.Context) error {
 		return c.String(http.StatusUnprocessableEntity, "Unprocessable entity")
 	}
 
-	return c.JSON(http.StatusOK, customer)
+	return c.JSON(http.StatusCreated, customer)
 }
 
 // @Summary	Register as organizer
@@ -109,6 +116,7 @@ func OrganizerRegistration(c echo.Context) error {
 		models.User{
 			Email:    body.Email,
 			Password: hashedPassword,
+			Role:     "organizer",
 		},
 	)
 
@@ -129,5 +137,5 @@ func OrganizerRegistration(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
-	return c.JSON(http.StatusOK, organizer)
+	return c.JSON(http.StatusCreated, organizer)
 }

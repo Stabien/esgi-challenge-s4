@@ -2,6 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/models/user.dart';
 import 'package:mobile/services/userServices.dart';
+import 'package:mobile/utils/navigation.dart';
+import 'package:mobile/utils/translate.dart';
 
 class CustomerRegisterForm extends StatefulWidget {
   const CustomerRegisterForm({super.key});
@@ -53,7 +55,10 @@ class _CustomerRegisterFormState extends State<CustomerRegisterForm> {
     final Response response = await _userServices.registerCustomer(
       userCredentials,
     );
-    print(response);
+
+    if (response.statusCode == 201) {
+      redirectToPath(context, '/auth');
+    }
   }
 
   @override
@@ -65,31 +70,75 @@ class _CustomerRegisterFormState extends State<CustomerRegisterForm> {
         children: [
           TextFormField(
             onChanged: _onLastnameInputChange,
-            decoration: const InputDecoration(
-              labelText: 'Nom',
+            style: TextStyle(
+              fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+            ),
+            decoration: InputDecoration(
+              labelText: t(context)!.lastname,
+              labelStyle: TextStyle(
+                fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+              ),
             ),
           ),
           TextFormField(
             onChanged: _onFirstnameInputChange,
-            decoration: const InputDecoration(
-              labelText: 'Prénom',
+            style: TextStyle(
+              fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+            ),
+            decoration: InputDecoration(
+              labelText: t(context)!.firstname,
+              labelStyle: TextStyle(
+                fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+              ),
             ),
           ),
           TextFormField(
             onChanged: _onEmailInputChange,
-            decoration: const InputDecoration(
-              labelText: 'Email',
+            style: TextStyle(
+              fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+            ),
+            decoration: InputDecoration(
+              labelText: t(context)!.email,
+              labelStyle: TextStyle(
+                fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+              ),
             ),
           ),
           TextFormField(
             onChanged: _onPasswordInputChange,
-            decoration: const InputDecoration(
-              labelText: 'Mot de passe',
+            obscureText: true,
+            style: TextStyle(
+              fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
             ),
+            decoration: InputDecoration(
+              labelText: t(context)!.password,
+              labelStyle: TextStyle(
+                fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 16,
           ),
           TextButton(
             onPressed: _onSubmit,
-            child: const Text("Envoyer"),
+            style: TextButton.styleFrom(
+              backgroundColor: Colors.orange,
+              foregroundColor: Colors.white, // Couleur de fond du bouton
+              padding: const EdgeInsets.all(
+                8.0,
+              ), // Padding autour du texte du bouton
+              shape: RoundedRectangleBorder(
+                borderRadius:
+                    BorderRadius.circular(12.0), // Border radius du bouton
+              ),
+            ),
+            child: Text(
+              style: TextStyle(
+                fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+              ),
+              t(context)!.register,
+            ),
           ),
         ],
       ),
