@@ -9,10 +9,10 @@ import 'package:mobile/utils/secureStorage.dart';
 part 'reservation_event.dart';
 part 'reservation_state.dart';
 
-class EventBloc extends Bloc<ReservationEvent, ReservationState> {
+class ReservationBloc extends Bloc<ReservationEvent, ReservationState> {
   String _userId = "";
 
-  EventBloc() : super(ReservationInitial()) {
+  ReservationBloc() : super(ReservationInitial()) {
     on<ReservationEvent>((event, emit) async {
       emit(ReservationLoading());
 
