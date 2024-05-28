@@ -8,7 +8,6 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       body: Center(
         child: FractionallySizedBox(
           widthFactor: 0.8,
@@ -18,8 +17,11 @@ class LoginScreen extends StatelessWidget {
               const LoginForm(),
               TextButton(
                 onPressed: () => redirectToPath(context, '/register/customer'),
-                child: const Text(
+                child: Text(
                   "S'inscrire",
+                  style: TextStyle(
+                    color: Theme.of(context).textTheme.titleMedium!.color,
+                  ),
                 ),
               ),
             ],

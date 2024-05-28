@@ -71,50 +71,41 @@ class _CustomerRegisterFormState extends State<CustomerRegisterForm> {
           TextFormField(
             onChanged: _onLastnameInputChange,
             style: TextStyle(
-              fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+              color: Theme.of(context).textTheme.titleMedium!.color,
             ),
             decoration: InputDecoration(
               labelText: t(context)!.lastname,
-              labelStyle: TextStyle(
-                fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
-              ),
             ),
           ),
+          const SizedBox(height: 16.0),
           TextFormField(
             onChanged: _onFirstnameInputChange,
             style: TextStyle(
-              fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+              color: Theme.of(context).textTheme.titleMedium!.color,
             ),
             decoration: InputDecoration(
               labelText: t(context)!.firstname,
-              labelStyle: TextStyle(
-                fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
-              ),
             ),
           ),
+          const SizedBox(height: 16.0),
           TextFormField(
             onChanged: _onEmailInputChange,
             style: TextStyle(
-              fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+              color: Theme.of(context).textTheme.titleMedium!.color,
             ),
             decoration: InputDecoration(
               labelText: t(context)!.email,
-              labelStyle: TextStyle(
-                fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
-              ),
             ),
           ),
+          const SizedBox(height: 16.0),
           TextFormField(
             onChanged: _onPasswordInputChange,
             obscureText: true,
             style: TextStyle(
-              fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+              color: Theme.of(context).textTheme.titleMedium!.color,
             ),
             decoration: InputDecoration(
               labelText: t(context)!.password,
-              labelStyle: TextStyle(
-                fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
-              ),
             ),
           ),
           const SizedBox(
@@ -129,13 +120,14 @@ class _CustomerRegisterFormState extends State<CustomerRegisterForm> {
                 8.0,
               ), // Padding autour du texte du bouton
               shape: RoundedRectangleBorder(
-                borderRadius:
-                    BorderRadius.circular(12.0), // Border radius du bouton
+                borderRadius: BorderRadius.circular(
+                  12.0,
+                ), // Border radius du bouton
               ),
             ),
             child: Text(
               style: TextStyle(
-                fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+                color: Theme.of(context).textTheme.titleMedium!.color,
               ),
               t(context)!.register,
             ),
