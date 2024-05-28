@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/components/eventComponents/reservationListTile.dart';
-import 'package:mobile/eventsReservation/blocs/event_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mobile/eventsReservation/blocs/reservation_bloc.dart';
 
 class ScreenEventReservation extends StatelessWidget {
   const ScreenEventReservation({super.key});
@@ -9,7 +9,7 @@ class ScreenEventReservation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => EventBloc()..add(EventDataLoaded()),
+      create: (context) => ReservationBloc()..add(ReservationDataLoaded()),
       child: SafeArea(
         child: Scaffold(
           backgroundColor: Colors.black,
@@ -31,14 +31,14 @@ class ScreenEventReservation extends StatelessWidget {
               ),
             ),
           ),
-          body: BlocBuilder<EventBloc, EventState>(
+          body: BlocBuilder<ReservationBloc, ReservationState>(
             builder: (context, state) {
-              if (state is EventLoading) {
+              if (state is ReservationLoading) {
                 return const Center(
                   child: CircularProgressIndicator(),
                 );
               }
-              if (state is EventDataLoadingError) {
+              if (state is ReservationDataLoadingError) {
                 return Center(
                   child: Text(
                     state.errorMessage,
@@ -46,7 +46,7 @@ class ScreenEventReservation extends StatelessWidget {
                   ),
                 );
               }
-              if (state is EventDataLoadingSuccess) {
+              if (state is ReservationDataLoadingSuccess) {
                 return ListView.builder(
                   itemBuilder: (context, index) {
                     final reservations = state.reservations[index];
