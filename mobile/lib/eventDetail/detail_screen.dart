@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:mobile/models/eventDetail.dart';
 import 'package:mobile/services/api_event_services.dart';
 import 'package:mobile/services/api_reservation_services.dart';
@@ -27,8 +25,6 @@ class _DetailScreen extends State<DetailScreen> {
 
   Future<void> initUser() async {
     await SecureStorage.getStorageItem('userId').then((value) {
-      print("le user id est");
-      print(value);
       _userId = value!;
       _fetchEvents();
     });
@@ -90,6 +86,9 @@ class _DetailScreen extends State<DetailScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Détail de l\'événement'),
+        ),
         backgroundColor: Colors.black,
         body: Builder(builder: (context) {
           if (_error != null) {
@@ -245,12 +244,14 @@ class _DetailScreen extends State<DetailScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  foregroundColor: Colors.black,
-                                  backgroundColor: Colors.white,
-                                ),
-                                onPressed: () => Navigator.of(context).pop(),
-                                child: const Text('Retour'),
+                                onPressed: () {
+                                  Navigator.of(context)
+                                      .pushNamed('/event/map', arguments: [
+                                    eventDetail.lat,
+                                    eventDetail.lng,
+                                  ]);
+                                },
+                                child: const Text('Voir la map'),
                               ),
                               _userRole == 'organizer'
                                   ? ElevatedButton(
