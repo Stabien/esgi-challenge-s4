@@ -1,31 +1,29 @@
-import 'dart:html';
-
 import 'package:bloc/bloc.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
+import 'package:mobile/models/reservation.dart';
 import 'package:mobile/services/api_event_services.dart';
 import 'package:mobile/core/api_exception.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/utils/secureStorage.dart';
 
-part 'event_event.dart';
-part 'event_state.dart';
+part 'reservation_event.dart';
+part 'reservation_state.dart';
 
-class EventBloc extends Bloc<EventEvent, EventState> {
+class EventBloc extends Bloc<ReservationEvent, ReservationState> {
   String _userId = "";
 
-  EventBloc() : super(EventInitial()) {
-    on<EventEvent>((event, emit) async {
-      emit(EventLoading());
+  EventBloc() : super(ReservationInitial()) {
+    on<ReservationEvent>((event, emit) async {
+      emit(ReservationLoading());
 
       try {
         await initUser();
         final reservations = await ApiServices.getMyReservations(_userId);
-
-        emit(EventDataLoadingSuccess(events: reservations));
+        emit(ReservationDataLoadingSuccess(reservations: reservations));
       } on ApiException catch (error) {
-        emit(EventDataLoadingError(errorMessage: error.message));
+        emit(ReservationDataLoadingError(errorMessage: error.message));
       } catch (error) {
-        emit(EventDataLoadingError(errorMessage: "Unhandled error"));
+        emit(ReservationDataLoadingError(errorMessage: "Unhandled error"));
       }
     });
   }
