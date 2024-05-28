@@ -21,6 +21,7 @@ func InitRouter(e *echo.Echo) {
 	e.GET("/events/organizer", controllers.GetEventsByOrganizer)
 
 	e.GET("/reservations/isreserv/:customerId/:eventId", controllers.IsReserv)
+	e.GET("/reservations/isValid/:reservationId", controllers.IsValid)
 
 	e.POST("/reservations", controllers.PostReservation)
 	e.DELETE("/reservations", controllers.DeleteReservation)

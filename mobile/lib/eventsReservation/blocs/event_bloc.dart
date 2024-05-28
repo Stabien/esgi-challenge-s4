@@ -2,6 +2,7 @@ import 'dart:html';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
+import 'package:mobile/models/reservation.dart';
 import 'package:mobile/services/api_event_services.dart';
 import 'package:mobile/core/api_exception.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
