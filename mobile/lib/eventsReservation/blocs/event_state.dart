@@ -8,9 +8,9 @@ final class EventInitial extends EventState {}
 final class EventLoading extends EventState {}
 
 final class EventDataLoadingSuccess extends EventState {
-  final List<UserReservation> reservations;
+  final List<Event> events;
 
-  EventDataLoadingSuccess({required this.reservations});
+  EventDataLoadingSuccess({required this.events});
 }
 
 final class EventDataLoadingError extends EventState {
