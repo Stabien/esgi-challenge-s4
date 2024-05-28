@@ -71,52 +71,44 @@ class _OrganizerRegisterFormState extends State<OrganizerRegisterForm> {
           TextFormField(
             onChanged: _onLastnameInputChange,
             style: TextStyle(
-              fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+              color: Theme.of(context).textTheme.titleMedium!.color,
             ),
             decoration: InputDecoration(
               labelText: t(context)!.lastname,
-              labelStyle: TextStyle(
-                fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
-              ),
             ),
           ),
+          const SizedBox(height: 16.0),
           TextFormField(
             onChanged: _onFirstnameInputChange,
             style: TextStyle(
-              fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+              color: Theme.of(context).textTheme.titleMedium!.color,
             ),
             decoration: InputDecoration(
               labelText: t(context)!.firstname,
-              labelStyle: TextStyle(
-                fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
-              ),
             ),
           ),
+          const SizedBox(height: 16.0),
           TextFormField(
             onChanged: _onEmailInputChange,
             style: TextStyle(
-              fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+              color: Theme.of(context).textTheme.titleMedium!.color,
             ),
             decoration: InputDecoration(
               labelText: t(context)!.email,
-              labelStyle: TextStyle(
-                fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
-              ),
             ),
           ),
+          const SizedBox(height: 16.0),
           TextFormField(
             onChanged: _onPasswordInputChange,
             obscureText: true,
             style: TextStyle(
-              fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+              color: Theme.of(context).textTheme.titleMedium!.color,
             ),
             decoration: InputDecoration(
               labelText: t(context)!.password,
-              labelStyle: TextStyle(
-                fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
-              ),
             ),
           ),
+          const SizedBox(height: 16.0),
           TextButton(
             onPressed: _onSubmit,
             style: TextButton.styleFrom(
@@ -133,7 +125,7 @@ class _OrganizerRegisterFormState extends State<OrganizerRegisterForm> {
             child: Text(
               "Envoyer",
               style: TextStyle(
-                fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+                color: Theme.of(context).textTheme.titleMedium!.color,
               ),
             ),
           ),

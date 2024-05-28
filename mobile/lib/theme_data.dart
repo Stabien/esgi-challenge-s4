@@ -49,6 +49,7 @@ final ThemeData easyTheme = ThemeData(
       ),
     ),
     inputDecorationTheme: const InputDecorationTheme(
+      focusColor: Colors.white,
       labelStyle: TextStyle(color: Colors.white),
       hintStyle: TextStyle(color: Colors.white),
       enabledBorder: OutlineInputBorder(
@@ -59,19 +60,9 @@ final ThemeData easyTheme = ThemeData(
       ),
     ),
     textTheme: const TextTheme(
-      bodySmall: TextStyle(
+      titleMedium: TextStyle(
         fontSize: 16,
-        color: Colors.black87,
-        fontFamily: 'MonumentExtended',
-      ),
-      bodyLarge: TextStyle(
-        fontSize: 14,
-        color: Colors.black87,
-        fontFamily: 'MonumentExtended',
-      ),
-      bodyMedium: TextStyle(
-        fontSize: 14,
-        color: Colors.black87,
+        color: Colors.white,
         fontFamily: 'MonumentExtended',
       ),
       titleLarge: TextStyle(

@@ -8,7 +8,6 @@ class OrganizerRegisterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -19,14 +18,20 @@ class OrganizerRegisterScreen extends StatelessWidget {
             ),
             TextButton(
               onPressed: () => redirectToPath(context, '/auth'),
-              child: const Text(
+              child: Text(
                 'Déjà inscrit ? Connectez-vous !',
+                style: TextStyle(
+                  color: Theme.of(context).textTheme.titleMedium!.color,
+                ),
               ),
             ),
             TextButton(
               onPressed: () => redirectToPath(context, '/register/customer'),
-              child: const Text(
+              child: Text(
                 "S'inscrire en tant qu'utilisateur",
+                style: TextStyle(
+                  color: Theme.of(context).textTheme.titleMedium!.color,
+                ),
               ),
             ),
           ],
