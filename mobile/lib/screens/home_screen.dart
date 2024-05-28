@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/components/disconnect-button.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -37,11 +38,7 @@ class HomeScreen extends StatelessWidget {
           children: [
             Directionality(
               textDirection: TextDirection.ltr,
-              child: QrImageView(
-                data: "ca marche",
-                version: QrVersions.auto,
-                size: 200.0,
-              ),
+              child: DisconnectButton(),
               // Text(
               //   "EASY NIGHT",
               //   style: TextStyle(
