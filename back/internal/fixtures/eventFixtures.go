@@ -5,6 +5,8 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+
+	"easynight/pkg/utils"
 )
 
 var participantNumber = 30
@@ -25,6 +27,7 @@ var Events = []models.Event{
 		Place:             "Café Oz The Australian Bar Denfert",
 		Tag:               "Disco",
 		Organizers:        []models.Organizer{Organizers[0], Organizers[1], Organizers[2]},
+		Code:              utils.GenerateRandomString(6),
 	},
 	{
 		ID:                uuid.New(),
@@ -33,13 +36,14 @@ var Events = []models.Event{
 		Banner:            "https://www.parisjazzclub.net/medias/photos_lieux/687-caveau-de-la-huchette-1/images/caveau-de-la-huchette-1-lg.jpg?20190308085451",
 		Image:             "https://www.parisjazzclub.net/medias/photos_lieux/687-caveau-de-la-huchette-1/images/caveau-de-la-huchette-1-lg.jpg?20190308085451",
 		Date:              time.Date(2024, time.July, 15, 0, 0, 0, 0, time.Local),
-		ParticipantNumber: nil,
+		ParticipantNumber: &participantNumber,
 		Lat:               48.85,
 		Lng:               2.34,
 		Location:          "5 Rue de la Huchette, 75005 Paris",
 		Place:             "Le Caveau de la Huchette",
 		Tag:               "Jazz",
 		Organizers:        []models.Organizer{Organizers[1]},
+		Code:              utils.GenerateRandomString(6),
 	},
 	{
 		ID:                uuid.New(),
@@ -55,5 +59,6 @@ var Events = []models.Event{
 		Place:             "T7 Club",
 		Tag:               "Techno",
 		Organizers:        []models.Organizer{Organizers[2]},
+		Code:              utils.GenerateRandomString(6),
 	},
 }
