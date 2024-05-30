@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"log"
 	"net/http"
 	"strings"
 	"time"
@@ -45,19 +46,13 @@ func CreateEvent(c echo.Context) error {
 		return err
 	}
 
-	date, err := time.Parse("2006-01-02", eventInput.Date)
-	if err != nil {
-		// handle error
-		return err
-	}
-
 	// Create new event object
 	event := models.Event{
 		Title:             eventInput.Title,
 		Description:       eventInput.Description,
 		Banner:            eventInput.Banner,
 		Image:             eventInput.Image,
-		Date:              date,
+		// Date:              eventInput.Date,
 		ParticipantNumber: eventInput.ParticipantNumber,
 		Lat:               float32(eventInput.Lat),
 		Lng:               float32(eventInput.Lng),
@@ -65,6 +60,13 @@ func CreateEvent(c echo.Context) error {
 		Tag:               eventInput.Tag,
 		Place:             eventInput.Place,
 		Code:              utils.GenerateRandomString(6),
+	}
+
+	var err error
+	event.Date, err = time.Parse("2006-01-02 15:04:05", eventInput.Date)
+	if err != nil {
+		// handle error
+		return err
 	}
 
 	claims, err := utils.GetTokenFromHeader(c)
@@ -147,6 +149,11 @@ func UpdateEvent(c echo.Context) error {
 	event.Lng = float32(updateInput.Lng)
 	event.Tag = updateInput.Tag
 	event.Place = updateInput.Place
+
+	event.Date, err = time.Parse("2006-01-02 15:04:05.000Z", updateInput.Date)
+	if err != nil {
+		return err
+	}
 
 	if err := db.DB().Model(&event).Updates(&event).Error; err != nil {
 		return err
