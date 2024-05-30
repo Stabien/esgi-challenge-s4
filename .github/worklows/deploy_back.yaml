@@ -1,0 +1,38 @@
+name: "Destroy and Mount Terraform"
+
+on:
+  push:
+    paths:
+      - "./github/workflows/deploy_back.yaml"
+      - "./back/terraform/conf/**"
+      - "./back/terraform/scripts/**"
+      - "./back/terraform/main.tf"
+      - "./back/terraform/terraform.tfvars"
+
+jobs:
+  destroy-mount:
+    name: "Test"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+      - name: Generate SSH Key
+        id: ssh-key
+        uses: truemark/generate-ssh-key-action@v2
+        with:
+          name: "id_rsa"
+      - name: "Config terraform"
+        if: false
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.1.7"
+      - name: "Terraform plan and apply"
+        run: |      
+          export TF_VAR_aws_credentials='{ access_key = "${{ secrets.AWS_ACCESS_KEY }}", secret_key = "${{ secrets.AWS_SECRET_KEY }}" }'
+          export TF_VAR_db_config='{ host = "${{ secrets.DB_HOST }}", port = "${{ secrets.DB_PORT }}", username = "${{ secrets.DB_USERNAME }}", password = "${{ secrets.DB_PASSWORD }}", name = "${{ secrets.DB_NAME }}" }'
+          export TF_VAR_jwt_secret="${{ secrets.JWT_SECRET }}"
+          export TF_VAR_server_port="${{ secrets.SERVER_PORT }}"
+          terraform init    
+          terraform destroy    
+          terraform plan
+          terraform apply -auto-approve

@@ -78,7 +78,16 @@ resource "null_resource" "ssh_to_docker_container" {
   }
 
   provisioner "file" {
-    source = "../.env.local"
+    content = <<-EOT
+      DB_HOST=${var.db_config.host}
+      DB_PORT=${var.db_config.port}
+      DB_USERNAME=${var.db_config.username}
+      DB_PASSWORD=${var.db_config.password}
+      DB_NAME=${var.db_config.name}
+      PORT=${var.server_port}
+      JWT_SECRET=${var.jwt_secret}
+    EOT
+
     destination = "/tmp/.env.local"
   }
 
