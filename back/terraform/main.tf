@@ -68,7 +68,7 @@ resource "null_resource" "ssh_to_docker_container" {
   }
 
   provisioner "file" {
-    content     = git_ssh_key
+    content     = var.git_ssh_key
     destination = "/tmp/id_rsa"
   }
 
