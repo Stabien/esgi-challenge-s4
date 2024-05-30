@@ -35,7 +35,6 @@ jobs:
           TF_VAR_git_ssh_key: ${{ secrets.SSH_GIT_KEY }}
         run: |
           cd ./back/terraform
-          terraform destroy -auto-approve
           terraform init
           terraform plan
           terraform apply -auto-approve
