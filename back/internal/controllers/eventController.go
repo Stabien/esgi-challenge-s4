@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"log"
 	"net/http"
 	"strings"
 	"time"
@@ -48,10 +47,10 @@ func CreateEvent(c echo.Context) error {
 
 	// Create new event object
 	event := models.Event{
-		Title:             eventInput.Title,
-		Description:       eventInput.Description,
-		Banner:            eventInput.Banner,
-		Image:             eventInput.Image,
+		Title:       eventInput.Title,
+		Description: eventInput.Description,
+		Banner:      eventInput.Banner,
+		Image:       eventInput.Image,
 		// Date:              eventInput.Date,
 		ParticipantNumber: eventInput.ParticipantNumber,
 		Lat:               float32(eventInput.Lat),
