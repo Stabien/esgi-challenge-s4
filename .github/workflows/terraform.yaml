@@ -1,0 +1,42 @@
+name: "Terraform"
+
+on:
+  push:
+    branches: [ "feat/add-cd" ]
+    paths:
+      - ".github/workflows/deploy_back.yaml"
+      - "back/terraform/conf/**"
+      - "back/terraform/scripts/**"
+      - "back/terraform/main.tf"
+      - "back/terraform/terraform.tfvars"
+
+jobs:
+  deploy_back:
+    name: "Test"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+      
+      - name: Generate SSH Key
+        id: ssh-key
+        uses: truemark/generate-ssh-key-action@v2
+        with:
+          name: "id_rsa"
+      
+      - name: "Config terraform"
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.1.7"
+      
+      - name: "Terraform plan and apply"
+        env:
+          TF_VAR_aws_credentials: '{ "access_key": "${{ secrets.AWS_ACCESS_KEY }}", "secret_key": "${{ secrets.AWS_SECRET_KEY }}" }'
+          TF_VAR_db_config: '{ "host": "${{ secrets.DB_HOST }}", "port": "${{ secrets.DB_PORT }}", "username": "${{ secrets.DB_USERNAME }}", "password": "${{ secrets.DB_PASSWORD }}", "name": "${{ secrets.DB_NAME }}" }'
+          TF_VAR_jwt_secret: ${{ secrets.JWT_SECRET }}
+          TF_VAR_server_port: ${{ secrets.SERVER_PORT }}
+        run: |
+          terraform init
+          terraform destroy -auto-approve
+          terraform plan
+          terraform apply -auto-approve
