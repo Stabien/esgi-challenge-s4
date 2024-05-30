@@ -6,6 +6,7 @@ on:
     paths:
       - ".github/workflows/terraform.yaml"
       - "./back/**"
+      - "./back/terraform/**"
 
 jobs:
   deploy_back:
