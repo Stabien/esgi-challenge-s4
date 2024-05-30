@@ -4,11 +4,8 @@ on:
   push:
     branches: [ "feat/add-cd" ]
     paths:
-      - ".github/workflows/deploy_back.yaml"
-      - "back/terraform/conf/**"
-      - "back/terraform/scripts/**"
-      - "back/terraform/main.tf"
-      - "back/terraform/terraform.tfvars"
+      - ".github/workflows/terraform.yaml"
+      - "./back/**"
 
 jobs:
   deploy_back:
@@ -36,6 +33,7 @@ jobs:
           TF_VAR_jwt_secret: ${{ secrets.JWT_SECRET }}
           TF_VAR_server_port: ${{ secrets.SERVER_PORT }}
         run: |
+          cd ./back/terraform
           terraform init
           terraform destroy -auto-approve
           terraform plan
