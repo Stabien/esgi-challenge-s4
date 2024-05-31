@@ -26,7 +26,7 @@ variable "db_config" {
     port = number
     username = string
     password = string
-    db_name = string
+    name = string
   })
 }
 
