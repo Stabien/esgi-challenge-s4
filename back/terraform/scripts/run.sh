@@ -13,5 +13,5 @@ ls
 wait
 
 cd esgi-challenge-s4/back
-sudo cp /tmp/.env.local ../.env.local
+sudo cp /tmp/.env.local ./.env.local
 sudo docker compose up -d

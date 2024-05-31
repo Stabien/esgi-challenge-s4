@@ -27,6 +27,15 @@ jobs:
         with:
           terraform_version: "1.1.7"
       
+      - name: Cache Terraform state
+        id: cache-state
+        uses: actions/cache@v3
+        with:
+          path: .terraform/terraform.tfstate
+          key: terraform-state-${{ github.sha }}
+          restore-keys: |
+            terraform-state-
+      
       - name: "Terraform plan and apply"
         env:
           TF_VAR_aws_credentials: '{ "access_key": "${{ secrets.AWS_ACCESS_KEY }}", "secret_key": "${{ secrets.AWS_SECRET_KEY }}" }'
