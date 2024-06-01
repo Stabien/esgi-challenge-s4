@@ -45,10 +45,10 @@ jobs:
         uses: actions/cache@v3
         with:
           path: |
-            .terraform
-            .terraform.lock.hcl
-            terraform.tfstate.d
-            terraform.tfstate
+            ./back/terraform/.terraform
+            ./back/terraform/.terraform.lock.hcl
+            ./back/terraform/terraform.tfstate.d
+            ./back/terraform/terraform.tfstate
           key: ${{ runner.os }}-terraform-${{ hashFiles('**/*.tf') }}
           restore-keys: |
             ${{ runner.os }}-terraform-
