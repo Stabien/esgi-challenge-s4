@@ -27,19 +27,6 @@ jobs:
         with:
           terraform_version: "1.1.7"
       
-      - name: Cache Terraform state
-        id: cache-state
-        uses: actions/cache@v3
-        with:
-          path: |
-            .terraform
-            .terraform.lock.hcl
-            terraform.tfstate.d
-            terraform.tfstate
-          key: ${{ runner.os }}-terraform-${{ hashFiles('**/*.tf') }}
-          restore-keys: |
-            ${{ runner.os }}-terraform-
-      
       - name: "Terraform plan and apply"
         env:
           TF_VAR_aws_credentials: '{ "access_key": "${{ secrets.AWS_ACCESS_KEY }}", "secret_key": "${{ secrets.AWS_SECRET_KEY }}" }'
@@ -52,3 +39,16 @@ jobs:
           terraform init
           terraform plan
           terraform apply -auto-approve
+
+      - name: Cache Terraform state
+        id: cache-state
+        uses: actions/cache@v3
+        with:
+          path: |
+            .terraform
+            .terraform.lock.hcl
+            terraform.tfstate.d
+            terraform.tfstate
+          key: ${{ runner.os }}-terraform-${{ hashFiles('**/*.tf') }}
+          restore-keys: |
+            ${{ runner.os }}-terraform-
