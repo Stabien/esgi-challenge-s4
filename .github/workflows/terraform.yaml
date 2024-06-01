@@ -38,7 +38,6 @@ jobs:
           cd ./back/terraform
           terraform init
           terraform plan
-          terraform apply -auto-approve
 
       - name: Cache Terraform state
         id: cache-state
