@@ -31,10 +31,14 @@ jobs:
         id: cache-state
         uses: actions/cache@v3
         with:
-          path: .terraform/terraform.tfstate
-          key: terraform-state-${{ github.sha }}
+          path: |
+            .terraform
+            .terraform.lock.hcl
+            terraform.tfstate.d
+            terraform.tfstate
+          key: ${{ runner.os }}-terraform-${{ hashFiles('**/*.tf') }}
           restore-keys: |
-            terraform-state-
+            ${{ runner.os }}-terraform-
       
       - name: "Terraform plan and apply"
         env:
