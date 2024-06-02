@@ -46,7 +46,7 @@ func InitRouter(e *echo.Echo) {
     e.DELETE("/users/:id", controllers.DeleteUser)
 
     // Reservation routes
-    e.POST("/reservations", controllers.CreateReservation)
+    e.POST("/reservations", controllers.PostReservation)
     e.GET("/reservations/:id", controllers.GetReservation)
     e.PUT("/reservations/:id", controllers.UpdateReservation)
     e.DELETE("/reservations/:id", controllers.DeleteReservation)
@@ -72,6 +72,7 @@ func InitRouter(e *echo.Echo) {
     // Rate routes
     e.POST("/rates", controllers.CreateRate)
     e.GET("/rates/:id", controllers.GetRate)
+    e.GET("/rates/:id", controllers.GetAllRates)
     e.PUT("/rates/:id", controllers.UpdateRate)
     e.DELETE("/rates/:id", controllers.DeleteRate)
 

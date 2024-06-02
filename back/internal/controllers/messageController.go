@@ -1,39 +1,146 @@
 package controllers
 
 import (
+	"easynight/internal/db"
+	"easynight/internal/models"
 	"net/http"
 
+	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 )
 
-// CreateMessage crée un nouveau message
+type MessageInput struct {
+	EventID     uuid.UUID `json:"eventId"`
+	OrganizerID uuid.UUID `json:"organizerId"`
+	Content     string    `json:"content"`
+}
+// CreateMessage creates a new message
 // @Summary Create a new message
-// @Description Create a new message with the given details
+// @Description Create a new message with the provided data
 // @Tags messages
-// @Accept  json
-// @Produce  json
-// @Success 200 {object} map[string]interface{} "Message created"
-// @Failure 400 {object} map[string]interface{} "Bad request"
+// @Accept json
+// @Produce json
+// @Param message body MessageInput true "Message data"
+// @Success 201 {object} Message
 // @Router /messages [post]
 func CreateMessage(c echo.Context) error {
-	return c.JSON(http.StatusOK, echo.Map{"message": "Message created"})
+
+	var input MessageInput
+	if err := c.Bind(&input); err != nil {
+		return err
+	}
+
+	message := models.Message{
+		EventID:     input.EventID,
+		OrganizerID: input.OrganizerID,
+		Content:     input.Content,
+	}
+
+	if err := db.DB().Create(&message).Error; err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusCreated, message)
 }
 
-// GetMessage renvoie un message par ID
+// GetMessageByID retrieves a message by ID
 // @Summary Get a message by ID
-// @Description Retrieve a message by its ID
+// @Description Retrieve a message based on its unique ID
 // @Tags messages
-// @Accept  json
-// @Produce  json
-// @Param id path int true "Message ID"
-// @Success 200 {object} map[string]interface{} "Message fetched"
-// @Failure 404 {object} map[string]interface{} "Message not found"
+// @Produce json
+// @Param id path string true "Message ID"
+// @Success 200 {object} Message
 // @Router /messages/{id} [get]
 func GetMessage(c echo.Context) error {
-	return c.JSON(http.StatusOK, echo.Map{"message": "Message fetched"})
+
+	id, err := uuid.Parse(c.Param("id"))
+	if err != nil {
+		return err
+	}
+
+	var message models.Message
+	if err := db.DB().First(&message, "id = ?", id).Error; err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusOK, message)
 }
 
-// UpdateMessage met à jour un message par ID
+// GetAllRates godoc
+// @Summary Get all rates
+// @Description Get all rates
+// @Tags rates
+// @Produce json
+// @Success 200 {array} models.Rate
+// @Router /rates [get]
+func GetAllMessage(c echo.Context) error {
+	var rates []models.Rate
+	if err := db.DB().Find(&rates).Error; err != nil {
+		return c.JSON(http.StatusInternalServerError, err)
+	}
+	return c.JSON(http.StatusOK, rates)
+}
+
+// UpdateMessageByID updates a message by ID
 // @Summary Update a message by ID
-// @Description Update a message with the given details by its ID
+// @Description Update an existing message identified by its ID
 // @Tags messages
+// @Accept json
+// @Produce json
+// @Param id path string true "Message ID"
+// @Param message body MessageInput true "Updated message data"
+// @Success 200 {object} Message
+// @Router /messages/{id} [put]
+func UpdateMessage(c echo.Context) error {
+
+	id, err := uuid.Parse(c.Param("id"))
+	if err != nil {
+		return err
+	}
+
+	var message models.Message
+	if err := db.DB().First(&message, "id = ?", id).Error; err != nil {
+		return err
+	}
+
+	var input MessageInput
+	if err := c.Bind(&input); err != nil {
+		return err
+	}
+
+	message.EventID = input.EventID
+	message.OrganizerID = input.OrganizerID
+	message.Content = input.Content
+
+	if err := db.DB().Save(&message).Error; err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusOK, message)
+}
+
+// DeleteMessageByID deletes a message by ID
+// @Summary Delete a message by ID
+// @Description Delete an existing message identified by its ID
+// @Tags messages
+// @Param id path string true "Message ID"
+// @Success 204 "No Content"
+// @Router /messages/{id} [delete]
+func DeleteMessage(c echo.Context) error {
+
+	id, err := uuid.Parse(c.Param("id"))
+	if err != nil {
+		return err
+	}
+
+	var message models.Message
+	if err := db.DB().First(&message, "id = ?", id).Error; err != nil {
+		return err
+	}
+
+	if err := db.DB().Delete(&message).Error; err != nil {
+		return err
+	}
+
+	return c.NoContent(http.StatusNoContent)
+}
