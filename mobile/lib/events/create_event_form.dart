@@ -59,7 +59,10 @@ class _CreateEventFormState extends State<CreateEventForm> {
             actions: <Widget>[
               TextButton(
                 child: Text("OK"),
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop(true);
+                },
               ),
             ],
           ),
@@ -136,13 +139,12 @@ class _CreateEventFormState extends State<CreateEventForm> {
                       showTitleActions: true,
                       minTime: DateTime.now(),
                       maxTime: DateTime.now().add(const Duration(days: 730)),
-                      onChanged: (date) {
-                        print('change $date');
-                      },
+                      // onChanged: (date) {
+                      //   print('change $date');
+                      // },
                       onConfirm: (date) {
-                        print('confirm $date');
                         setState(() {
-                          _dateController.text = date.toString();
+                          _dateController.text = date.toUtc().toIso8601String();
                         });
                       },
                       currentTime: _dateController.text.isNotEmpty

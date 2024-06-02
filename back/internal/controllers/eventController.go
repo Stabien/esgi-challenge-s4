@@ -62,7 +62,7 @@ func CreateEvent(c echo.Context) error {
 	}
 
 	var err error
-	event.Date, err = time.Parse("2006-01-02 15:04:05", eventInput.Date)
+	event.Date, err = time.Parse(time.RFC3339, eventInput.Date)
 	if err != nil {
 		// handle error
 		return err
@@ -149,7 +149,7 @@ func UpdateEvent(c echo.Context) error {
 	event.Tag = updateInput.Tag
 	event.Place = updateInput.Place
 
-	event.Date, err = time.Parse("2006-01-02 15:04:05.000Z", updateInput.Date)
+	event.Date, err = time.Parse(time.RFC3339, updateInput.Date)
 	if err != nil {
 		return err
 	}

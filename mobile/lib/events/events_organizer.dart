@@ -45,7 +45,16 @@ class _EventsOrganizerState extends State<EventsOrganizer> {
         distance: 112,
         children: [
           ActionButton(
-            onPressed: () => Navigator.of(context).pushNamed('/event/create'),
+            onPressed: () async {
+              final result =
+                  await Navigator.of(context)
+                      .pushNamed(
+                '/event/create',
+              );
+              if (result == true) {
+                _fetchEvents();
+              }
+            },
             icon: const Icon(Icons.add_box_outlined),
           ),
           ActionButton(
@@ -146,11 +155,16 @@ class _EventsOrganizerState extends State<EventsOrganizer> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       ElevatedButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pushNamed(
+                                        onPressed: () async {
+                                          final result =
+                                              await Navigator.of(context)
+                                                  .pushNamed(
                                             '/event/update',
                                             arguments: event.id,
                                           );
+                                          if (result == true) {
+                                            _fetchEvents();
+                                          }
                                         },
                                         child: const Text('Modifier'),
                                       ),
