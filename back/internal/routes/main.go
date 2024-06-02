@@ -78,6 +78,7 @@ func InitRouter(e *echo.Echo) {
     // Organizer routes
     e.POST("/organizers", controllers.CreateOrganizer)
     e.GET("/organizers/:id", controllers.GetOrganizer)
+    e.GET("/organizers/:id", controllers.GetAllOrganizers)
     e.PUT("/organizers/:id", controllers.UpdateOrganizer)
     e.DELETE("/organizers/:id", controllers.DeleteOrganizer)
 

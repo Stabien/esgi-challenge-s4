@@ -1,71 +1,130 @@
 package controllers
 
 import (
+	"easynight/internal/db"
+	"easynight/internal/models"
 	"net/http"
+	"time"
 
+	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 )
 
-// CreateOrganizer crée un nouvel organisateur
-// @Summary Crée un nouvel organisateur
-// @Tags Organizers
+type OrganizerInput struct {
+	UserID    uuid.UUID `json:"user_id"`
+	Firstname string    `json:"firstname"`
+	Lastname  string    `json:"lastname"`
+}
+
+// CreateOrganizer godoc
+// @Summary Create a new organizer
+// @Description Create a new organizer
+// @Tags organizers
 // @Accept json
 // @Produce json
-// @Param organizer body Organizer true "Nouvel organisateur"
-// @Success 200 {string} string "Organizer created"
-// @Failure 400 {object} error "Bad request"
-// @Failure 500 {object} error "Internal server error"
-// @Router /admin/organizers [post]
+// @Param organizer body models.OrganizerInput true "Organizer Input"
+// @Success 201 {object} models.Organizer
+// @Router /organizers [post]
 func CreateOrganizer(c echo.Context) error {
-    // Votre logique pour créer un organisateur
-    return c.JSON(http.StatusOK, echo.Map{"message": "Organizer created"})
+	var input OrganizerInput
+	if err := c.Bind(&input); err != nil {
+		return c.JSON(http.StatusBadRequest, err)
+	}
+
+	organizer := models.Organizer{
+		UserID:    input.UserID,
+		Firstname: input.Firstname,
+		Lastname:  input.Lastname,
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+	}
+
+	if err := db.DB().Create(&organizer).Error; err != nil {
+		return c.JSON(http.StatusInternalServerError, err)
+	}
+
+	return c.JSON(http.StatusCreated, organizer)
 }
 
-// GetOrganizer renvoie un organisateur par ID
-// @Summary Renvoie un organisateur par ID
-// @Tags Organizers
-// @Accept json
+// GetOrganizer godoc
+// @Summary Get an organizer by ID
+// @Description Get an organizer by ID
+// @Tags organizers
 // @Produce json
-// @Param id path string true "ID de l'organisateur"
-// @Success 200 {object} Organizer "Organizer fetched"
-// @Failure 400 {object} error "Bad request"
-// @Failure 404 {object} error "Organizer not found"
-// @Failure 500 {object} error "Internal server error"
-// @Router /admin/organizers/{id} [get]
+// @Param id path string true "Organizer ID"
+// @Success 200 {object} models.Organizer
+// @Router /organizers/{id} [get]
 func GetOrganizer(c echo.Context) error {
-    // Votre logique pour obtenir un organisateur par ID
-    return c.JSON(http.StatusOK, echo.Map{"message": "Organizer fetched"})
+	id := c.Param("id")
+	var organizer models.Organizer
+	if err := db.DB().First(&organizer, "user_id = ?", id).Error; err != nil {
+		return c.JSON(http.StatusNotFound, err)
+	}
+	return c.JSON(http.StatusOK, organizer)
 }
 
-// UpdateOrganizer met à jour un organisateur par ID
-// @Summary Met à jour un organisateur par ID
-// @Tags Organizers
+// GetAllOrganizers godoc
+// @Summary Get all organizers
+// @Description Get all organizers
+// @Tags organizers
+// @Produce json
+// @Success 200 {array} models.Organizer
+// @Router /organizers [get]
+func GetAllOrganizers(c echo.Context) error {
+	var organizers []models.Organizer
+	if err := db.DB().Find(&organizers).Error; err != nil {
+		return c.JSON(http.StatusInternalServerError, err)
+	}
+	return c.JSON(http.StatusOK, organizers)
+}
+
+
+// UpdateOrganizer godoc
+// @Summary Update an organizer by ID
+// @Description Update an organizer by ID
+// @Tags organizers
 // @Accept json
 // @Produce json
-// @Param id path string true "ID de l'organisateur"
-// @Param organizer body Organizer true "Mise à jour de l'organisateur"
-// @Success 200 {string} string "Organizer updated"
-// @Failure 400 {object} error "Bad request"
-// @Failure 404 {object} error "Organizer not found"
-// @Failure 500 {object} error "Internal server error"
-// @Router /admin/organizers/{id} [put]
+// @Param id path string true "Organizer ID"
+// @Param organizer body models.OrganizerInput true "Organizer Input"
+// @Success 200 {object} models.Organizer
+// @Router /organizers/{id} [put]
 func UpdateOrganizer(c echo.Context) error {
-    // Votre logique pour mettre à jour un organisateur par ID
-    return c.JSON(http.StatusOK, echo.Map{"message": "Organizer updated"})
+	id := c.Param("id")
+	var organizer models.Organizer
+	if err := db.DB().First(&organizer, "user_id = ?", id).Error; err != nil {
+		return c.JSON(http.StatusNotFound, err)
+	}
+
+	var input OrganizerInput
+	if err := c.Bind(&input); err != nil {
+		return c.JSON(http.StatusBadRequest, err)
+	}
+
+	organizer.Firstname = input.Firstname
+	organizer.Lastname = input.Lastname
+	organizer.UpdatedAt = time.Now()
+
+	if err := db.DB().Save(&organizer).Error; err != nil {
+		return c.JSON(http.StatusInternalServerError, err)
+	}
+
+	return c.JSON(http.StatusOK, organizer)
 }
 
-// DeleteOrganizer supprime un organisateur par ID
-// @Summary Supprime un organisateur par ID
-// @Tags Organizers
-// @Accept json
+
+// DeleteOrganizer godoc
+// @Summary Delete an organizer by ID
+// @Description Delete an organizer by ID
+// @Tags organizers
 // @Produce json
-// @Param id path string true "ID de l'organisateur"
-// @Success 200 {string} string "Organizer deleted"
-// @Failure 400 {object} error "Bad request"
-// @Failure 404 {object} error "Organizer not found"
-// @Failure 500 {object} error "Internal server error"
-// @Router /admin/organizers/{id} [delete]
+// @Param id path string true "Organizer ID"
+// @Success 204
+// @Router /organizers/{id} [delete]
 func DeleteOrganizer(c echo.Context) error {
-    // Votre logique pour supprimer un organisateur par ID
-    return c.JSON(http.StatusOK, echo.Map{"message": "Organizer deleted"})
+	id := c.Param("id")
+	if err := db.DB().Delete(&models.Organizer{}, "user_id = ?", id).Error; err != nil {
+		return c.JSON(http.StatusInternalServerError, err)
+	}
+	return c.NoContent(http.StatusNoContent)
 }
