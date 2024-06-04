@@ -23,18 +23,18 @@ jobs:
     steps:
       - name: "Checkout"
         uses: actions/checkout@v4
-      
+
       - name: Generate SSH Key
         id: ssh-key
         uses: truemark/generate-ssh-key-action@v2
         with:
           name: "id_rsa"
-      
+
       - name: "Config terraform"
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: "1.1.7"
-      
+
       - name: Terraform init
         id: init
         working-directory: ./back/terraform
@@ -54,3 +54,4 @@ jobs:
         id: apply
         working-directory: ./back/terraform
         run: terraform apply -auto-approve
+
