@@ -38,6 +38,8 @@ jobs:
       - name: Terraform init
         id: init
         working-directory: ./back/terraform
+        env:
+          TF_VAR_aws_credentials: '{ "access_key": "${{ secrets.AWS_ACCESS_KEY }}", "secret_key": "${{ secrets.AWS_SECRET_KEY }}" }'
         run: terraform init -backend-config="bucket=$BUCKET_TF_STATE"
 
       - name: Terraform validate
