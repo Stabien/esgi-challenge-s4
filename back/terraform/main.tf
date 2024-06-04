@@ -5,6 +5,11 @@ terraform {
       version = "~> 5.0"
     }
   }
+  backend "s3" {
+    bucket         = "easynight-terraform-state-bucket"
+    key            = ":env/production/terraform.tfstate"
+    region         = "eu-west-1"
+  }
 }
 
 provider "aws" {

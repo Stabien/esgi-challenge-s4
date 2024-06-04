@@ -8,6 +8,14 @@ on:
       - "./back/**"
       - "./back/terraform/**"
 
+env:
+  TF_VAR_aws_credentials: '{ "access_key": "${{ secrets.AWS_ACCESS_KEY }}", "secret_key": "${{ secrets.AWS_SECRET_KEY }}" }'
+  TF_VAR_db_config: '{ "host": "${{ secrets.DB_HOST }}", "port": "${{ secrets.DB_PORT }}", "username": "${{ secrets.DB_USERNAME }}", "password": "${{ secrets.DB_PASSWORD }}", "name": "${{ secrets.DB_NAME }}" }'
+  TF_VAR_jwt_secret: ${{ secrets.JWT_SECRET }}
+  TF_VAR_server_port: ${{ secrets.SERVER_PORT }}
+  TF_VAR_git_ssh_key: ${{ secrets.SSH_GIT_KEY }}
+  BUCKET_TF_STATE: ${{ secrets.BUCKET_TF_STATE }}
+
 jobs:
   deploy_back:
     name: "Test"
@@ -27,28 +35,22 @@ jobs:
         with:
           terraform_version: "1.1.7"
       
-      - name: "Terraform plan and apply"
-        env:
-          TF_VAR_aws_credentials: '{ "access_key": "${{ secrets.AWS_ACCESS_KEY }}", "secret_key": "${{ secrets.AWS_SECRET_KEY }}" }'
-          TF_VAR_db_config: '{ "host": "${{ secrets.DB_HOST }}", "port": "${{ secrets.DB_PORT }}", "username": "${{ secrets.DB_USERNAME }}", "password": "${{ secrets.DB_PASSWORD }}", "name": "${{ secrets.DB_NAME }}" }'
-          TF_VAR_jwt_secret: ${{ secrets.JWT_SECRET }}
-          TF_VAR_server_port: ${{ secrets.SERVER_PORT }}
-          TF_VAR_git_ssh_key: ${{ secrets.SSH_GIT_KEY }}
-        run: |
-          cd ./back/terraform
-          terraform init
-          terraform plan
-          terraform apply -auto-approve
+      - name: Terraform init
+        id: init
+        working-directory: ./back/terraform
+        run: terraform init -backend-config="bucket=$BUCKET_TF_STATE"
 
-      - name: Cache Terraform state
-        id: cache-state
-        uses: actions/cache@v3
-        with:
-          path: |
-            ./back/terraform/.terraform
-            ./back/terraform/.terraform.lock.hcl
-            ./back/terraform/terraform.tfstate.d
-            ./back/terraform/terraform.tfstate
-          key: ${{ runner.os }}-terraform-${{ hashFiles('**/*.tf') }}
-          restore-keys: |
-            ${{ runner.os }}-terraform-
+      - name: Terraform validate
+        id: validate
+        working-directory: ./back/terraform
+        run: terraform validate
+
+      - name: "Terraform plan"
+        id: plan
+        working-directory: ./back/terraform
+        run: terraform plan -auto-approve
+
+      - name: "Terraform apply"
+        id: apply
+        working-directory: ./back/terraform
+        run: terraform apply -auto-approve
