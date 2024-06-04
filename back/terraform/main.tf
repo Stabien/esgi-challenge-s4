@@ -9,6 +9,8 @@ terraform {
     bucket         = "easynight-terraform-state-bucket"
     key            = ":env/production/terraform.tfstate"
     region         = "eu-west-1"
+    access_key     = var.aws_credentials.access_key
+    secret_key     = var.aws_credentials.secret_key
   }
 }
 
