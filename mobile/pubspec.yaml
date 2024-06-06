@@ -49,6 +49,9 @@ dependencies:
   logging: ^1.2.0
   flutter_secure_storage: ^9.2.2
   dart_jsonwebtoken: ^2.14.0
+  flutter_map: ^6.1.0
+  latlong2: ^0.9.1
+  flutter_datetime_picker_plus: ^2.2.0
 
 dev_dependencies:
   flutter_test:

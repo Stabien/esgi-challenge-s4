@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/usersScreen/bloc/profil_bloc.dart';
 
 class ProfilScreen extends StatelessWidget {
-  const ProfilScreen({Key? key}) : super(key: key);
+  const ProfilScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,7 @@ class ProfilScreen extends StatelessWidget {
                     const Icon(Icons.account_circle_rounded, size: 200, color: Colors.grey),
                     const SizedBox(height: 20),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.center, 
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
                           profil?.firstname ?? '',

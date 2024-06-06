@@ -5,7 +5,6 @@ import (
 	"easynight/internal/models"
 	"easynight/internal/services"
 	"easynight/pkg/utils"
-	"log"
 	"net/http"
 
 	"github.com/google/uuid"
@@ -200,7 +199,6 @@ func GetUserByIdCustomer(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
 
 	}
-	log.Println(results)
 
 	if len(results) == 0 {
 		return c.JSON(http.StatusOK, []Result{})
@@ -233,11 +231,140 @@ func GetUserByIdOrga(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
 
 	}
-	log.Println(results)
 
 	if len(results) == 0 {
 		return c.JSON(http.StatusOK, []Result{})
 	}
 
 	return c.JSON(http.StatusOK, results)
+}
+
+// GetUser récupère un utilisateur par ID
+// @Summary Get an user by ID
+// @Description Retrieve an user based on its unique ID
+// @Tags users
+// @Produce json
+// @Param id path string true "User ID"
+// @Success 200 {object} models.User
+// @Router /users/{id} [get]
+func GetUser(c echo.Context) error {
+
+	id, err := uuid.Parse(c.Param("id"))
+	if err != nil {
+		return err
+	}
+
+	var user models.User
+	if err := db.DB().First(&user, "id = ?", id).Error; err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusOK, user)
+}
+
+// GetAllUsers récupère tous les utilisateurs
+// @Summary Get all users
+// @Description Retrieve all users from the database
+// @Tags users
+// @Produce json
+// @Success 200 {array} models.User
+// @Router /users [get]
+func GetAllUsers(c echo.Context) error {
+
+	var users []models.User
+	if err := db.DB().Find(&users).Error; err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusOK, users)
+}
+
+// UpdateUser met à jour un utilisateur par ID
+// @Summary Update an user by ID
+// @Description Update an existing user identified by its ID
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param id path string true "User ID"
+// @Param user body UserInput true "Updated user data"
+// @Success 200 {object} models.User
+// @Router /users/{id} [put]
+func UpdateUser(c echo.Context) error {
+	id, err := uuid.Parse(c.Param("id"))
+	if err != nil {
+		return err
+	}
+
+	var user models.User
+	if err := db.DB().First(&user, "id = ?", id).Error; err != nil {
+		return err
+	}
+
+	var input UserInput
+	if err := c.Bind(&input); err != nil {
+		return err
+	}
+
+	user.Email = input.Email
+	user.Password = input.Password
+
+	if err := db.DB().Save(&user).Error; err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusOK, user)
+}
+
+// CreateUser crée un nouvel utilisateur
+// @Summary Create a new user
+// @Description Create a new user with the provided data
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param user body UserInput true "User data"
+// @Success 201 {object} models.User
+// @Router /users [post]
+func CreateUser(c echo.Context) error {
+
+	var input UserInput
+	if err := c.Bind(&input); err != nil {
+		return err
+	}
+
+	user := models.User{
+		Email:    input.Email,
+		Password: input.Password,
+	}
+
+	if err := db.DB().Create(&user).Error; err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusCreated, user)
+}
+
+// DeleteUser supprime un utilisateur par ID
+// @Summary Delete a user by ID
+// @Description Delete an existing user identified by its ID
+// @Tags users
+// @Param id path string true "User ID"
+// @Success 204 "No Content"
+// @Router /users/{id} [delete]
+func DeleteUser(c echo.Context) error {
+
+	id, err := uuid.Parse(c.Param("id"))
+	if err != nil {
+		return err
+	}
+
+	var user models.User
+	if err := db.DB().First(&user, "id = ?", id).Error; err != nil {
+		return err
+	}
+
+	if err := db.DB().Delete(&user).Error; err != nil {
+		return err
+	}
+
+	return c.NoContent(http.StatusNoContent)
 }
