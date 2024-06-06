@@ -27,9 +27,30 @@ class ProfilScreen extends StatelessWidget {
               } else if (state is ProfilDataLoadingSuccess) {
                 final profil = state.profil;
                 return Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(profil?.firstname ?? ''),
-                    // Ajoutez d'autres éléments pour afficher d'autres informations du profil
+                    const SizedBox(height: 20),
+                    const Icon(Icons.account_circle_rounded, size: 200, color: Colors.grey),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center, 
+                      children: [
+                        Text(
+                          profil?.firstname ?? '',
+                          style: const TextStyle(fontSize: 20, color: Colors.white),
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          profil?.lastname ?? '',
+                          style: const TextStyle(fontSize: 20, color: Colors.white),
+                        ),
+                      ],
+                    ),
+                    
+                    Text(
+                      profil?.email ?? '',
+                      style: const TextStyle(color: Colors.white),
+                    ),
                   ],
                 );
               } else {
