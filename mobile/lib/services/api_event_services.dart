@@ -64,7 +64,7 @@ class ApiServices {
       }
       final data =
           json.decode(utf8.decode(response.bodyBytes)) as List<dynamic>;
-      log(data.toString());
+      // log(data.toString());
       return data.mapList((e) => UserReservation.fromJson(e));
     } on SocketException catch (error) {
       log('Network error.', error: error);

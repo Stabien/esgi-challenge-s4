@@ -209,35 +209,35 @@ func GetUserByIdCustomer(c echo.Context) error {
 	return c.JSON(http.StatusOK, results)
 }
 
-// // @Summary Get user by ID
-// // @Description Retrieve user details by user ID, including first name, last name, email, and password.
-// // @Tags Users
-// // @Accept json
-// // @Produce json
-// // @Security ApiKeyAuth
-// // @Param id path string true "User ID"
-// // @Success 200 {array} Result
-// // @Failure 400 {object} error "Bad request"
-// // @Failure 500 {object} error "Internal server error"
-// // @Router /users/orga/{id} [get]
-// func GetUserByIdOrga(c echo.Context) error {
+// @Summary Get user by ID
+// @Description Retrieve user details by user ID, including first name, last name, email, and password.
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Security ApiKeyAuth
+// @Param id path string true "User ID"
+// @Success 200 {array} Result
+// @Failure 400 {object} error "Bad request"
+// @Failure 500 {object} error "Internal server error"
+// @Router /users/orga/{id} [get]
+func GetUserByIdOrga(c echo.Context) error {
 
-// 	userIDparam := c.Param("id")
+	userIDparam := c.Param("id")
 
-// 	var results []Result
+	var results []Result
 
-// 	if err := db.DB().Table("users").Select(" users.email, users.password, organizers.firstname, organizers.lastname ").
-// 		Joins("JOIN organizers on users.id = organizers.user_id").
-// 		Where("users.id = ? AND users.deleted_at IS NULL", userIDparam).
-// 		Find(&results).Error; err != nil {
-// 		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+	if err := db.DB().Table("users").Select(" users.email, users.password, organizers.firstname, organizers.lastname ").
+		Joins("JOIN organizers on users.id = organizers.user_id").
+		Where("users.id = ? AND users.deleted_at IS NULL", userIDparam).
+		Find(&results).Error; err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
 
-// 	}
-// 	log.Println(results)
+	}
+	log.Println(results)
 
-// 	if len(results) == 0 {
-// 		return c.JSON(http.StatusOK, []Result{})
-// 	}
+	if len(results) == 0 {
+		return c.JSON(http.StatusOK, []Result{})
+	}
 
-// 	return c.JSON(http.StatusOK, results)
-// }
+	return c.JSON(http.StatusOK, results)
+}
