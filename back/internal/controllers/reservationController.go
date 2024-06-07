@@ -60,7 +60,6 @@ func DeleteReservation(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, "Invalid request body")
 	}
 
-	// Suppose you have a function to find and delete the reservation based on event and customer IDs.
 	if err := db.DB().Where("event_id = ? AND customer_id = ?", reservationRequest.EventID, reservationRequest.CustomerID).Delete(&models.Reservation{}).Error; err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
@@ -69,12 +68,11 @@ func DeleteReservation(c echo.Context) error {
 }
 
 type UserReservation struct {
-	ID uuid.UUID `json:"id"`
+	ID         uuid.UUID `json:"id"`
 	CustomerID uuid.UUID `json:"customer_id"`
 	Qrcode     string
-	Event SimpleEvent 
+	Event      SimpleEvent
 }
-
 
 // @Summary get reservation by user
 // @Tags Reservation
@@ -90,10 +88,10 @@ func GetReservationsbyUser(c echo.Context) error {
 
 	var reservations []models.Reservation
 
-	err := db.DB().Preload("Customer").Preload("Event").Where("reservations.customer_id = ? AND reservations.deleted_at IS NULL", CustomerID).Find(&reservations).Error;
+	err := db.DB().Preload("Customer").Preload("Event").Where("reservations.customer_id = ? AND reservations.deleted_at IS NULL", CustomerID).Find(&reservations).Error
 
 	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error());
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
 	if len(reservations) == 0 {
@@ -113,10 +111,10 @@ func GetReservationsbyUser(c echo.Context) error {
 			Place:       reservation.Event.Place,
 		}
 		userReservations = append(userReservations, UserReservation{
-			Event: reservationEvent,
-			ID: reservation.ID,
+			Event:      reservationEvent,
+			ID:         reservation.ID,
 			CustomerID: reservation.CustomerID,
-			Qrcode: reservation.Qrcode,
+			Qrcode:     reservation.Qrcode,
 		})
 	}
 	return c.JSON(http.StatusOK, userReservations)
@@ -160,14 +158,12 @@ func IsReserv(c echo.Context) error {
 	return c.JSON(http.StatusOK, simpleReservation)
 }
 
-
 // ReservationInput represents the input structure for creating or updating a reservation
 type ReservationInput struct {
 	CustomerID uuid.UUID `json:"customerId"`
 	EventID    uuid.UUID `json:"eventId"`
 	Qrcode     string    `json:"qrcode"`
 }
-
 
 // GetReservation retrieves a reservation by ID
 // @Summary Get a reservation by ID
