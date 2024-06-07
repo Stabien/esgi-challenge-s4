@@ -24,7 +24,7 @@ class ApiServices {
       }
       final data =
           json.decode(utf8.decode(response.bodyBytes)) as List<dynamic>;
-      // log(data.toString());
+      log(data.toString());
       return data.mapList((e) => Event.fromJson(e));
     } on SocketException catch (error) {
       log('Network error.', error: error);
@@ -70,7 +70,7 @@ class ApiServices {
       log('Network error.', error: error);
       throw ApiException(message: 'Network error');
     } catch (error) {
-      log('An error occurred while fetching events apirequete.', error: error);
+      log('An error occurred while fetching events apirequete mes billet.', error: error);
       throw ApiException(message: 'Unknown errors');
     }
   }
