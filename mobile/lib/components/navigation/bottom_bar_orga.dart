@@ -54,6 +54,10 @@ class _BottomBarOrgaState extends State<BottomBarOrga> {
             icon: Icon(Icons.insert_drive_file_outlined),
             label: 'Logs',
           ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profil',
+          ),
         ],
         currentIndex: widget.selectedIndex,
         onTap: widget.onItemTapped,
