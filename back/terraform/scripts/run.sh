@@ -7,8 +7,7 @@ sudo chmod 600 ~/.ssh/id_rsa
 ssh-keyscan github.com >> ~/.ssh/known_hosts
 
 sudo chmod 777 /home
-sudo yes yes | git clone git@github.com:Stabien/esgi-challenge-s4
-ls
+sudo yes yes | git clone --branch feat/add-cd git@github.com:Stabien/esgi-challenge-s4
 
 wait
 
