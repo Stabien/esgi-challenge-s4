@@ -58,15 +58,11 @@ jobs:
         id: outputs
         working-directory: ./back/terraform
         run: |
-          echo "name=ec2_public_ip=$(terraform output -raw ec2_public_ip)" >> $GITHUB_OUTPUT
-          echo "name=ec2_username=$(terraform output -raw ec2_username)" >> $GITHUB_OUTPUT
-          echo "name=ec2_ssh_key=$(terraform output -raw ec2_ssh_key)" >> $GITHUB_OUTPUT
-          echo "name=ec2_port=$(terraform output -raw ec2_port)" >> $GITHUB_OUTPUT
-  # deploy-back:
-  #   name: Deploy back
-  #   runs-on: ubuntu-latest
-  #   needs: terraform
-  #   steps:
+          echo "ec2_public_ip=$(terraform output -raw ec2_public_ip)" >> $GITHUB_OUTPUT
+          echo "ec2_user$(terraform output -raw ec2_username)" >> $GITHUB_OUTPUT
+          echo "ec2_ssh_key=$(terraform output -raw ec2_ssh_key)" >> $GITHUB_OUTPUT
+          echo "ec2_port=$(terraform output -raw ec2_port)" >> $GITHUB_OUTPUT
+
       - name: Connect to EC2
         uses: appleboy/ssh-action@master
         with:
