@@ -63,6 +63,11 @@ jobs:
           echo "ec2_ssh_key=$(terraform output -raw ec2_ssh_key)" >> $GITHUB_OUTPUT
           echo "ec2_port=$(terraform output -raw ec2_port)" >> $GITHUB_OUTPUT
 
+      - name: Extract Terraform outputs
+        id: log
+        run: |
+          echo ${{ steps.outputs.ec2_public_ip }}
+
       - name: Connect to EC2
         uses: appleboy/ssh-action@master
         with:
