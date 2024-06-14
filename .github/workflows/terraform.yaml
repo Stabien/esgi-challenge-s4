@@ -58,11 +58,10 @@ jobs:
         id: outputs
         working-directory: ./back/terraform
         run: |
-          echo "::set-output name=ec2_public_ip::$(terraform output -raw ec2_public_ip)"
-          echo "::set-output name=ec2_username::$(terraform output -raw ec2_username)"
-          echo "::set-output name=ec2_ssh_key::$(terraform output -raw ec2_ssh_key)"
-          echo "::set-output name=ec2_port::$(terraform output -raw ec2_port)"
-
+          echo "name=ec2_public_ip=$(terraform output -raw ec2_public_ip)" >> $GITHUB_OUTPUT
+          echo "name=ec2_username=$(terraform output -raw ec2_username)" >> $GITHUB_OUTPUT
+          echo "name=ec2_ssh_key=$(terraform output -raw ec2_ssh_key)" >> $GITHUB_OUTPUT
+          echo "name=ec2_port=$(terraform output -raw ec2_port)" >> $GITHUB_OUTPUT
   # deploy-back:
   #   name: Deploy back
   #   runs-on: ubuntu-latest
@@ -71,10 +70,10 @@ jobs:
       - name: Connect to EC2
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ needs.terraform.outputs.ec2_public_ip }}
-          username: ${{ needs.terraform.outputs.ec2_username }}
-          key: ${{ needs.terraform.outputs.ec2_ssh_key }}
-          port: ${{ needs.terraform.outputs.ec2_port }}
+          host: ${{ terraform.outputs.ec2_public_ip }}
+          username: ${{ terraform.outputs.ec2_username }}
+          key: ${{ terraform.outputs.ec2_ssh_key }}
+          port: ${{ terraform.outputs.ec2_port }}
           script: |
             cd ../esgi-challenge-s4
             git pull origin develop
