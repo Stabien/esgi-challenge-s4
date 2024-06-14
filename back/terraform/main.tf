@@ -97,25 +97,33 @@ resource "null_resource" "ssh_to_docker_container" {
     destination = "/tmp/.env.local"
   }
 
-  provisioner "file" {
-    source = "./nginx/nginx.conf"
-    destination = "/tmp/nginx.conf"
-  }
-
-  provisioner "file" {
-    source = "./scripts/run.sh"
-    destination = "/tmp/run.sh"
-  }
-
   provisioner "remote-exec" {
     inline = [ 
       "cd /tmp",
       "chmod 777 ./install.sh",
       "./install.sh",
-      "chmod 777 ./run.sh",
-      "./run.sh"
     ]
   }
 
   depends_on = [ aws_instance.example_server ]
+}
+
+output "ec2_public_ip" {
+  description = "The public IP of the EC2 instance"
+  value       = aws_instance.example_server.public_ip
+}
+
+output "ec2_username" {
+  description = "The username for SSH access"
+  value       = "ubuntu"  # Assurez-vous que ce nom d'utilisateur correspond à votre instance AMI
+}
+
+output "ec2_ssh_key" {
+  description = "The path to the private SSH key"
+  value       = "~/.ssh/id_rsa"
+}
+
+output "ec2_port" {
+  description = "The SSH port"
+  value       = 22
 }
