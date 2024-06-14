@@ -66,10 +66,10 @@ jobs:
       - name: Connect to EC2
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ outputs.ec2_public_ip }}
-          username: ${{ outputs.ec2_username }}
-          key: ${{ outputs.ec2_ssh_key }}
-          port: ${{ outputs.ec2_port }}
+          host: ${{ steps.outputs.ec2_public_ip }}
+          username: ${{ steps.outputs.ec2_username }}
+          key: ${{ steps.outputs.ec2_ssh_key }}
+          port: ${{ steps.outputs.ec2_port }}
           script: |
             cd ../esgi-challenge-s4
             git pull origin develop
