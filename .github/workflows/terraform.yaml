@@ -61,7 +61,7 @@ jobs:
           echo "ec2_public_ip=$(terraform output -raw ec2_public_ip)" >> $GITHUB_OUTPUT
           echo "ec2_user=$(terraform output -raw ec2_username)" >> $GITHUB_OUTPUT
           echo "ec2_ssh_key=$(terraform output -raw ec2_ssh_key)" >> $GITHUB_OUTPUT
-          echo "ec2_port=$(terraform output -raw ec2_port)" >> $GITHUB_OUTPUT
+          echo "ec2_port=$(cat $(terraform output -raw ec2_port))" >> $GITHUB_OUTPUT
 
       - name: Connect to EC2
         uses: appleboy/ssh-action@master
@@ -72,6 +72,6 @@ jobs:
           port: ${{ steps.tf_outputs.outputs.ec2_port }}
           script: |
             cd ../esgi-challenge-s4
-            git pull origin develop
+            git pull origin feat/add-cd
             sudo docker compose down
             sudo docker compose up -d
