@@ -55,7 +55,7 @@ jobs:
         run: terraform apply -auto-approve
       
       - name: Extract Terraform outputs
-        id: outputs
+        id: tf_outputs
         working-directory: ./back/terraform
         run: |
           echo "ec2_public_ip=$(terraform output -raw ec2_public_ip)" >> $GITHUB_OUTPUT
@@ -68,7 +68,7 @@ jobs:
         working-directory: ./back/terraform
         run: |
           echo $(terraform output -raw ec2_public_ip)
-          echo ${{ steps.outputs.ec2_public_ip }}
+          echo ${{ steps.tf_outputs.outputs.ec2_public_ip }}
 
       - name: Connect to EC2
         uses: appleboy/ssh-action@master
