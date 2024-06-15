@@ -63,20 +63,13 @@ jobs:
           echo "ec2_ssh_key=$(terraform output -raw ec2_ssh_key)" >> $GITHUB_OUTPUT
           echo "ec2_port=$(terraform output -raw ec2_port)" >> $GITHUB_OUTPUT
 
-      - name: Extract Terraform outputs
-        id: log
-        working-directory: ./back/terraform
-        run: |
-          echo $(terraform output -raw ec2_public_ip)
-          echo ${{ steps.tf_outputs.outputs.ec2_public_ip }}
-
       - name: Connect to EC2
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ steps.outputs.ec2_public_ip }}
-          username: ${{ steps.outputs.ec2_username }}
-          key: ${{ steps.outputs.ec2_ssh_key }}
-          port: ${{ steps.outputs.ec2_port }}
+          host: ${{ steps.tf_outputs.outputs.ec2_public_ip }}
+          username: ${{ steps.tf_outputs.outputs.ec2_username }}
+          key: ${{ steps.tf_outputs.outputs.ec2_ssh_key }}
+          port: ${{ steps.tf_outputs.outputs.ec2_port }}
           script: |
             cd ../esgi-challenge-s4
             git pull origin develop
