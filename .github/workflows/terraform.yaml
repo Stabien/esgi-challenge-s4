@@ -65,7 +65,7 @@ jobs:
 
       - name: Display Path of SSH Key Job
         run: |
-          echo ${{ steps.ssh-key.path }}
+          echo ${{ steps.ssh-key }}
 
       - name: Connect to EC2
         uses: appleboy/ssh-action@master
