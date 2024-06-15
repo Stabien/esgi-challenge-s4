@@ -73,7 +73,7 @@ jobs:
         with:
           host: ${{ steps.tf_outputs.outputs.ec2_public_ip }}
           username: ${{ steps.tf_outputs.outputs.ec2_username }}
-          key_path: ${{ steps.ssh-key.outputs.public-key-path }}
+          key_path: ${{ steps.ssh-key.outputs.private-key-path }}
           port: ${{ steps.tf_outputs.outputs.ec2_port }}
           script: |
             cd ../esgi-challenge-s4
