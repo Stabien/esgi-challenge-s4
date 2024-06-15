@@ -67,6 +67,7 @@ jobs:
         run: |
           cat ${{ steps.ssh-key.outputs.public-key-path }} >> /home/runner/.ssh/authorized_keys
           chmod 700 /home/runner/.ssh/authorized_keys
+          chmod 600 /home/runner/.ssh/id_rsa
       
       - name: Display Path of SSH Key Job
         run: |
