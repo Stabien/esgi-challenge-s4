@@ -20,6 +20,10 @@ variable "aws_ssh_key" {
   type = string
 }
 
+variable "aws_ssh_public_key" {
+  type = string
+}
+
 variable "git_ssh_key" {
   type = string
 }
