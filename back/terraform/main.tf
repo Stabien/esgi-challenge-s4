@@ -24,9 +24,9 @@ resource "aws_key_pair" "terraform_ssh_key" {
   public_key = var.aws_ssh_public_key
 }
 
-resource "aws_security_group" "example_sg" {
-  name        = "example_sg"
-  description = "Security group for example_server"
+resource "aws_security_group" "easynight_sg" {
+  name        = "easynight_sg"
+  description = "Security group for easynight_server"
   egress {
     from_port   = 0
     to_port     = 0
@@ -41,7 +41,7 @@ resource "aws_security_group_rule" "allow_ssh" {
   to_port           = 22
   protocol          = "tcp"
   cidr_blocks       = ["0.0.0.0/0"] // Autoriser l'accès depuis n'importe quelle adresse IP
-  security_group_id = aws_security_group.example_sg.id
+  security_group_id = aws_security_group.easynight_sg.id
 }
 
 resource "aws_security_group_rule" "allow_server_connection" {
@@ -50,25 +50,25 @@ resource "aws_security_group_rule" "allow_server_connection" {
   to_port           = 80
   protocol          = "tcp"
   cidr_blocks       = ["0.0.0.0/0"] // Autoriser l'accès depuis n'importe quelle adresse IP
-  security_group_id = aws_security_group.example_sg.id
+  security_group_id = aws_security_group.easynight_sg.id
 }
 
-resource "aws_instance" "example_server" {
+resource "aws_instance" "easynight_server" {
   ami           = var.aws_instance.ami
   instance_type = var.aws_instance.instance_type
   key_name = aws_key_pair.terraform_ssh_key.key_name
   associate_public_ip_address = true
-  security_groups = [aws_security_group.example_sg.name]
+  security_groups = [aws_security_group.easynight_sg.name]
 }
 
 output "domain_name" {
-  value = aws_instance.example_server.public_dns
+  value = aws_instance.easynight_server.public_dns
 }
 
 resource "null_resource" "ssh_to_docker_container" {
   connection {
     type        = "ssh"
-    host        = aws_instance.example_server.public_ip
+    host        = aws_instance.easynight_server.public_ip
     user        = "ubuntu"
     private_key = var.aws_ssh_key
   }
@@ -105,12 +105,12 @@ resource "null_resource" "ssh_to_docker_container" {
     ]
   }
 
-  depends_on = [ aws_instance.example_server ]
+  depends_on = [ aws_instance.easynight_server ]
 }
 
 output "ec2_public_ip" {
   description = "The public IP of the EC2 instance"
-  value       = aws_instance.example_server.public_ip
+  value       = aws_instance.easynight_server.public_ip
 }
 
 output "ec2_username" {
