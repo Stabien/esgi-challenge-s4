@@ -68,6 +68,7 @@ jobs:
         working-directory: ./back/terraform
         run: |
           echo $(terraform output -raw ec2_public_ip)
+          echo ${{ steps.outputs.ec2_public_ip }}
 
       - name: Connect to EC2
         uses: appleboy/ssh-action@master
