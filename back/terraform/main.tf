@@ -118,11 +118,6 @@ output "ec2_username" {
   value       = "ubuntu"  # Assurez-vous que ce nom d'utilisateur correspond à votre instance AMI
 }
 
-output "ec2_ssh_key" {
-  description = "The path to the private SSH key"
-  value       = file("~/.ssh/id_rsa")
-}
-
 output "ec2_port" {
   description = "The SSH port"
   value       = 22
