@@ -70,7 +70,7 @@ resource "null_resource" "ssh_to_docker_container" {
     type        = "ssh"
     host        = aws_instance.example_server.public_ip
     user        = "ubuntu"
-    private_key = file("~/.ssh/id_rsa")
+    private_key = var.aws_ssh_key
   }
 
   provisioner "file" {
@@ -116,6 +116,11 @@ output "ec2_public_ip" {
 output "ec2_username" {
   description = "The username for SSH access"
   value       = "ubuntu"  # Assurez-vous que ce nom d'utilisateur correspond à votre instance AMI
+}
+
+output "ec2_ssh_key" {
+  description = "The path to the private SSH key"
+  value       = file("~/.ssh/id_rsa")
 }
 
 output "ec2_port" {

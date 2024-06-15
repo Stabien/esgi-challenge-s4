@@ -16,6 +16,10 @@ variable "aws_instance" {
   })
 }
 
+variable "aws_ssh_key" {
+  type = string
+}
+
 variable "git_ssh_key" {
   type = string
 }
