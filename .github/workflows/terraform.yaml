@@ -65,6 +65,7 @@ jobs:
 
       - name: Extract Terraform outputs
         id: log
+        working-directory: ./back/terraform
         run: |
           echo $(terraform output -raw ec2_public_ip)
 
