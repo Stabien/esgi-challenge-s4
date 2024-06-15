@@ -28,7 +28,6 @@ jobs:
         uses: truemark/generate-ssh-key-action@v2
         with:
           name: "id_rsa"
-          output-path: ~/.ssh/id_rsa
 
       - name: "Config terraform"
         uses: hashicorp/setup-terraform@v3
