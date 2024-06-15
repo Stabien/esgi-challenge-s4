@@ -25,13 +25,13 @@ void main() async {
   await dotenv.load(fileName: ".env.local");
   runApp(const MyApp());
 
-  if (dotenv.env['FIREBASE_API_KEY'] != "default" &&
-      dotenv.env['FIREBASE_API_KEY'] != null) {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
-    await FirebaseApi().initNotifications();
-  }
+  // if (dotenv.env['FIREBASE_API_KEY'] != "default" &&
+  //     dotenv.env['FIREBASE_API_KEY'] != null) {
+  //   await Firebase.initializeApp(
+  //     options: DefaultFirebaseOptions.currentPlatform,
+  //   );
+  //   await FirebaseApi().initNotifications();
+  // }
 }
 
 class MyApp extends StatelessWidget {
