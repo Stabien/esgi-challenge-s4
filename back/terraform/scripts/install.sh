@@ -17,3 +17,11 @@ echo \
 
 sudo apt-get update -y
 sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+
+cd /home
+
+sudo chmod 777 /tmp/id_rsa
+sudo mv /tmp/id_rsa ~/.ssh/id_rsa
+sudo chmod 600 ~/.ssh/id_rsa
+
+ssh-keyscan github.com >> ~/.ssh/known_hosts
