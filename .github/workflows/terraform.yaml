@@ -64,7 +64,7 @@ jobs:
           echo "ec2_port=$(terraform output -raw ec2_port)" >> $GITHUB_OUTPUT
 
       - name: Add ssh-key authorization
-        run: cat ${{ steps.ssh-key.outputs.public-key-path }} >> ${{ steps.ssh-key.outputs.public-key-path }}/../authorized_keys
+        run: cat ${{ steps.ssh-key.outputs.public-key-path }} >> /home/runner/.ssh/authorized_keys
       
       - name: Display Path of SSH Key Job
         run: |
