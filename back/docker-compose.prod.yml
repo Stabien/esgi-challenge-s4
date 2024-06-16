@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: dockerfile
+      target: prod
+    ports: 
+      - 3000:3000
+    volumes: 
+      - ./:/app
+    tty: true
+    stdin_open: true
+    depends_on:
+      - postgres
+
+  postgres:
+    build: ./internal/db
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres_db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=easynight
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+
+  caddy:
+    image: caddy:latest
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+    depends_on:
+      - api
+
+volumes:
+  postgres_db:

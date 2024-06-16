@@ -57,26 +57,21 @@ class _LoginFormState extends State<LoginForm> {
           TextFormField(
             onChanged: _onEmailInputChange,
             style: TextStyle(
-              fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+              color: Theme.of(context).textTheme.titleMedium!.color,
             ),
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               labelText: 'Email',
-              labelStyle: TextStyle(
-                fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
-              ),
             ),
           ),
+          const SizedBox(height: 16.0),
           TextFormField(
             onChanged: _onPasswordInputChange,
             obscureText: true,
             style: TextStyle(
-              fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+              color: Theme.of(context).textTheme.titleMedium!.color,
             ),
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               labelText: 'Mot de passe',
-              labelStyle: TextStyle(
-                fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
-              ),
             ),
           ),
           const SizedBox(height: 16.0),

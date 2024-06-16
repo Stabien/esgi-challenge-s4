@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:mobile/utils/secureStorage.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 
 class CreateEventForm extends StatefulWidget {
   const CreateEventForm({super.key});
@@ -58,7 +59,10 @@ class _CreateEventFormState extends State<CreateEventForm> {
             actions: <Widget>[
               TextButton(
                 child: Text("OK"),
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop(true);
+                },
               ),
             ],
           ),
@@ -111,15 +115,47 @@ class _CreateEventFormState extends State<CreateEventForm> {
                 ),
               ),
             ),
+            _dateController.text.isEmpty
+                ? const Text(
+                    "Date (YYYY-MM-DD) :",
+                    style: TextStyle(color: Colors.white),
+                  )
+                : Column(children: [
+                    Text(
+                      "Date (YYYY-MM-DD) : ${DateTime.parse(_dateController.text).day}/${DateTime.parse(_dateController.text).month > 9 ? DateTime.parse(_dateController.text).month : '0${DateTime.parse(_dateController.text).month}'}/${DateTime.parse(_dateController.text).year}",
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                    Text(
+                      "Heure : ${DateTime.parse(_dateController.text).hour}H${DateTime.parse(_dateController.text).minute > 9 ? DateTime.parse(_dateController.text).minute : '0${DateTime.parse(_dateController.text).minute}'}",
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ]),
             Container(
               margin: const EdgeInsets.only(bottom: 16.0),
-              child: TextField(
-                style: TextStyle(color: Colors.white),
-                controller: _dateController,
-                decoration: InputDecoration(
-                  labelText: "Date (YYYY-MM-DD)",
-                ),
-              ),
+              child: ElevatedButton(
+                  onPressed: () {
+                    DatePicker.showDateTimePicker(
+                      context,
+                      showTitleActions: true,
+                      minTime: DateTime.now(),
+                      maxTime: DateTime.now().add(const Duration(days: 730)),
+                      // onChanged: (date) {
+                      //   print('change $date');
+                      // },
+                      onConfirm: (date) {
+                        setState(() {
+                          _dateController.text = date.toUtc().toIso8601String();
+                        });
+                      },
+                      currentTime: _dateController.text.isNotEmpty
+                          ? DateTime.parse(_dateController.text)
+                          : DateTime.now(),
+                      locale: LocaleType.fr,
+                    );
+                  },
+                  child: const Text(
+                    'Choisir une date et une heure',
+                  )),
             ),
             Container(
               margin: const EdgeInsets.only(bottom: 16.0),

@@ -45,19 +45,13 @@ func CreateEvent(c echo.Context) error {
 		return err
 	}
 
-	date, err := time.Parse("2006-01-02", eventInput.Date)
-	if err != nil {
-		// handle error
-		return err
-	}
-
 	// Create new event object
 	event := models.Event{
-		Title:             eventInput.Title,
-		Description:       eventInput.Description,
-		Banner:            eventInput.Banner,
-		Image:             eventInput.Image,
-		Date:              date,
+		Title:       eventInput.Title,
+		Description: eventInput.Description,
+		Banner:      eventInput.Banner,
+		Image:       eventInput.Image,
+		// Date:              eventInput.Date,
 		ParticipantNumber: eventInput.ParticipantNumber,
 		Lat:               float32(eventInput.Lat),
 		Lng:               float32(eventInput.Lng),
@@ -65,6 +59,13 @@ func CreateEvent(c echo.Context) error {
 		Tag:               eventInput.Tag,
 		Place:             eventInput.Place,
 		Code:              utils.GenerateRandomString(6),
+	}
+
+	var err error
+	event.Date, err = time.Parse(time.RFC3339, eventInput.Date)
+	if err != nil {
+		// handle error
+		return err
 	}
 
 	claims, err := utils.GetTokenFromHeader(c)
@@ -148,6 +149,11 @@ func UpdateEvent(c echo.Context) error {
 	event.Tag = updateInput.Tag
 	event.Place = updateInput.Place
 
+	event.Date, err = time.Parse(time.RFC3339, updateInput.Date)
+	if err != nil {
+		return err
+	}
+
 	if err := db.DB().Model(&event).Updates(&event).Error; err != nil {
 		return err
 	}
@@ -169,6 +175,7 @@ type EventDetails struct {
 	Location          string    `json:"location"`
 	ParticipantNumber *int      `json:"participant_number"`
 	PlaceRestante     int       `json:"place_restante"`
+	Code              string    `json:"code"`
 }
 
 // @Summary Get an event by ID
@@ -210,6 +217,7 @@ func GetEvent(c echo.Context) error {
 		Location:          event.Location,
 		ParticipantNumber: event.ParticipantNumber,
 		PlaceRestante:     *event.ParticipantNumber - int(count),
+		Code:              event.Code,
 	}
 
 	return c.JSON(http.StatusOK, eventDetails)

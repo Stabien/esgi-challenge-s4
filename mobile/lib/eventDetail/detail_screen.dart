@@ -1,10 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:mobile/models/eventDetail.dart';
 import 'package:mobile/services/api_event_services.dart';
 import 'package:mobile/services/api_reservation_services.dart';
+import 'package:mobile/services/formatDate.dart';
 import 'package:mobile/utils/secureStorage.dart';
+import 'package:flutter/services.dart';
 
 class DetailScreen extends StatefulWidget {
   final String id;
@@ -22,13 +22,16 @@ class _DetailScreen extends State<DetailScreen> {
   bool _isReserv = false;
   String _textReserv = "";
   String _userId = "";
+  String _userRole = "";
 
   Future<void> initUser() async {
     await SecureStorage.getStorageItem('userId').then((value) {
-      print("le user id est");
-      print(value);
       _userId = value!;
       _fetchEvents();
+    });
+
+    await SecureStorage.getStorageItem('userRole').then((value) {
+      _userRole = value!;
     });
   }
 
@@ -63,7 +66,6 @@ class _DetailScreen extends State<DetailScreen> {
 
   void _updateReservationStatus() {
     ApiReservation.isreserv(widget.id, _userId).then((data) {
-      print(data);
       setState(() {
         if (data.isEmpty) {
           _isReserv = false;
@@ -85,6 +87,9 @@ class _DetailScreen extends State<DetailScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Détail de l\'événement'),
+        ),
         backgroundColor: Colors.black,
         body: Builder(builder: (context) {
           if (_error != null) {
@@ -122,17 +127,11 @@ class _DetailScreen extends State<DetailScreen> {
                           const SizedBox(height: 10),
                           Row(
                             children: [
-                              const Text(
-                                "Par recupe l'organisateur",
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey,
-                                ),
-                              ),
+                              
                               const SizedBox(width: 10),
                               Expanded(
                                 child: Text(
-                                  eventDetail.placerestante.toString(),
+                                 "Il reste : ${eventDetail.placerestante} places",
                                   style: const TextStyle(
                                     fontSize: 12,
                                     color: Colors.grey,
@@ -162,7 +161,7 @@ class _DetailScreen extends State<DetailScreen> {
                                 ),
                                 const SizedBox(width: 15),
                                 Text(
-                                  eventDetail.date,
+                                  transformerDate(eventDetail.date),
                                   style: const TextStyle(
                                     fontSize: 12,
                                     color: Colors.grey,
@@ -240,41 +239,55 @@ class _DetailScreen extends State<DetailScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  foregroundColor: Colors.black,
-                                  backgroundColor: Colors.white,
-                                ),
-                                onPressed: () => Navigator.of(context).pop(),
-                                child: const Text('Retour'),
-                              ),
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  foregroundColor: Colors.black,
-                                  backgroundColor: Colors.white,
-                                ),
                                 onPressed: () {
-                                  if (!_isReserv &&
-                                      eventDetail.placerestante > 0) {
-                                    ApiReservation.reserveEvent(
-                                        eventDetail.id, _userId);
-                                    _updateReservationStatus();
-                                    _fetchEvents();
-                                    print(_textReserv);
-                                  } else if (_isReserv &&
-                                      eventDetail.placerestante <= 0) {
-                                  } else {
-                                    ApiReservation.cancelReservation(
-                                        eventDetail.id, _userId);
-                                    _updateReservationStatus();
-                                    _fetchEvents();
-                                    print(_textReserv);
-                                  }
+                                  Navigator.of(context)
+                                      .pushNamed('/event/map', arguments: [
+                                    eventDetail.lat,
+                                    eventDetail.lng,
+                                  ]);
                                 },
-                                child: Text(
-                                  _textReserv,
-                                  style: const TextStyle(color: Colors.black),
-                                ),
+                                child: const Text('Voir la map'),
                               ),
+                              _userRole == 'organizer'
+                                  ? ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        foregroundColor: Colors.black,
+                                        backgroundColor: Colors.white,
+                                      ),
+                                      onPressed: () async {
+                                        await Clipboard.setData(
+                                          ClipboardData(text: eventDetail.code),
+                                        );
+                                      },
+                                      child: const Text('Copier le code'),
+                                    )
+                                  : ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        foregroundColor: Colors.black,
+                                        backgroundColor: Colors.white,
+                                      ),
+                                      onPressed: () {
+                                        if (!_isReserv &&
+                                            eventDetail.placerestante > 0) {
+                                          ApiReservation.reserveEvent(
+                                              eventDetail.id, _userId);
+                                          _updateReservationStatus();
+                                          _fetchEvents();
+                                        } else if (_isReserv &&
+                                            eventDetail.placerestante <= 0) {
+                                        } else {
+                                          ApiReservation.cancelReservation(
+                                              eventDetail.id, _userId);
+                                          _updateReservationStatus();
+                                          _fetchEvents();
+                                        }
+                                      },
+                                      child: Text(
+                                        _textReserv,
+                                        style: const TextStyle(
+                                            color: Colors.black),
+                                      ),
+                                    ),
                             ],
                           ),
                         ],

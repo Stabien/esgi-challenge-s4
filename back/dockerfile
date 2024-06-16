@@ -1,4 +1,4 @@
-FROM golang:1.22.1
+FROM golang:1.22.1 as dev
 
 WORKDIR /app
 
@@ -16,3 +16,20 @@ COPY *.go ./
 EXPOSE 3000
 
 ENTRYPOINT [ "air" ]
+
+
+FROM golang:1.22.1 as prod
+
+WORKDIR /app
+
+COPY go.mod go.sum ./
+
+RUN go mod download
+
+COPY . ./
+
+RUN CGO_ENABLED=0 GOOS=linux go build -o /server ./cmd/server
+
+EXPOSE 3000
+
+CMD [ "/server" ]
