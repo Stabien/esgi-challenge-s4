@@ -59,15 +59,14 @@ resource "aws_instance" "easynight_server" {
   key_name = aws_key_pair.terraform_ssh_key.key_name
   associate_public_ip_address = true
   security_groups = [aws_security_group.easynight_sg.name]
-
-  user_data = <<-EOF
-    #!/bin/bash
-    echo ${var.aws_ssh_public_key} >> ~/.ssh/authorized_keys
-  EOF
 }
 
 output "domain_name" {
   value = aws_instance.easynight_server.public_dns
+}
+
+output "aws_ssh_key" {
+  value = var.aws_ssh_key
 }
 
 resource "null_resource" "ssh_to_docker_container" {
