@@ -13,7 +13,8 @@ services:
     tty: true
     stdin_open: true
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
 
   postgres:
     build: ./internal/db
