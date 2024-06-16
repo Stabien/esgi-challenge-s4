@@ -3,9 +3,6 @@ name: "Terraform"
 on:
   push:
     branches: [ "feat/add-cd" ]
-    paths:
-      - ".github/workflows/terraform.yaml"
-      - "./back/terraform/**"
 
 env:
   TF_VAR_aws_credentials: '{ "access_key": "${{ secrets.AWS_ACCESS_KEY }}", "secret_key": "${{ secrets.AWS_SECRET_KEY }}" }'
