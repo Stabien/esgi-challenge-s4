@@ -9,6 +9,7 @@ import 'package:mobile/events/screen_events.dart';
 import 'package:mobile/eventsReservation/screen_eventsReserv.dart';
 import 'package:mobile/events/screen_eventsToday.dart';
 import 'package:mobile/utils/secureStorage.dart';
+import 'package:mobile/usersScreen/profil_screen.dart';
 
 class Layout extends StatefulWidget {
   const Layout({super.key});
@@ -48,7 +49,7 @@ class _LayoutState extends State<Layout> {
     ScreenEventToday(),
     ScreenEvent(),
     ScreenEventReservation(),
-    EventsOrganizer(),
+    ProfilScreen(),
     // LogsScreen(),
   ];
 

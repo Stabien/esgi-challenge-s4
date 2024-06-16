@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile/models/eventDetail.dart';
 import 'package:mobile/services/api_event_services.dart';
 import 'package:mobile/services/api_reservation_services.dart';
+import 'package:mobile/services/formatDate.dart';
 import 'package:mobile/utils/secureStorage.dart';
 import 'package:flutter/services.dart';
 
@@ -126,17 +127,11 @@ class _DetailScreen extends State<DetailScreen> {
                           const SizedBox(height: 10),
                           Row(
                             children: [
-                              const Text(
-                                "Par recupe l'organisateur",
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey,
-                                ),
-                              ),
+                              
                               const SizedBox(width: 10),
                               Expanded(
                                 child: Text(
-                                  eventDetail.placerestante.toString(),
+                                 "Il reste : ${eventDetail.placerestante} places",
                                   style: const TextStyle(
                                     fontSize: 12,
                                     color: Colors.grey,
@@ -166,7 +161,7 @@ class _DetailScreen extends State<DetailScreen> {
                                 ),
                                 const SizedBox(width: 15),
                                 Text(
-                                  eventDetail.date,
+                                  transformerDate(eventDetail.date),
                                   style: const TextStyle(
                                     fontSize: 12,
                                     color: Colors.grey,
