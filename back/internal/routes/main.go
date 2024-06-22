@@ -45,6 +45,9 @@ func InitRouter(e *echo.Echo) {
 	e.GET("/users/:id", controllers.GetUser)
 	e.PUT("/users/:id", controllers.UpdateUser)
 	e.DELETE("/users/:id", controllers.DeleteUser)
+	// Forgot password
+	e.POST("/send-mail-forgot-password", controllers.SendMailForgotPassword)
+	e.POST("/forgot-password", controllers.ForgotPassword)
 
 	// Reservation routes
 	e.POST("/reservations", controllers.PostReservation)

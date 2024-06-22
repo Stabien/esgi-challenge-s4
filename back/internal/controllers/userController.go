@@ -9,6 +9,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
+	"github.com/resend/resend-go/v2"
 )
 
 type RegistrationPayload struct {
@@ -367,4 +368,87 @@ func DeleteUser(c echo.Context) error {
 	}
 
 	return c.NoContent(http.StatusNoContent)
+}
+
+// SendMailForgotPassword envoie un email pour réinitialiser le mot de passe
+// @Summary Send an email to reset password
+// @Description Send an email to reset password
+// @Tags users
+// @Param email in query param
+// @Success 200 "Email sent"
+// @Failure 400 "Email is required"
+// @Router /send-mail-forgot-password [post]
+func SendMailForgotPassword(c echo.Context) error {
+	email := c.QueryParam("email")
+	if email == "" {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Email is required"})
+	}
+
+	user := services.GetUserByEmail(email)
+	if user.ID != uuid.Nil {
+		token := utils.GenerateRandomString(6)
+		user.Token = token
+		db.DB().Save(&user)
+
+		if utils.GetEnvVariable("RESEND_API_KEY") == "" {
+			return c.JSON(http.StatusBadRequest, map[string]string{"error": "Api key is missing"})
+		}
+
+		client := resend.NewClient(utils.GetEnvVariable("RESEND_API_KEY"))
+
+		params := &resend.SendEmailRequest{
+			From:    "onboarding@resend.dev",
+			To:      []string{email},
+			Subject: "Forgot password",
+			Html:    "<p>Hello, here is a token to reset your password : <strong>" + token + "</strong></p>",
+		}
+
+		_, err := client.Emails.Send(params)
+
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+		}
+	}
+
+	return c.JSON(http.StatusOK, map[string]string{"message": "Email sent"})
+}
+
+type UserPasswordInput struct {
+	Password string `json:"password"`
+}
+
+// ForgotPassword Change password with token
+// @Summary Change password with token
+// @Description Change password with token
+// @Tags users
+// @Param token in query param and new password in body
+// @Success 200 "Password updated"
+// @Failure 400 "Token is required"
+// @Router /forgot-password [post]
+func ForgotPassword(c echo.Context) error {
+	token := c.QueryParam("token")
+	if token == "" {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Token is required"})
+	}
+
+	user := services.GetUserByToken(token)
+	if user.ID != uuid.Nil {
+		var input UserPasswordInput
+		if err := c.Bind(&input); err != nil {
+			return err
+		}
+
+		hashedPassword, err := utils.HashPassword(input.Password)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+		}
+
+		user.Password = hashedPassword
+		user.Token = ""
+		db.DB().Save(&user)
+
+		return c.JSON(http.StatusOK, map[string]string{"message": "Password updated"})
+	}
+
+	return c.JSON(http.StatusNotFound, map[string]string{"error": "Token not found"})
 }

@@ -7,6 +7,7 @@ import 'package:mobile/map/map.dart';
 import 'package:mobile/screens/customer_register_screen.dart';
 import 'package:mobile/screens/login_screen.dart';
 import 'package:mobile/screens/organizer_register_screen.dart';
+import 'package:mobile/screens/forgot_password_screen.dart';
 import 'package:mobile/theme_data.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mobile/layout.dart';
@@ -65,6 +66,12 @@ class MyApp extends StatelessWidget {
             return MaterialPageRoute(
               builder: (context) {
                 return const OrganizerRegisterScreen();
+              },
+            );
+          case '/forgot-password':
+            return MaterialPageRoute(
+              builder: (context) {
+                return const ForgotPasswordScreen();
               },
             );
           case '/event':
