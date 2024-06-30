@@ -111,24 +111,9 @@ class _CustomerRegisterFormState extends State<CustomerRegisterForm> {
           const SizedBox(
             height: 16,
           ),
-          TextButton(
+          ElevatedButton(
             onPressed: _onSubmit,
-            style: TextButton.styleFrom(
-              backgroundColor: Colors.orange,
-              foregroundColor: Colors.white, // Couleur de fond du bouton
-              padding: const EdgeInsets.all(
-                8.0,
-              ), // Padding autour du texte du bouton
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(
-                  12.0,
-                ), // Border radius du bouton
-              ),
-            ),
             child: Text(
-              style: TextStyle(
-                color: Theme.of(context).textTheme.titleMedium!.color,
-              ),
               t(context)!.register,
             ),
           ),
