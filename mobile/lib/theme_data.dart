@@ -1,73 +1,74 @@
 import 'package:flutter/material.dart';
 
 const ColorScheme colorScheme = ColorScheme(
-  primary: Color(0xFF353535),
-  secondary: Color(0xFFFF9900),
-  background: Color(0xFF272727),
-  surface: Color.fromARGB(255, 255, 255, 255),
-  onBackground: Color(0xFFE9ECF1),
-  error: Color(0xFFFF765F),
-  onError: Colors.greenAccent,
-  onPrimary: Colors.black87,
-  onSecondary: Colors.black54,
-  onSurface: Colors.black87,
+  primary: Color(0xFF1E1E1E),
+  secondary: Color(0xFFFFA726),
+  background: Color(0xFF121212),
+  surface: Color(0xFF1E1E1E),
+  onBackground: Color(0xFFE0E0E0),
+  error: Color(0xFFD32F2F),
+  onError: Colors.white,
+  onPrimary: Colors.white,
+  onSecondary: Colors.black,
+  onSurface: Colors.white,
   brightness: Brightness.dark,
 );
 
 final ThemeData easyTheme = ThemeData(
-    fontFamily: 'MonumentExtended',
-    hintColor: Colors.green,
-    canvasColor: Colors.black,
-    scaffoldBackgroundColor: Colors.black87,
-    // primarySwatch: const MaterialColor(0xFF00000),
-    colorScheme: colorScheme,
-    buttonTheme: const ButtonThemeData(
-      textTheme: ButtonTextTheme.primary,
-      shape: RoundedRectangleBorder(
+  hintColor: Colors.white54,
+  canvasColor: Colors.black,
+  scaffoldBackgroundColor: colorScheme.background,
+  colorScheme: colorScheme,
+  buttonTheme: const ButtonThemeData(
+    textTheme: ButtonTextTheme.primary,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.all(Radius.circular(4)),
+    ),
+  ),
+  elevatedButtonTheme: ElevatedButtonThemeData(
+    style: ElevatedButton.styleFrom(
+      foregroundColor: colorScheme.onSecondary,
+      backgroundColor: colorScheme.secondary,
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(4)),
       ),
     ),
-    elevatedButtonTheme: ElevatedButtonThemeData(
-      style: ElevatedButton.styleFrom(
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(4)),
-        ),
+  ),
+  textButtonTheme: TextButtonThemeData(
+    style: TextButton.styleFrom(
+      foregroundColor: colorScheme.secondary,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(4)),
       ),
     ),
-    textButtonTheme: TextButtonThemeData(
-      style: TextButton.styleFrom(
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(4)),
-        ),
+  ),
+  outlinedButtonTheme: OutlinedButtonThemeData(
+    style: OutlinedButton.styleFrom(
+      foregroundColor: colorScheme.onSurface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(4)),
       ),
     ),
-    outlinedButtonTheme: OutlinedButtonThemeData(
-      style: OutlinedButton.styleFrom(
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(4)),
-        ),
-      ),
+  ),
+  inputDecorationTheme: const InputDecorationTheme(
+    focusColor: Colors.white,
+    labelStyle: TextStyle(color: Colors.white),
+    hintStyle: TextStyle(color: Colors.white54),
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: Colors.white54),
     ),
-    inputDecorationTheme: const InputDecorationTheme(
-      focusColor: Colors.white,
-      labelStyle: TextStyle(color: Colors.white),
-      hintStyle: TextStyle(color: Colors.white),
-      enabledBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: Colors.white),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: Colors.white),
-      ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: Colors.white),
     ),
-    textTheme: const TextTheme(
-      titleMedium: TextStyle(
-        fontSize: 16,
-        color: Colors.white,
-        fontFamily: 'MonumentExtended',
-      ),
-      titleLarge: TextStyle(
-        fontFamily: 'Grotesk',
-        fontSize: 24,
-        color: Colors.black87,
-      ),
-    ));
+  ),
+  textTheme: const TextTheme(
+    titleMedium: TextStyle(
+      fontSize: 16,
+      color: Colors.white,
+    ),
+    titleLarge: TextStyle(
+      fontSize: 24,
+      color: Colors.white,
+    ),
+  ),
+);
