@@ -5,7 +5,6 @@ import 'package:mobile/models/reservation.dart';
 import 'package:mobile/services/formatDate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-
 class ReservationListTile extends StatelessWidget {
   final UserReservation reservation;
 
@@ -16,10 +15,12 @@ class ReservationListTile extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: ListTile(
-        onTap: () => Navigator.of(context).pushNamed(
+        onTap: () => Navigator.of(context)
+            .pushNamed(
           '/event/detail',
           arguments: reservation.event.id,
-        ).then((_) {
+        )
+            .then((_) {
           context.read<ReservationBloc>().add(ReservationDataLoaded());
         }),
         contentPadding: const EdgeInsets.symmetric(vertical: 15.0),

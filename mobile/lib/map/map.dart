@@ -51,7 +51,6 @@ class _EventMapState extends State<EventMap> {
         backgroundColor: Colors.blue,
         child: const Icon(Icons.location_searching),
       ),
-      backgroundColor: Colors.black,
       body: FlutterMap(
         options: MapOptions(
           initialCenter: LatLng(widget.lat, widget.lng),
