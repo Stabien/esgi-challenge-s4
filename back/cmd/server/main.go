@@ -40,6 +40,8 @@ func main() {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
+	e.Static("/", "public")
+
 	validators.InitValidators(e)
 	routes.InitRouter(e)
 

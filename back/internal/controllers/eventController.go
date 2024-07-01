@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 
@@ -37,36 +38,60 @@ type EventInput struct {
 // @Failure 500 {object} error "Internal server error"
 // @Router /event [post]
 func CreateEvent(c echo.Context) error {
-	// Define EventInput struct
-	var eventInput EventInput
+	bannerFile, err := c.FormFile("banner")
 
-	// Bind request body to EventInput struct
-	if err := c.Bind(&eventInput); err != nil {
-		return err
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+	}
+
+	bannerPath, err := utils.UploadFile(bannerFile)
+
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+	}
+
+	participantNumber, err := strconv.Atoi(c.FormValue("participantNumber"))
+
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+	}
+
+	lat, err := strconv.ParseFloat(c.FormValue("lat"), 32)
+
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+	}
+
+	lng, err := strconv.ParseFloat(c.FormValue("lng"), 32)
+
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
 	}
 
 	// Create new event object
 	event := models.Event{
-		Title:       eventInput.Title,
-		Description: eventInput.Description,
-		Banner:      eventInput.Banner,
-		Image:       eventInput.Image,
-		// Date:              eventInput.Date,
-		ParticipantNumber: eventInput.ParticipantNumber,
-		Lat:               float32(eventInput.Lat),
-		Lng:               float32(eventInput.Lng),
-		Location:          eventInput.Location,
-		Tag:               eventInput.Tag,
-		Place:             eventInput.Place,
+		Title:             c.FormValue("title"),
+		Description:       c.FormValue("description"),
+		Banner:            bannerPath,
+		Image:             c.FormValue("image"),
+		Date:              time.Now(),
+		ParticipantNumber: &participantNumber,
+		Lat:               float32(lat),
+		Lng:               float32(lng),
+		Location:          c.FormValue("location"),
+		Tag:               c.FormValue("tag"),
+		Place:             c.FormValue("place"),
 		Code:              utils.GenerateRandomString(6),
 	}
 
-	var err error
-	event.Date, err = time.Parse(time.RFC3339, eventInput.Date)
-	if err != nil {
-		// handle error
-		return err
-	}
+	event.Banner = bannerPath
+
+	// var err error
+	// // event.Date, err = time.Parse(time.RFC3339, eventInput.Date)
+	// if err != nil {
+	// 	// handle error
+	// 	return err
+	// }
 
 	claims, err := utils.GetTokenFromHeader(c)
 	if err != nil {
