@@ -10,55 +10,50 @@ class ScreenEventReservation extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => ReservationBloc()..add(ReservationDataLoaded()),
-      child: SafeArea(
-        child: Scaffold(
-          backgroundColor: Colors.black,
-          appBar: AppBar(
-            title: const Text('MES BILLETS',
-                style: TextStyle(color: Colors.white)),
-            backgroundColor: Colors.black,
-            bottom: const PreferredSize(
-              preferredSize: Size.fromHeight(
-                  100.0), // Ajustez la hauteur selon vos besoins
-              child: Column(
-                children: [
-                  Text(
-                    'A VENIR',
-                    style: TextStyle(color: Colors.white, fontSize: 15.0),
-                  ),
-                  SizedBox(height: 10.0),
-                ],
-              ),
+      child: Scaffold(
+        appBar: AppBar(
+          title:
+              const Text('Mes billets', style: TextStyle(color: Colors.white)),
+          bottom: const PreferredSize(
+            preferredSize: Size.fromHeight(100.0),
+            child: Column(
+              children: [
+                Text(
+                  'A VENIR',
+                  style: TextStyle(color: Colors.white, fontSize: 15.0),
+                ),
+                SizedBox(height: 10.0),
+              ],
             ),
           ),
-          body: BlocBuilder<ReservationBloc, ReservationState>(
-            builder: (context, state) {
-              if (state is ReservationLoading) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-              if (state is ReservationDataLoadingError) {
-                return Center(
-                  child: Text(
-                    state.errorMessage,
-                    style: const TextStyle(color: Colors.red),
-                  ),
-                );
-              }
-              if (state is ReservationDataLoadingSuccess) {
-                return ListView.builder(
-                  itemBuilder: (context, index) {
-                    final reservations = state.reservations[index];
-                    return ReservationListTile(reservation: reservations);
-                  },
-                  itemCount: state.reservations.length,
-                );
-              }
+        ),
+        body: BlocBuilder<ReservationBloc, ReservationState>(
+          builder: (context, state) {
+            if (state is ReservationLoading) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            if (state is ReservationDataLoadingError) {
+              return Center(
+                child: Text(
+                  state.errorMessage,
+                  style: const TextStyle(color: Colors.red),
+                ),
+              );
+            }
+            if (state is ReservationDataLoadingSuccess) {
+              return ListView.builder(
+                itemBuilder: (context, index) {
+                  final reservations = state.reservations[index];
+                  return ReservationListTile(reservation: reservations);
+                },
+                itemCount: state.reservations.length,
+              );
+            }
 
-              return const SizedBox();
-            },
-          ),
+            return const SizedBox();
+          },
         ),
       ),
     );

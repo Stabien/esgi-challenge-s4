@@ -37,7 +37,6 @@ class _EventsOrganizerState extends State<EventsOrganizer> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
       appBar: AppBar(
         title: const Text('Evénements organisateur'),
       ),

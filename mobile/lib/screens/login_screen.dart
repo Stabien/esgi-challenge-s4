@@ -24,6 +24,16 @@ class LoginScreen extends StatelessWidget {
                   ),
                 ),
               ),
+              // forgot password
+              TextButton(
+                onPressed: () => redirectToPath(context, '/forgot-password'),
+                child: Text(
+                  'Mot de passe oublié',
+                  style: TextStyle(
+                    color: Theme.of(context).textTheme.titleMedium!.color,
+                  ),
+                ),
+              ),
             ],
           ),
         ),

@@ -44,7 +44,6 @@ class _ScreenEventState extends State<ScreenEventToday> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
       body: Column(
         children: [
           const SizedBox(height: 50),
@@ -65,68 +64,73 @@ class _ScreenEventState extends State<ScreenEventToday> {
                 ? const Center(child: CircularProgressIndicator())
                 : _error != null
                     ? Center(child: Text('Erreur: $_error'))
-                    : ListView.builder(
-                        itemBuilder: (context, index) {
-                          final event = _events[index];
-                          return GestureDetector(
-                            onTap: () => Navigator.of(context).pushNamed(
-                              '/event/detail',
-                              arguments: event.id,
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(50.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Image(image: NetworkImage(event.image)),
-                                  Text(
-                                    event.title,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  Text(
-                                    event.place,
-                                    style: const TextStyle(
-                                      fontSize: 10,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                  Text(
-                                    transformerDate(event.date),
-                                    style: const TextStyle(
-                                      fontSize: 10,
-                                      color: Colors.orange,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8, vertical: 4),
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
+                    : _events.isEmpty
+                        ? const Center(
+                            child: Text('Aucun événement trouvé aujourd\'hui'),
+                          )
+                        : ListView.builder(
+                            itemBuilder: (context, index) {
+                              final event = _events[index];
+                              return GestureDetector(
+                                onTap: () => Navigator.of(context).pushNamed(
+                                  '/event/detail',
+                                  arguments: event.id,
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(50.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Image(image: NetworkImage(event.image)),
+                                      Text(
+                                        event.title,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
                                           color: Colors.white,
-                                          width: 1), // Bordure blanche fine
-                                      borderRadius: BorderRadius.circular(
-                                          8), // Bordures arrondies
-                                    ),
-                                    child: Text(
-                                      event.tag,
-                                      style: const TextStyle(
-                                        fontSize: 10,
-                                        color: Colors.white,
+                                        ),
                                       ),
-                                    ),
+                                      Text(
+                                        event.place,
+                                        style: const TextStyle(
+                                          fontSize: 10,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                      Text(
+                                        transformerDate(event.date),
+                                        style: const TextStyle(
+                                          fontSize: 10,
+                                          color: Colors.orange,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 10),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8, vertical: 4),
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                              color: Colors.white,
+                                              width: 1), // Bordure blanche fine
+                                          borderRadius: BorderRadius.circular(
+                                              8), // Bordures arrondies
+                                        ),
+                                        child: Text(
+                                          event.tag,
+                                          style: const TextStyle(
+                                            fontSize: 10,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                        itemCount: _events.length,
-                      ),
+                                ),
+                              );
+                            },
+                            itemCount: _events.length,
+                          ),
           ),
         ],
       ),
