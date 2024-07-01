@@ -2,6 +2,7 @@ import 'package:mobile/services/api_event_services.dart';
 import 'package:mobile/models/event.dart';
 import 'package:mobile/services/formatDate.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile/components/expandable_fab.dart';
 
 class EventsOrganizer extends StatefulWidget {
   const EventsOrganizer({super.key});
@@ -36,9 +37,52 @@ class _EventsOrganizerState extends State<EventsOrganizer> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
       appBar: AppBar(
         title: const Text('Evénements organisateur'),
+      ),
+      floatingActionButton: ExpandableFab(
+        distance: 112,
+        children: [
+          ActionButton(
+            onPressed: () async {
+              final result =
+                  await Navigator.of(context)
+                      .pushNamed(
+                '/event/create',
+              );
+              if (result == true) {
+                _fetchEvents();
+              }
+            },
+            icon: const Icon(Icons.add_box_outlined),
+          ),
+          ActionButton(
+            onPressed: () => Navigator.of(context).pushNamed('/event/join'),
+            icon: const Icon(Icons.person_add_alt_rounded),
+          ),
+          ActionButton(
+            icon: const Icon(Icons.qr_code_scanner_outlined),
+            onPressed: () => showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: const Text("Scanner un QR code"),
+                content: const Text("Veuillez scanner le QR code."),
+                actions: <Widget>[
+                  TextButton(
+                    child: const Text("Annuler"),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                  TextButton(
+                    child: const Text("Scanner"),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
       body: Center(
           child: _loading
@@ -47,25 +91,6 @@ class _EventsOrganizerState extends State<EventsOrganizer> {
                   child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // button to create an event
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pushNamed('/event/create');
-                        },
-                        child: const Text('Créer un événement'),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pushNamed('/event/join');
-                        },
-                        child: const Text('Rejoindre un événement'),
-                      ),
-                    ),
                     Expanded(
                       child: ListView.builder(
                         itemBuilder: (context, index) {
@@ -129,11 +154,16 @@ class _EventsOrganizerState extends State<EventsOrganizer> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       ElevatedButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pushNamed(
+                                        onPressed: () async {
+                                          final result =
+                                              await Navigator.of(context)
+                                                  .pushNamed(
                                             '/event/update',
                                             arguments: event.id,
                                           );
+                                          if (result == true) {
+                                            _fetchEvents();
+                                          }
                                         },
                                         child: const Text('Modifier'),
                                       ),

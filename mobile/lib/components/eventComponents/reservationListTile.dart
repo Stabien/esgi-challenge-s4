@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/components/qr-code-button.dart';
+import 'package:mobile/eventsReservation/blocs/reservation_bloc.dart';
 import 'package:mobile/models/reservation.dart';
 import 'package:mobile/services/formatDate.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ReservationListTile extends StatelessWidget {
   final UserReservation reservation;
@@ -13,10 +15,14 @@ class ReservationListTile extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: ListTile(
-        onTap: () => Navigator.of(context).pushNamed(
+        onTap: () => Navigator.of(context)
+            .pushNamed(
           '/event/detail',
           arguments: reservation.event.id,
-        ),
+        )
+            .then((_) {
+          context.read<ReservationBloc>().add(ReservationDataLoaded());
+        }),
         contentPadding: const EdgeInsets.symmetric(vertical: 15.0),
         leading: Image.network(
           reservation.event.image,

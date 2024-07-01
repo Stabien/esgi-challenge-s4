@@ -9,7 +9,6 @@ class QRButton extends StatelessWidget {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         padding: EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
-        backgroundColor: const Color.fromARGB(43, 43, 43, 255),
         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
       ),
       onPressed: () {

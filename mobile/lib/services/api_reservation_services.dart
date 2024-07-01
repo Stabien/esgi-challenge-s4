@@ -1,10 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:logging/logging.dart';
 import 'package:mobile/models/reservation.dart';
 
 class ApiReservation {
-  static final _log = Logger('ApiReservation');
 
   static Future<void> reserveEvent(String eventId, String customerID) async {
     try {

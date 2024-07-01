@@ -1,9 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:mobile/models/eventDetail.dart';
 import 'package:mobile/services/api_event_services.dart';
 import 'package:mobile/services/api_reservation_services.dart';
+import 'package:mobile/services/formatDate.dart';
 import 'package:mobile/utils/secureStorage.dart';
 import 'package:flutter/services.dart';
 
@@ -27,8 +26,6 @@ class _DetailScreen extends State<DetailScreen> {
 
   Future<void> initUser() async {
     await SecureStorage.getStorageItem('userId').then((value) {
-      print("le user id est");
-      print(value);
       _userId = value!;
       _fetchEvents();
     });
@@ -88,56 +85,109 @@ class _DetailScreen extends State<DetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.black,
-        body: Builder(builder: (context) {
-          if (_error != null) {
-            return Center(
-              child: Text(_error.toString()),
-            );
-          } else if (_loading) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          } else {
-            return ListView.builder(
-              itemBuilder: (context, index) {
-                final eventDetail = _eventdetails[index];
-                return Column(
-                  children: [
-                    Image.network(
-                      eventDetail.banner,
-                      width: double.infinity,
-                      height: 200,
-                    ),
-                    const SizedBox(height: 20),
-                    Container(
-                      alignment: Alignment.topLeft,
-                      padding: const EdgeInsets.all(20),
-                      child: Column(
-                        children: [
-                          Text(
-                            eventDetail.title,
-                            style: const TextStyle(
-                              fontSize: 30,
-                              color: Colors.white,
-                            ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Détail de l\'événement'),
+      ),
+      body: Builder(builder: (context) {
+        if (_error != null) {
+          return Center(
+            child: Text(_error.toString()),
+          );
+        } else if (_loading) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else {
+          return ListView.builder(
+            itemBuilder: (context, index) {
+              final eventDetail = _eventdetails[index];
+              return Column(
+                children: [
+                  Image.network(
+                    eventDetail.banner,
+                    width: double.infinity,
+                    height: 200,
+                  ),
+                  const SizedBox(height: 20),
+                  Container(
+                    alignment: Alignment.topLeft,
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      children: [
+                        Text(
+                          eventDetail.title,
+                          style: const TextStyle(
+                            fontSize: 30,
+                            color: Colors.white,
                           ),
-                          const SizedBox(height: 10),
-                          Row(
+                        ),
+                        const SizedBox(height: 10),
+                        Row(
+                          children: [
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: Text(
+                                "Il reste : ${eventDetail.placerestante} places",
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            )
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          eventDetail.description,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Container(
+                          padding: const EdgeInsets.all(20),
+                          child: Row(
                             children: [
-                              const Text(
-                                "Par recupe l'organisateur",
-                                style: TextStyle(
+                              const Icon(
+                                Icons.date_range,
+                                color: Colors.grey,
+                              ),
+                              const SizedBox(width: 15),
+                              Text(
+                                transformerDate(eventDetail.date),
+                                style: const TextStyle(
                                   fontSize: 12,
                                   color: Colors.grey,
                                 ),
                               ),
-                              const SizedBox(width: 10),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Container(
+                          padding: const EdgeInsets.all(20),
+                          decoration: const BoxDecoration(
+                            border: Border(
+                              top: BorderSide(
+                                color: Colors.grey,
+                                width: 1, // Épaisseur de la bordure
+                              ),
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.location_on,
+                                color: Colors.grey,
+                              ),
+                              const SizedBox(width: 15),
                               Expanded(
                                 child: Text(
-                                  eventDetail.placerestante.toString(),
+                                  eventDetail.location,
                                   style: const TextStyle(
                                     fontSize: 12,
                                     color: Colors.grey,
@@ -145,166 +195,108 @@ class _DetailScreen extends State<DetailScreen> {
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                 ),
-                              )
+                              ),
                             ],
                           ),
-                          const SizedBox(height: 10),
-                          Text(
-                            eventDetail.description,
-                            style: const TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey,
+                        ),
+                        const SizedBox(height: 10),
+                        Container(
+                          padding: const EdgeInsets.all(20),
+                          decoration: const BoxDecoration(
+                            border: Border(
+                              top: BorderSide(
+                                color: Colors.grey,
+                                width: 1, // Épaisseur de la bordure
+                              ),
                             ),
                           ),
-                          const SizedBox(height: 10),
-                          Container(
-                            padding: const EdgeInsets.all(20),
-                            child: Row(
-                              children: [
-                                const Icon(
-                                  Icons.date_range,
-                                  color: Colors.grey,
-                                ),
-                                const SizedBox(width: 15),
-                                Text(
-                                  eventDetail.date,
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.home,
+                                color: Colors.grey,
+                              ),
+                              const SizedBox(width: 15),
+                              Expanded(
+                                child: Text(
+                                  eventDetail.place,
                                   style: const TextStyle(
                                     fontSize: 12,
                                     color: Colors.grey,
                                   ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          Container(
-                            padding: const EdgeInsets.all(20),
-                            decoration: const BoxDecoration(
-                              border: Border(
-                                top: BorderSide(
-                                  color: Colors.grey,
-                                  width: 1, // Épaisseur de la bordure
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
-                            ),
-                            child: Row(
-                              children: [
-                                const Icon(
-                                  Icons.location_on,
-                                  color: Colors.grey,
-                                ),
-                                const SizedBox(width: 15),
-                                Expanded(
-                                  child: Text(
-                                    eventDetail.location,
-                                    style: const TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.grey,
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          Container(
-                            padding: const EdgeInsets.all(20),
-                            decoration: const BoxDecoration(
-                              border: Border(
-                                top: BorderSide(
-                                  color: Colors.grey,
-                                  width: 1, // Épaisseur de la bordure
-                                ),
-                              ),
-                            ),
-                            child: Row(
-                              children: [
-                                const Icon(
-                                  Icons.home,
-                                  color: Colors.grey,
-                                ),
-                                const SizedBox(width: 15),
-                                Expanded(
-                                  child: Text(
-                                    eventDetail.place,
-                                    style: const TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.grey,
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 100),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  foregroundColor: Colors.black,
-                                  backgroundColor: Colors.white,
-                                ),
-                                onPressed: () => Navigator.of(context).pop(),
-                                child: const Text('Retour'),
-                              ),
-                              _userRole == 'organizer'
-                                  ? ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        foregroundColor: Colors.black,
-                                        backgroundColor: Colors.white,
-                                      ),
-                                      onPressed: () async {
-                                        await Clipboard.setData(
-                                          ClipboardData(text: eventDetail.code),
-                                        );
-                                      },
-                                      child: const Text('Copier le code'),
-                                    )
-                                  : ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        foregroundColor: Colors.black,
-                                        backgroundColor: Colors.white,
-                                      ),
-                                      onPressed: () {
-                                        if (!_isReserv &&
-                                            eventDetail.placerestante > 0) {
-                                          ApiReservation.reserveEvent(
-                                              eventDetail.id, _userId);
-                                          _updateReservationStatus();
-                                          _fetchEvents();
-                                        } else if (_isReserv &&
-                                            eventDetail.placerestante <= 0) {
-                                        } else {
-                                          ApiReservation.cancelReservation(
-                                              eventDetail.id, _userId);
-                                          _updateReservationStatus();
-                                          _fetchEvents();
-                                        }
-                                      },
-                                      child: Text(
-                                        _textReserv,
-                                        style: const TextStyle(
-                                            color: Colors.black),
-                                      ),
-                                    ),
                             ],
                           ),
-                        ],
-                      ),
+                        ),
+                        const SizedBox(height: 100),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.of(context)
+                                    .pushNamed('/event/map', arguments: [
+                                  eventDetail.lat,
+                                  eventDetail.lng,
+                                ]);
+                              },
+                              child: const Text('Voir la map'),
+                            ),
+                            _userRole == 'organizer'
+                                ? ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      foregroundColor: Colors.black,
+                                      backgroundColor: Colors.white,
+                                    ),
+                                    onPressed: () async {
+                                      await Clipboard.setData(
+                                        ClipboardData(text: eventDetail.code),
+                                      );
+                                    },
+                                    child: const Text('Copier le code'),
+                                  )
+                                : ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      foregroundColor: Colors.black,
+                                      backgroundColor: Colors.white,
+                                    ),
+                                    onPressed: () {
+                                      if (!_isReserv &&
+                                          eventDetail.placerestante > 0) {
+                                        ApiReservation.reserveEvent(
+                                            eventDetail.id, _userId);
+                                        _updateReservationStatus();
+                                        _fetchEvents();
+                                      } else if (_isReserv &&
+                                          eventDetail.placerestante <= 0) {
+                                      } else {
+                                        ApiReservation.cancelReservation(
+                                            eventDetail.id, _userId);
+                                        _updateReservationStatus();
+                                        _fetchEvents();
+                                      }
+                                    },
+                                    child: Text(
+                                      _textReserv,
+                                      style:
+                                          const TextStyle(color: Colors.black),
+                                    ),
+                                  ),
+                          ],
+                        ),
+                      ],
                     ),
-                  ],
-                );
-              },
-              itemCount: _eventdetails.length,
-            );
-          }
-        }),
-      ),
+                  ),
+                ],
+              );
+            },
+            itemCount: _eventdetails.length,
+          );
+        }
+      }),
     );
   }
 }

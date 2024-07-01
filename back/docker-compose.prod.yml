@@ -1,0 +1,46 @@
+version: '3'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: dockerfile
+      target: prod
+    ports: 
+      - 3000:3000
+    volumes: 
+      - ./:/app
+    tty: true
+    stdin_open: true
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  postgres:
+    build: ./internal/db
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres_db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=easynight
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d easynight"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+
+  caddy:
+    image: caddy:latest
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+    depends_on:
+      - api
+
+volumes:
+  postgres_db:
