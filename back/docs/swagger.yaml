@@ -464,6 +464,30 @@ paths:
       summary: get reservation by user
       tags:
       - Reservation
+  /reservations/isValid/{reservationId}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: reservationId
+        in: path
+        name: reservationId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: Successfully get
+        "400":
+          description: Bad request
+          schema: {}
+        "500":
+          description: Internal server error
+          schema: {}
+      summary: get reservation validity
+      tags:
+      - Reservation
   /reservations/isreserv/{customerId}/{eventId}:
     get:
       consumes:

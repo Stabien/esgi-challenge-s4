@@ -562,6 +562,42 @@ const docTemplate = `{
                 }
             }
         },
+        "/reservations/isValid/{reservationId}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Reservation"
+                ],
+                "summary": "get reservation validity",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "reservationId",
+                        "name": "reservationId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Successfully get"
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {}
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {}
+                    }
+                }
+            }
+        },
         "/reservations/isreserv/{customerId}/{eventId}": {
             "get": {
                 "consumes": [
