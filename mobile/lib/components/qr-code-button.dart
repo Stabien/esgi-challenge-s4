@@ -32,12 +32,10 @@ class QRButton extends StatelessWidget {
           },
         );
       },
-      child: const Text('QR',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 8,
-            color: Colors.white,
-          )),
+      child: const Icon(
+        Icons.qr_code,
+        color: Colors.white,
+      ),
     );
   }
 }

@@ -3,6 +3,7 @@ package controllers
 import (
 	"easynight/internal/db"
 	"easynight/internal/models"
+	"time"
 
 	// "encoding/json"
 
@@ -10,6 +11,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
+	"gorm.io/gorm"
 )
 
 // @Summary add reservation
@@ -158,6 +160,42 @@ func IsReserv(c echo.Context) error {
 	return c.JSON(http.StatusOK, simpleReservation)
 }
 
+// @Summary get reservation validity
+// @Tags Reservation
+// @Accept json
+// @Produce json
+// @Param reservationId path string true "reservationId"
+// @Success 204 "Successfully get"
+// @Failure 400 {object} error "Bad request"
+// @Failure 500 {object} error "Internal server error"
+// @Router /reservations/isValid/{reservationId} [get]
+func IsValid(c echo.Context) error {
+	reservationId := c.Param("reservationId")
+
+	var reservation models.Reservation
+
+	if err := db.DB().Preload("Event").Where("id = ? AND deleted_at IS NULL", reservationId).First(&reservation).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return c.JSON(http.StatusNotFound, map[string]string{"error": "Reservation not found or already deleted"})
+		}
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+	}
+
+	if reservation.Event.Date.After(time.Now()) {
+		return c.JSON(http.StatusOK, map[string]bool{"isValid": true})
+	} else {
+		return c.JSON(http.StatusOK, map[string]interface{}{"isValid": false, "message": "The event is in the past"})
+	}
+
+
+	// if err := db.DB().Preload("Event").Where("reservations.id = ? AND reservations.deleted_at IS NULL",  reservationId).First(&reservation).Error; err != nil {
+	// 	return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+	// }
+
+
+	// return c.JSON(http.StatusOK, true)!
+
+}
 // ReservationInput represents the input structure for creating or updating a reservation
 type ReservationInput struct {
 	CustomerID uuid.UUID `json:"customerId"`
