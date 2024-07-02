@@ -55,8 +55,8 @@ class _BottomBarOrgaState extends State<BottomBarOrga> {
             label: 'Logs',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.qr_code_scanner_sharp),
-            label: 'Logs',
+            icon: Icon(Icons.person),
+            label: 'Profil',
           ),
         ],
         currentIndex: widget.selectedIndex,

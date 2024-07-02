@@ -72,6 +72,31 @@ Future<Profil?> profilCustomer(String id) async {
   }
 }
 
+Future<Profil?> profilOrga(String id) async {
+  try {
+    final Response response = await dio.get('$baseUrl/users/orga/$id');
+    print("la valeur est : ");
+    print(response.data.toString());
+
+    final List<dynamic> dataList = response.data;
+    print("Parsing response data...");
+
+    if (dataList.isNotEmpty) {
+      final Map<String, dynamic> data = dataList.first;
+      print("Parsing item: $data");
+      Profil profil = Profil.fromJson(data);
+      print("Parsed profil: $profil");
+      return profil;
+    } else {
+      print("No data found");
+      return Profil(firstname: "", lastname: "", email: "", password: "");
+    }
+  } catch (error) {
+    print('Unknown error dans profilCustomer: $error');
+    return null;
+  }
+}
+
 
 
 

@@ -11,13 +11,20 @@ part 'profil_state.dart';
 
 class ProfilBloc extends Bloc<ProfilEvent, ProfilState> {
   String _userId = "";
+  String _role = "";
+  
 
   ProfilBloc() : super(ProfilInitial()) {
     on<ProfilEvent>((event, emit) async {
     emit(ProfilLoading());
    try {
         await initUser();
-        final profil = await UserServices().profilCustomer(_userId);
+         Profil? profil;
+        if (_role == "organizer") {
+          profil = await UserServices().profilOrga(_userId);
+        } else {
+          profil = await UserServices().profilCustomer(_userId);
+        }
         print("le profil est dans le bloc");
         print(profil);
         emit(ProfilDataLoadingSuccess(profil: profil));
@@ -33,6 +40,11 @@ class ProfilBloc extends Bloc<ProfilEvent, ProfilState> {
       print("le user id est dans le profil bloc");
       print(value);
       _userId = value!;
+    });
+    await SecureStorage.getStorageItem('userRole').then((value) {
+      print("le user role est dans le profil bloc");
+      print(value);
+      _role = value!;
     });
   }
 }

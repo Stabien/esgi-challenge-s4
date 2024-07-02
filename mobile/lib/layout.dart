@@ -57,6 +57,8 @@ class _LayoutState extends State<Layout> {
     HomeScreen(),
     EventsOrganizer(),
     LogsScreen(),
+    ProfilScreen(),
+
   ];
 
   void _onBottomBarItemTapped(int index) {

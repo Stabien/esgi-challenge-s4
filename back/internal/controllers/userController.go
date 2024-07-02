@@ -10,6 +10,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"github.com/resend/resend-go/v2"
+	"gorm.io/gorm"
 )
 
 type RegistrationPayload struct {
@@ -240,6 +241,85 @@ func GetUserByIdOrga(c echo.Context) error {
 	return c.JSON(http.StatusOK, results)
 }
 
+// @Summary Update user by ID
+// @Description Update user details by user ID, including first name, last name, and email.
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Security ApiKeyAuth
+// @Param id path string true "User ID"
+// @Param user body UpdateUserRequest true "User details to update"
+// @Success 200 {object} Result
+// @Failure 400 {object} error "Bad request"
+// @Failure 500 {object} error "Internal server error"
+// @Router /users/orga/{id} [patch]
+func UpdateUserByIdOrga(c echo.Context) error {
+	userIDparam := c.Param("id")
+
+	var updateUserRequest UpdateUserRequest
+	if err := c.Bind(&updateUserRequest); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid request payload"})
+	}
+
+	var result ResultUpadate
+	if err := db.DB().Table("users").
+		Select("users.email, organizers.firstname, organizers.lastname").
+		Joins("JOIN organizers on users.id = organizers.user_id").
+		Where("users.id = ? AND users.deleted_at IS NULL", userIDparam).
+		First(&result).Error; err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "User not found"})
+	}
+
+	// Update the user's details
+	if updateUserRequest.Email != "" {
+		result.Email = updateUserRequest.Email
+	}
+	if updateUserRequest.FirstName != "" {
+		result.FirstName = updateUserRequest.FirstName
+	}
+	if updateUserRequest.LastName != "" {
+		result.LastName = updateUserRequest.LastName
+	}
+
+	// Save the updated user details
+	if err := db.DB().Transaction(func(tx *gorm.DB) error {
+		if err := tx.Table("users").
+			Where("id = ?", userIDparam).
+			Updates(map[string]interface{}{
+				"email": result.Email,
+			}).Error; err != nil {
+			return err
+		}
+
+		if err := tx.Table("organizers").
+			Where("user_id = ?", userIDparam).
+			Updates(map[string]interface{}{
+				"firstname": result.FirstName,
+				"lastname":  result.LastName,
+			}).Error; err != nil {
+			return err
+		}
+
+		return nil
+	}); err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to update user details"})
+	}
+
+	return c.JSON(http.StatusOK, result)
+}
+
+type UpdateUserRequest struct {
+	Email     string `json:"email,omitempty"`
+	FirstName string `json:"firstname,omitempty"`
+	LastName  string `json:"lastname,omitempty"`
+}
+
+type ResultUpadate struct {
+	Email     string `json:"email"`
+	FirstName string `json:"firstname"`
+	LastName  string `json:"lastname"`
+}
+
 // GetUser récupère un utilisateur par ID
 // @Summary Get an user by ID
 // @Description Retrieve an user based on its unique ID
@@ -374,7 +454,7 @@ func DeleteUser(c echo.Context) error {
 // @Summary Send an email to reset password
 // @Description Send an email to reset password
 // @Tags users
-// @Param email in query param
+// @Param email path string true "User Email"
 // @Success 200 "Email sent"
 // @Failure 400 "Email is required"
 // @Router /send-mail-forgot-password [post]
@@ -421,7 +501,7 @@ type UserPasswordInput struct {
 // @Summary Change password with token
 // @Description Change password with token
 // @Tags users
-// @Param token in query param and new password in body
+// @Param token path string true "User Token"
 // @Success 200 "Password updated"
 // @Failure 400 "Token is required"
 // @Router /forgot-password [post]
