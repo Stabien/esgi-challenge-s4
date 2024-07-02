@@ -22,7 +22,7 @@ type OrganizerInput struct {
 // @Tags organizers
 // @Accept json
 // @Produce json
-// @Param organizer body models.OrganizerInput true "Organizer Input"
+// @Param organizer body OrganizerInput true "Organizer Input"
 // @Success 201 {object} models.Organizer
 // @Router /organizers [post]
 func CreateOrganizer(c echo.Context) error {
@@ -78,7 +78,6 @@ func GetAllOrganizers(c echo.Context) error {
 	return c.JSON(http.StatusOK, organizers)
 }
 
-
 // UpdateOrganizer godoc
 // @Summary Update an organizer by ID
 // @Description Update an organizer by ID
@@ -86,7 +85,7 @@ func GetAllOrganizers(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Param id path string true "Organizer ID"
-// @Param organizer body models.OrganizerInput true "Organizer Input"
+// @Param organizer body OrganizerInput true "Organizer Input"
 // @Success 200 {object} models.Organizer
 // @Router /organizers/{id} [put]
 func UpdateOrganizer(c echo.Context) error {
@@ -111,7 +110,6 @@ func UpdateOrganizer(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, organizer)
 }
-
 
 // DeleteOrganizer godoc
 // @Summary Delete an organizer by ID

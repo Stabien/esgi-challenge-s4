@@ -165,7 +165,6 @@ type ReservationInput struct {
 	Qrcode     string    `json:"qrcode"`
 }
 
-// GetReservation retrieves a reservation by ID
 // @Summary Get a reservation by ID
 // @Description Retrieve a reservation based on its unique ID
 // @Tags reservations
@@ -188,7 +187,6 @@ func GetReservation(c echo.Context) error {
 	return c.JSON(http.StatusOK, reservation)
 }
 
-// GetAllReservations retrieves all reservations
 // @Summary Get all reservations
 // @Description Retrieve all reservations from the database
 // @Tags reservations
