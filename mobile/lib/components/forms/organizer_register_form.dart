@@ -109,24 +109,10 @@ class _OrganizerRegisterFormState extends State<OrganizerRegisterForm> {
             ),
           ),
           const SizedBox(height: 16.0),
-          TextButton(
+          ElevatedButton(
             onPressed: _onSubmit,
-            style: TextButton.styleFrom(
-              backgroundColor: Colors.orange,
-              foregroundColor: Colors.white, // Couleur de fond du bouton
-              padding: const EdgeInsets.all(
-                8.0,
-              ), // Padding autour du texte du bouton
-              shape: RoundedRectangleBorder(
-                borderRadius:
-                    BorderRadius.circular(12.0), // Border radius du bouton
-              ),
-            ),
-            child: Text(
+            child: const Text(
               "Envoyer",
-              style: TextStyle(
-                color: Theme.of(context).textTheme.titleMedium!.color,
-              ),
             ),
           ),
         ],

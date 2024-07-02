@@ -42,6 +42,7 @@ dependencies:
   flutter_bloc: ^8.1.5
   qr_flutter: ^4.1.0
   intl: any
+  qr_code_scanner: ^1.0.1
   firebase_core: ^2.31.0
   firebase_messaging: ^14.9.2
   flutter_localizations:

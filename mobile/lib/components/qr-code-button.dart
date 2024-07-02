@@ -9,7 +9,6 @@ class QRButton extends StatelessWidget {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         padding: EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
-        backgroundColor: const Color.fromARGB(43, 43, 43, 255),
         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
       ),
       onPressed: () {
@@ -33,12 +32,10 @@ class QRButton extends StatelessWidget {
           },
         );
       },
-      child: const Text('QR',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 8,
-            color: Colors.white,
-          )),
+      child: const Icon(
+        Icons.qr_code,
+        color: Colors.white,
+      ),
     );
   }
 }
