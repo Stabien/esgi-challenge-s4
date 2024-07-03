@@ -241,80 +241,130 @@ func GetUserByIdOrga(c echo.Context) error {
 	return c.JSON(http.StatusOK, results)
 }
 
-// @Summary Update user by ID
-// @Description Update user details by user ID, including first name, last name, and email.
+// @Summary Update user details by ID
 // @Tags Users
 // @Accept json
 // @Produce json
 // @Security ApiKeyAuth
 // @Param id path string true "User ID"
-// @Param user body UpdateUserRequest true "User details to update"
-// @Success 200 {object} Result
+// @Param user body UpdateUserRequest true "User Update Data"
+// @Success 200 {string} string "User updated successfully!"
 // @Failure 400 {object} error "Bad request"
 // @Failure 500 {object} error "Internal server error"
 // @Router /users/orga/{id} [patch]
 func UpdateUserByIdOrga(c echo.Context) error {
 	userIDparam := c.Param("id")
 
-	var updateUserRequest UpdateUserRequest
-	if err := c.Bind(&updateUserRequest); err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid request payload"})
+	var updateUser UpdateUserRequest
+
+	if err := c.Bind(&updateUser); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
 	}
 
-	var result ResultUpadate
-	if err := db.DB().Table("users").
-		Select("users.email, organizers.firstname, organizers.lastname").
-		Joins("JOIN organizers on users.id = organizers.user_id").
-		Where("users.id = ? AND users.deleted_at IS NULL", userIDparam).
-		First(&result).Error; err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "User not found"})
+	userUpdates := map[string]interface{}{}
+	if updateUser.Email != nil {
+		userUpdates["email"] = *updateUser.Email
+	}
+	if updateUser.Password != nil {
+		userUpdates["password"] = *updateUser.Password
 	}
 
-	// Update the user's details
-	if updateUserRequest.Email != "" {
-		result.Email = updateUserRequest.Email
+	organizerUpdates := map[string]interface{}{}
+	if updateUser.FirstName != nil {
+		organizerUpdates["firstname"] = *updateUser.FirstName
 	}
-	if updateUserRequest.FirstName != "" {
-		result.FirstName = updateUserRequest.FirstName
-	}
-	if updateUserRequest.LastName != "" {
-		result.LastName = updateUserRequest.LastName
+	if updateUser.LastName != nil {
+		organizerUpdates["lastname"] = *updateUser.LastName
 	}
 
-	// Save the updated user details
 	if err := db.DB().Transaction(func(tx *gorm.DB) error {
-		if err := tx.Table("users").
-			Where("id = ?", userIDparam).
-			Updates(map[string]interface{}{
-				"email": result.Email,
-			}).Error; err != nil {
-			return err
+		if len(userUpdates) > 0 {
+			if err := tx.Table("users").Where("id = ? AND deleted_at IS NULL", userIDparam).Updates(userUpdates).Error; err != nil {
+				return err
+			}
 		}
 
-		if err := tx.Table("organizers").
-			Where("user_id = ?", userIDparam).
-			Updates(map[string]interface{}{
-				"firstname": result.FirstName,
-				"lastname":  result.LastName,
-			}).Error; err != nil {
-			return err
+		if len(organizerUpdates) > 0 {
+			if err := tx.Table("organizers").Where("user_id = ?", userIDparam).Updates(organizerUpdates).Error; err != nil {
+				return err
+			}
 		}
 
 		return nil
 	}); err != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to update user details"})
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 	}
 
-	return c.JSON(http.StatusOK, result)
+	return c.String(http.StatusOK, "User updated successfully!")
 }
 
+// @Summary Update user custom details by ID
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Security ApiKeyAuth
+// @Param id path string true "User ID"
+// @Param user body UpdateUserRequest true "User Update Data"
+// @Success 200 {string} string "User updated successfully!"
+// @Failure 400 {object} error "Bad request"
+// @Failure 500 {object} error "Internal server error"
+// @Router /users/custom/{id} [patch]
+func UpdateUserByIdCustomer(c echo.Context) error {
+	userIDparam := c.Param("id")
+
+	var updateUser UpdateUserRequest
+
+	if err := c.Bind(&updateUser); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+	}
+
+	userUpdates := map[string]interface{}{}
+	if updateUser.Email != nil {
+		userUpdates["email"] = *updateUser.Email
+	}
+	if updateUser.Password != nil {
+		userUpdates["password"] = *updateUser.Password
+	}
+
+	customerUpdates := map[string]interface{}{}
+	if updateUser.FirstName != nil {
+		customerUpdates["firstname"] = *updateUser.FirstName
+	}
+	if updateUser.LastName != nil {
+		customerUpdates["lastname"] = *updateUser.LastName
+	}
+
+	if err := db.DB().Transaction(func(tx *gorm.DB) error {
+		if len(userUpdates) > 0 {
+			if err := tx.Table("users").Where("id = ? AND deleted_at IS NULL", userIDparam).Updates(userUpdates).Error; err != nil {
+				return err
+			}
+		}
+
+		if len(customerUpdates) > 0 {
+			if err := tx.Table("customers").Where("user_id = ?", userIDparam).Updates(customerUpdates).Error; err != nil {
+				return err
+			}
+		}
+
+		return nil
+	}); err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+	}
+
+	return c.String(http.StatusOK, "User updated successfully!")
+}
+
+// Define UpdateUserRequest struct
 type UpdateUserRequest struct {
-	Email     string `json:"email,omitempty"`
-	FirstName string `json:"firstname,omitempty"`
-	LastName  string `json:"lastname,omitempty"`
+	Email     *string `json:"email"`
+	Password  *string `json:"password"`
+	FirstName *string `json:"firstname"`
+	LastName  *string `json:"lastname"`
 }
 
-type ResultUpadate struct {
+// Define Result struct for response
+type ResultUpdate struct {
 	Email     string `json:"email"`
 	FirstName string `json:"firstname"`
 	LastName  string `json:"lastname"`
