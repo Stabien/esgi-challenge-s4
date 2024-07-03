@@ -58,6 +58,10 @@ class _BottomBarOrgaState extends State<BottomBarOrga> {
             icon: Icon(Icons.person),
             label: 'Profil',
           ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.qr_code_scanner_outlined),
+            label: 'QR Code Scanner',
+          ),
         ],
         currentIndex: widget.selectedIndex,
         onTap: widget.onItemTapped,
