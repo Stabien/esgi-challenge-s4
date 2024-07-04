@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/usersScreen/bloc/profil_bloc.dart';
+import 'package:mobile/usersScreen/edit_profil_screen.dart';
 
 class ProfilScreen extends StatelessWidget {
   const ProfilScreen({super.key});
@@ -10,6 +11,9 @@ class ProfilScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => ProfilBloc()..add(ProfilDataLoaded()),
       child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Profile'),
+        ),
         body: BlocBuilder<ProfilBloc, ProfilState>(
           builder: (context, state) {
             if (state is ProfilLoading) {
@@ -24,7 +28,7 @@ class ProfilScreen extends StatelessWidget {
                 ),
               );
             } else if (state is ProfilDataLoadingSuccess) {
-              final profil = state.profil;
+              final profil = state.profil!;
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -36,20 +40,20 @@ class ProfilScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        profil?.firstname ?? '',
+                        profil.firstname,
                         style:
                             const TextStyle(fontSize: 20, color: Colors.white),
                       ),
                       const SizedBox(width: 10),
                       Text(
-                        profil?.lastname ?? '',
+                        profil.lastname,
                         style:
                             const TextStyle(fontSize: 20, color: Colors.white),
                       ),
                     ],
                   ),
                   Text(
-                    profil?.email ?? '',
+                    profil.email,
                     style: const TextStyle(color: Colors.white),
                   ),
                 ],
@@ -58,6 +62,27 @@ class ProfilScreen extends StatelessWidget {
               return const Center(
                 child: Text('Unknown state'),
               );
+            }
+          },
+        ),
+        floatingActionButton: BlocBuilder<ProfilBloc, ProfilState>(
+          builder: (context, state) {
+            if (state is ProfilDataLoadingSuccess) {
+              final profil = state.profil!;
+              return FloatingActionButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          EditProfilePage(userProfile: profil),
+                    ),
+                  );
+                },
+                child: const Icon(Icons.edit),
+              );
+            } else {
+              return Container();
             }
           },
         ),
