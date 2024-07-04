@@ -10,11 +10,13 @@ import 'package:mobile/models/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:flinq/flinq.dart';
 
-
-
 class UserServices {
   final String baseUrl = dotenv.env['URL_BACK'].toString();
-  final Dio dio = Dio();
+  final Dio dio = Dio(BaseOptions(
+    headers: {
+      HttpHeaders.contentTypeHeader: 'application/json',
+    },
+  ));
 
   Future<Response> auth(UserCredentials payload) async {
     final Response response = await dio.post('$baseUrl/auth', data: {
@@ -47,96 +49,123 @@ class UserServices {
     return response;
   }
 
-Future<Profil?> profilCustomer(String id) async {
-  try {
-    final Response response = await dio.get('$baseUrl/users/custom/$id');
-    print("la valeur est : ");
-    print(response.data.toString());
+  Future<Profil?> profilCustomer(String id) async {
+    try {
+      final Response response = await dio.get('$baseUrl/users/custom/$id');
+      print("la valeur est : ");
+      print(response.data.toString());
 
-    final List<dynamic> dataList = response.data;
-    print("Parsing response data...");
+      final List<dynamic> dataList = response.data;
+      print("Parsing response data...");
 
-    if (dataList.isNotEmpty) {
-      final Map<String, dynamic> data = dataList.first;
-      print("Parsing item: $data");
-      Profil profil = Profil.fromJson(data);
-      print("Parsed profil: $profil");
-      return profil;
-    } else {
-      print("No data found");
-      return Profil(firstname: "", lastname: "", email: "", password: "");
+      if (dataList.isNotEmpty) {
+        final Map<String, dynamic> data = dataList.first;
+        print("Parsing item: $data");
+        Profil profil = Profil.fromJson(data);
+        print("Parsed profil: $profil");
+        return profil;
+      } else {
+        print("No data found");
+        return Profil(firstname: "", lastname: "", email: "", password: "");
+      }
+    } catch (error) {
+      print('Unknown error dans profilCustomer: $error');
+      return null;
     }
-  } catch (error) {
-    print('Unknown error dans profilCustomer: $error');
-    return null;
   }
-}
 
-Future<Profil?> profilOrga(String id) async {
-  try {
-    final Response response = await dio.get('$baseUrl/users/orga/$id');
-    print("la valeur est : ");
-    print(response.data.toString());
+  Future<Profil?> profilOrga(String id) async {
+    try {
+      final Response response = await dio.get('$baseUrl/users/orga/$id');
+      print("la valeur est : ");
+      print(response.data.toString());
 
-    final List<dynamic> dataList = response.data;
-    print("Parsing response data...");
+      final List<dynamic> dataList = response.data;
+      print("Parsing response data...");
 
-    if (dataList.isNotEmpty) {
-      final Map<String, dynamic> data = dataList.first;
-      print("Parsing item: $data");
-      Profil profil = Profil.fromJson(data);
-      print("Parsed profil: $profil");
-      return profil;
-    } else {
-      print("No data found");
-      return Profil(firstname: "", lastname: "", email: "", password: "");
+      if (dataList.isNotEmpty) {
+        final Map<String, dynamic> data = dataList.first;
+        print("Parsing item: $data");
+        Profil profil = Profil.fromJson(data);
+        print("Parsed profil: $profil");
+        return profil;
+      } else {
+        print("No data found");
+        return Profil(firstname: "", lastname: "", email: "", password: "");
+      }
+    } catch (error) {
+      print('Unknown error dans profilCustomer: $error');
+      return null;
     }
-  } catch (error) {
-    print('Unknown error dans profilCustomer: $error');
-    return null;
   }
-}
 
+  Future<Profil?> patchProfilOrga(String id, Profil profil) async {
+    try {
+      final Response response = await dio.patch(
+        '$baseUrl/users/orga/$id',
+        data: {
+          "lastname": profil.lastname,
+          "firstname": profil.firstname,
+          "email": profil.email,
+        },
+        options: Options(headers: {"Content-Type": "application/json"}),
+      );
 
+      if (response.data != null && response.data.isNotEmpty) {
+        final Map<String, dynamic> data = response.data is String
+            ? jsonDecode(response.data)
+            : response.data as Map<String, dynamic>;
 
+        Profil profil = Profil.fromJson(data);
+        return profil;
+      } else {
+        return Profil(firstname: "", lastname: "", email: "", password: "");
+      }
+    } catch (e) {
+      if (e is DioException) {
+        print('Dio error: ${e.message}');
+        print('Request: ${e.requestOptions}');
+        print('Response: ${e.response}');
+        print('Type: ${e.type}');
+      } else {
+        print('Unknown error in patchProfilOrga: $e');
+      }
+      return null;
+    }
+  }
 
-//  Future<List> profilCustomer(
-//       String id) async {
-//     try {
-//       Dio dio = Dio();
-//       String url =
-//           '${dotenv.env['URL_BACK']}/users/custom/$id';
+  Future<Profil?> patchProfilCusto(String id, Profil profil) async {
+    try {
+      final Response response = await dio.patch(
+        '$baseUrl/users/custom/$id',
+        data: {
+          "lastname": profil.lastname,
+          "firstname": profil.firstname,
+          "email": profil.email,
+        },
+        options: Options(headers: {"Content-Type": "application/json"}),
+      );
 
-//       Response response = await dio.get(url);
-//       print("Response data: ${response.data}");
+      if (response.data != null && response.data.isNotEmpty) {
+        final Map<String, dynamic> data = response.data is String
+            ? jsonDecode(response.data)
+            : response.data as Map<String, dynamic>;
 
-//       final data = response.data as List;
-//       print(data);
-//       return data;
-//     } catch (error) {
-//       print('Unknown error: $error');
-//       return [];
-//     }
-//   }
-
-//  Future<Profil> profilCustomer(String id) async {
-//     try {
-//       final response = await http.get(Uri.parse('$baseUrl/users/custom/$id'));
-//       await Future.delayed(const Duration(seconds: 1));
-//       if (response.statusCode < 200 || response.statusCode >= 400) {
-//         throw ApiException(message: 'Bad request');
-//       }
-//       final data =
-//           json.decode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
-//           print(data);
-//       return Profil.fromJson(data);
-//     } on SocketException catch (error) {
-//       // log('Network error.' as num, error: error);
-//       throw ApiException(message: 'Network error');
-//     } catch (error) {
-//       // log('An error occurred while fetching events apirequete.' as num, error: error);
-//       throw ApiException(message: 'Unknown errors');
-//     }
-//   }
-
+        Profil profil = Profil.fromJson(data);
+        return profil;
+      } else {
+        return Profil(firstname: "", lastname: "", email: "", password: "");
+      }
+    } catch (e) {
+      if (e is DioException) {
+        print('Dio error: ${e.message}');
+        print('Request: ${e.requestOptions}');
+        print('Response: ${e.response}');
+        print('Type: ${e.type}');
+      } else {
+        print('Unknown error in patchProfilOrga: $e');
+      }
+      return null;
+    }
+  }
 }

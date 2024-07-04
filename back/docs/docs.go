@@ -1629,6 +1629,57 @@ const docTemplate = `{
                         "schema": {}
                     }
                 }
+            },
+            "patch": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Update user custom details by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "User Update Data",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/internal_controllers.UpdateUserRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User updated successfully!",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {}
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {}
+                    }
+                }
             }
         },
         "/users/orga/{id}": {
@@ -1684,7 +1735,6 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Update user details by user ID, including first name, last name, and email.",
                 "consumes": [
                     "application/json"
                 ],
@@ -1694,7 +1744,7 @@ const docTemplate = `{
                 "tags": [
                     "Users"
                 ],
-                "summary": "Update user by ID",
+                "summary": "Update user details by ID",
                 "parameters": [
                     {
                         "type": "string",
@@ -1704,7 +1754,7 @@ const docTemplate = `{
                         "required": true
                     },
                     {
-                        "description": "User details to update",
+                        "description": "User Update Data",
                         "name": "user",
                         "in": "body",
                         "required": true,
@@ -1715,9 +1765,9 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "User updated successfully!",
                         "schema": {
-                            "$ref": "#/definitions/internal_controllers.Result"
+                            "type": "string"
                         }
                     },
                     "400": {
@@ -2377,6 +2427,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "lastname": {
+                    "type": "string"
+                },
+                "password": {
                     "type": "string"
                 }
             }

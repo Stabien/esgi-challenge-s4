@@ -17,6 +17,7 @@ import 'package:mobile/events/screen_events.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:mobile/usersScreen/edit_profil_screen.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -107,7 +108,8 @@ class MyApp extends StatelessWidget {
           case '/event/map':
             return MaterialPageRoute(
               builder: (context) {
-                return EventMap(lat: (args as List)[0] as double, lng: (args)[1] as double);
+                return EventMap(
+                    lat: (args as List)[0] as double, lng: (args)[1] as double);
               },
             );
         }
