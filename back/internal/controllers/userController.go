@@ -10,6 +10,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"github.com/resend/resend-go/v2"
+	"gorm.io/gorm"
 )
 
 type RegistrationPayload struct {
@@ -240,6 +241,135 @@ func GetUserByIdOrga(c echo.Context) error {
 	return c.JSON(http.StatusOK, results)
 }
 
+// @Summary Update user details by ID
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Security ApiKeyAuth
+// @Param id path string true "User ID"
+// @Param user body UpdateUserRequest true "User Update Data"
+// @Success 200 {string} string "User updated successfully!"
+// @Failure 400 {object} error "Bad request"
+// @Failure 500 {object} error "Internal server error"
+// @Router /users/orga/{id} [patch]
+func UpdateUserByIdOrga(c echo.Context) error {
+	userIDparam := c.Param("id")
+
+	var updateUser UpdateUserRequest
+
+	if err := c.Bind(&updateUser); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+	}
+
+	userUpdates := map[string]interface{}{}
+	if updateUser.Email != nil {
+		userUpdates["email"] = *updateUser.Email
+	}
+	if updateUser.Password != nil {
+		userUpdates["password"] = *updateUser.Password
+	}
+
+	organizerUpdates := map[string]interface{}{}
+	if updateUser.FirstName != nil {
+		organizerUpdates["firstname"] = *updateUser.FirstName
+	}
+	if updateUser.LastName != nil {
+		organizerUpdates["lastname"] = *updateUser.LastName
+	}
+
+	if err := db.DB().Transaction(func(tx *gorm.DB) error {
+		if len(userUpdates) > 0 {
+			if err := tx.Table("users").Where("id = ? AND deleted_at IS NULL", userIDparam).Updates(userUpdates).Error; err != nil {
+				return err
+			}
+		}
+
+		if len(organizerUpdates) > 0 {
+			if err := tx.Table("organizers").Where("user_id = ?", userIDparam).Updates(organizerUpdates).Error; err != nil {
+				return err
+			}
+		}
+
+		return nil
+	}); err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+	}
+
+	return c.String(http.StatusOK, "User updated successfully!")
+}
+
+// @Summary Update user custom details by ID
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Security ApiKeyAuth
+// @Param id path string true "User ID"
+// @Param user body UpdateUserRequest true "User Update Data"
+// @Success 200 {string} string "User updated successfully!"
+// @Failure 400 {object} error "Bad request"
+// @Failure 500 {object} error "Internal server error"
+// @Router /users/custom/{id} [patch]
+func UpdateUserByIdCustomer(c echo.Context) error {
+	userIDparam := c.Param("id")
+
+	var updateUser UpdateUserRequest
+
+	if err := c.Bind(&updateUser); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+	}
+
+	userUpdates := map[string]interface{}{}
+	if updateUser.Email != nil {
+		userUpdates["email"] = *updateUser.Email
+	}
+	if updateUser.Password != nil {
+		userUpdates["password"] = *updateUser.Password
+	}
+
+	customerUpdates := map[string]interface{}{}
+	if updateUser.FirstName != nil {
+		customerUpdates["firstname"] = *updateUser.FirstName
+	}
+	if updateUser.LastName != nil {
+		customerUpdates["lastname"] = *updateUser.LastName
+	}
+
+	if err := db.DB().Transaction(func(tx *gorm.DB) error {
+		if len(userUpdates) > 0 {
+			if err := tx.Table("users").Where("id = ? AND deleted_at IS NULL", userIDparam).Updates(userUpdates).Error; err != nil {
+				return err
+			}
+		}
+
+		if len(customerUpdates) > 0 {
+			if err := tx.Table("customers").Where("user_id = ?", userIDparam).Updates(customerUpdates).Error; err != nil {
+				return err
+			}
+		}
+
+		return nil
+	}); err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+	}
+
+	return c.String(http.StatusOK, "User updated successfully!")
+}
+
+// Define UpdateUserRequest struct
+type UpdateUserRequest struct {
+	Email     *string `json:"email"`
+	Password  *string `json:"password"`
+	FirstName *string `json:"firstname"`
+	LastName  *string `json:"lastname"`
+}
+
+// Define Result struct for response
+type ResultUpdate struct {
+	Email     string `json:"email"`
+	FirstName string `json:"firstname"`
+	LastName  string `json:"lastname"`
+}
+
 // GetUser récupère un utilisateur par ID
 // @Summary Get an user by ID
 // @Description Retrieve an user based on its unique ID
@@ -374,7 +504,7 @@ func DeleteUser(c echo.Context) error {
 // @Summary Send an email to reset password
 // @Description Send an email to reset password
 // @Tags users
-// @Param email in query param
+// @Param email path string true "User Email"
 // @Success 200 "Email sent"
 // @Failure 400 "Email is required"
 // @Router /send-mail-forgot-password [post]
@@ -421,7 +551,7 @@ type UserPasswordInput struct {
 // @Summary Change password with token
 // @Description Change password with token
 // @Tags users
-// @Param token in query param and new password in body
+// @Param token path string true "User Token"
 // @Success 200 "Password updated"
 // @Failure 400 "Token is required"
 // @Router /forgot-password [post]

@@ -14,6 +14,7 @@ type MessageInput struct {
 	OrganizerID uuid.UUID `json:"organizerId"`
 	Content     string    `json:"content"`
 }
+
 // CreateMessage creates a new message
 // @Summary Create a new message
 // @Description Create a new message with the provided data
@@ -21,7 +22,7 @@ type MessageInput struct {
 // @Accept json
 // @Produce json
 // @Param message body MessageInput true "Message data"
-// @Success 201 {object} Message
+// @Success 201 {object} models.Message
 // @Router /messages [post]
 func CreateMessage(c echo.Context) error {
 
@@ -49,7 +50,7 @@ func CreateMessage(c echo.Context) error {
 // @Tags messages
 // @Produce json
 // @Param id path string true "Message ID"
-// @Success 200 {object} Message
+// @Success 200 {object} models.Message
 // @Router /messages/{id} [get]
 func GetMessage(c echo.Context) error {
 
@@ -89,7 +90,7 @@ func GetAllMessage(c echo.Context) error {
 // @Produce json
 // @Param id path string true "Message ID"
 // @Param message body MessageInput true "Updated message data"
-// @Success 200 {object} Message
+// @Success 200 {object} models.Message
 // @Router /messages/{id} [put]
 func UpdateMessage(c echo.Context) error {
 
