@@ -2,6 +2,7 @@ package routes
 
 import (
 	"easynight/internal/controllers"
+	"easynight/internal/ws"
 
 	"github.com/labstack/echo/v4"
 	echoSwagger "github.com/swaggo/echo-swagger"
@@ -9,6 +10,8 @@ import (
 
 func InitRouter(e *echo.Echo) {
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
+
+	e.GET("/ws", ws.HandleWebSocket)
 
 	e.POST("/event", controllers.CreateEvent)
 	e.DELETE("/event/:id", controllers.DeleteEvent)

@@ -3,6 +3,8 @@ import 'package:mobile/models/event.dart';
 import 'package:mobile/services/formatDate.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/components/expandable_fab.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:web_socket_channel/status.dart' as status;
 
 class EventsOrganizer extends StatefulWidget {
   const EventsOrganizer({super.key});
@@ -14,6 +16,7 @@ class EventsOrganizer extends StatefulWidget {
 class _EventsOrganizerState extends State<EventsOrganizer> {
   late List<Event> _events = [];
   bool _loading = false;
+  WebSocketChannel? _channel;
 
   @override
   void initState() {
@@ -34,6 +37,33 @@ class _EventsOrganizerState extends State<EventsOrganizer> {
     });
   }
 
+  void _connectWebSocket() {
+    setState(() {
+      _channel = WebSocketChannel.connect(
+        Uri.parse('ws://10.0.2.2:3000/ws'),
+      );
+      print('essaye au serveur WebSocket');
+
+      _channel!.sink.add('Bonjour serveur, je suis connecté!');
+
+      _channel!.stream.listen((message) {
+        print('Message reçu: $message');
+      });
+    });
+  }
+
+  void _sendMessage(String message) {
+    if (_channel != null) {
+      _channel!.sink.add(message);
+    }
+  }
+
+  @override
+  void dispose() {
+    _channel?.sink.close(status.goingAway);
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,10 +76,7 @@ class _EventsOrganizerState extends State<EventsOrganizer> {
           ActionButton(
             onPressed: () async {
               final result =
-                  await Navigator.of(context)
-                      .pushNamed(
-                '/event/create',
-              );
+                  await Navigator.of(context).pushNamed('/event/create');
               if (result == true) {
                 _fetchEvents();
               }
@@ -85,10 +112,10 @@ class _EventsOrganizerState extends State<EventsOrganizer> {
         ],
       ),
       body: Center(
-          child: _loading
-              ? const CircularProgressIndicator()
-              : Container(
-                  child: Column(
+        child: _loading
+            ? const CircularProgressIndicator()
+            : Container(
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Expanded(
@@ -138,8 +165,7 @@ class _EventsOrganizerState extends State<EventsOrganizer> {
                                         width: 1,
                                       ), // Bordure blanche fine
                                       borderRadius: BorderRadius.circular(
-                                        8,
-                                      ), // Bordures arrondies
+                                          8), // Bordures arrondies
                                     ),
                                     child: Text(
                                       event.tag,
@@ -196,6 +222,10 @@ class _EventsOrganizerState extends State<EventsOrganizer> {
                                         ),
                                         child: const Text('Supprimer'),
                                       ),
+                                      ElevatedButton(
+                                        onPressed: _connectWebSocket,
+                                        child: const Text('Chat'),
+                                      ),
                                     ],
                                   ),
                                 ],
@@ -207,7 +237,9 @@ class _EventsOrganizerState extends State<EventsOrganizer> {
                       ),
                     ),
                   ],
-                ))),
+                ),
+              ),
+      ),
     );
   }
 }
