@@ -11,7 +11,8 @@ import (
 func InitRouter(e *echo.Echo) {
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
-	e.GET("/ws", ws.HandleWebSocket)
+	// e.GET("/ws", ws.HandleWebSocket)
+	e.GET("/ws/room", ws.HandleRoomWebSocket)
 
 	e.POST("/event", controllers.CreateEvent)
 	e.DELETE("/event/:id", controllers.DeleteEvent)
