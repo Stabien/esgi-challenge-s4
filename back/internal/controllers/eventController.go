@@ -92,6 +92,7 @@ func CreateEvent(c echo.Context) error {
 	return c.String(http.StatusOK, "Event created successfully!")
 }
 
+// UpdateEvent met à jour partiellement un événement par ID
 // @Summary Update an existing event
 // @Tags Event
 // @Accept json
@@ -100,6 +101,7 @@ func CreateEvent(c echo.Context) error {
 // @Param event body EventInput true "Event input"
 // @Success 200 {string} string "Event updated successfully!"
 // @Failure 400 {object} error "Bad request"
+// @Failure 404 {object} error "Event not found"
 // @Failure 500 {object} error "Internal server error"
 // @Router /event/{id} [patch]
 func UpdateEvent(c echo.Context) error {
@@ -137,21 +139,42 @@ func UpdateEvent(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "You are not the organizer of this event"})
 	}
 
-	// Update event fields
-	event.Title = updateInput.Title
-	event.Description = updateInput.Description
-	event.Banner = updateInput.Banner
-	event.Image = updateInput.Image
-	event.Location = updateInput.Location
-	event.ParticipantNumber = updateInput.ParticipantNumber
-	event.Lat = float32(updateInput.Lat)
-	event.Lng = float32(updateInput.Lng)
-	event.Tag = updateInput.Tag
-	event.Place = updateInput.Place
-
-	event.Date, err = time.Parse(time.RFC3339, updateInput.Date)
-	if err != nil {
-		return err
+	// Update only fields that are provided in the input
+	if updateInput.Title != "" {
+		event.Title = updateInput.Title
+	}
+	if updateInput.Description != "" {
+		event.Description = updateInput.Description
+	}
+	if updateInput.Banner != "" {
+		event.Banner = updateInput.Banner
+	}
+	if updateInput.Image != "" {
+		event.Image = updateInput.Image
+	}
+	if updateInput.Location != "" {
+		event.Location = updateInput.Location
+	}
+	if updateInput.ParticipantNumber != 0 {
+		event.ParticipantNumber = updateInput.ParticipantNumber
+	}
+	if updateInput.Lat != 0 {
+		event.Lat = float32(updateInput.Lat)
+	}
+	if updateInput.Lng != 0 {
+		event.Lng = float32(updateInput.Lng)
+	}
+	if updateInput.Tag != "" {
+		event.Tag = updateInput.Tag
+	}
+	if updateInput.Place != "" {
+		event.Place = updateInput.Place
+	}
+	if updateInput.Date != "" {
+		event.Date, err = time.Parse(time.RFC3339, updateInput.Date)
+		if err != nil {
+			return err
+		}
 	}
 
 	if err := db.DB().Model(&event).Updates(&event).Error; err != nil {
@@ -160,6 +183,7 @@ func UpdateEvent(c echo.Context) error {
 
 	return c.String(http.StatusOK, "Event updated successfully!")
 }
+
 
 type EventDetails struct {
 	ID                uuid.UUID `json:"id"`

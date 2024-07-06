@@ -419,7 +419,7 @@ func GetAllUsers(c echo.Context) error {
 // @Param id path string true "User ID"
 // @Param user body UserInput true "Updated user data"
 // @Success 200 {object} models.User
-// @Router /users/{id} [put]
+// @Router /users/{id} [patch]
 func UpdateUser(c echo.Context) error {
 	id, err := uuid.Parse(c.Param("id"))
 	if err != nil {
@@ -436,8 +436,13 @@ func UpdateUser(c echo.Context) error {
 		return err
 	}
 
-	user.Email = input.Email
-	user.Password = input.Password
+		// Update only fields that are provided in the input
+	if input.Email != "" {
+		user.Email = input.Email
+	}
+	if input.Password != "" {
+		user.Password = input.Password
+	}
 
 	if err := db.DB().Save(&user).Error; err != nil {
 		return err
