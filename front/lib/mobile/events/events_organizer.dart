@@ -14,11 +14,13 @@ class EventsOrganizer extends StatefulWidget {
 class _EventsOrganizerState extends State<EventsOrganizer> {
   late List<Event> _events = [];
   bool _loading = false;
+  bool _eventCreationEnabled = false;
 
   @override
   void initState() {
     super.initState();
     _fetchEvents();
+    eventCreationEnabled();
   }
 
   void _fetchEvents() async {
@@ -34,6 +36,17 @@ class _EventsOrganizerState extends State<EventsOrganizer> {
     });
   }
 
+  void eventCreationEnabled() async {
+    try {
+      final data = await ApiServices.eventCreationEnabled();
+      setState(() {
+        _eventCreationEnabled = data;
+      });
+    } catch (e) {
+      print('Error occurred: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,19 +56,27 @@ class _EventsOrganizerState extends State<EventsOrganizer> {
       floatingActionButton: ExpandableFab(
         distance: 112,
         children: [
-          ActionButton(
-            onPressed: () async {
-              final result =
-                  await Navigator.of(context)
-                      .pushNamed(
-                '/event/create',
-              );
-              if (result == true) {
-                _fetchEvents();
-              }
-            },
-            icon: const Icon(Icons.add_box_outlined),
-          ),
+          _eventCreationEnabled
+              ? ActionButton(
+                  onPressed: () async {
+                    final result = await Navigator.of(context).pushNamed(
+                      '/event/create',
+                    );
+                    if (result == true) {
+                      _fetchEvents();
+                    }
+                  },
+                  icon: const Icon(Icons.add_box_outlined),
+                )
+              : const IgnorePointer(
+                  ignoring: true,
+                  child: Opacity(
+                    opacity: 0.5,
+                    child: ActionButton(
+                      icon: Icon(Icons.add_box_outlined),
+                    ),
+                  ),
+                ),
           ActionButton(
             onPressed: () => Navigator.of(context).pushNamed('/event/join'),
             icon: const Icon(Icons.person_add_alt_rounded),

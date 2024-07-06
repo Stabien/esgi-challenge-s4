@@ -7,6 +7,7 @@ import 'pages/organizers.dart';
 import 'pages/rates.dart';
 import 'pages/reservations.dart';
 import 'pages/users.dart';
+import 'pages/feature_flipping.dart';
 
 class WebApp extends StatelessWidget {
   const WebApp({super.key});
@@ -18,6 +19,7 @@ class WebApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
+      debugShowCheckedModeBanner: false,
       initialRoute: '/',
       routes: {
         // When navigating to the "/" route, build the FirstScreen widget.
@@ -30,6 +32,7 @@ class WebApp extends StatelessWidget {
         '/organizer': (context) => const OrganizerPage(),
         '/rates': (context) => const RatePage(),
         '/reservations': (context) => const ReservationsPage(),
+        '/feature_flipping': (context) => const FeatureFlippingPage(),
       },
     );
   }

@@ -155,7 +155,7 @@ func UpdateEvent(c echo.Context) error {
 	if updateInput.Location != "" {
 		event.Location = updateInput.Location
 	}
-	if updateInput.ParticipantNumber != 0 {
+	if updateInput.ParticipantNumber != nil {
 		event.ParticipantNumber = updateInput.ParticipantNumber
 	}
 	if updateInput.Lat != 0 {
@@ -183,7 +183,6 @@ func UpdateEvent(c echo.Context) error {
 
 	return c.String(http.StatusOK, "Event updated successfully!")
 }
-
 
 type EventDetails struct {
 	ID                uuid.UUID `json:"id"`
