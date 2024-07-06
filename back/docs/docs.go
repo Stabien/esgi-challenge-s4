@@ -462,6 +462,10 @@ const docTemplate = `{
                         "description": "Bad request",
                         "schema": {}
                     },
+                    "404": {
+                        "description": "Event not found",
+                        "schema": {}
+                    },
                     "500": {
                         "description": "Internal server error",
                         "schema": {}
@@ -590,6 +594,101 @@ const docTemplate = `{
                     "500": {
                         "description": "Internal server error",
                         "schema": {}
+                    }
+                }
+            }
+        },
+        "/features": {
+            "get": {
+                "description": "Get all features",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Feature Flipping"
+                ],
+                "summary": "Get all features",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/easynight_internal_models.FeatureFlipping"
+                            }
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "description": "Update feature state",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Feature Flipping"
+                ],
+                "summary": "Update feature state",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Feature name",
+                        "name": "feature",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "State",
+                        "name": "is_enabled",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/easynight_internal_models.FeatureFlipping"
+                        }
+                    }
+                }
+            }
+        },
+        "/features/{name}": {
+            "get": {
+                "description": "Get feature state",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Feature Flipping"
+                ],
+                "summary": "Get feature state",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Feature name",
+                        "name": "name",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "boolean"
+                        }
                     }
                 }
             }
@@ -1809,7 +1908,28 @@ const docTemplate = `{
                     }
                 }
             },
-            "put": {
+            "delete": {
+                "description": "Delete an existing user identified by its ID",
+                "tags": [
+                    "users"
+                ],
+                "summary": "Delete a user by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    }
+                }
+            },
+            "patch": {
                 "description": "Update an existing user identified by its ID",
                 "consumes": [
                     "application/json"
@@ -1845,27 +1965,6 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/easynight_internal_models.User"
                         }
-                    }
-                }
-            },
-            "delete": {
-                "description": "Delete an existing user identified by its ID",
-                "tags": [
-                    "users"
-                ],
-                "summary": "Delete a user by ID",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "User ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": "No Content"
                     }
                 }
             }
@@ -1994,6 +2093,29 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "title": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "easynight_internal_models.FeatureFlipping": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "deletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "isEnabled": {
+                    "type": "boolean"
+                },
+                "name": {
                     "type": "string"
                 },
                 "updatedAt": {
