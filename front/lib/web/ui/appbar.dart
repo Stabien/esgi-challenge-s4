@@ -61,6 +61,12 @@ class WebAppBar extends StatelessWidget implements PreferredSizeWidget {
             Navigator.pushNamed(context, '/reservations');
           },
         ),
+        IconButton(
+          icon: const Icon(Icons.flip_camera_android),
+          onPressed: () {
+            Navigator.pushNamed(context, '/feature_flipping');
+          },
+        ),
       ],
     );
   }
