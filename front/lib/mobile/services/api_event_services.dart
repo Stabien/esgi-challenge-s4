@@ -133,6 +133,22 @@ class ApiServices {
       throw ApiException(message: 'Error deleting event');
     }
   }
+
+  static Future<bool> eventCreationEnabled() async {
+    var dio = Dio(
+      BaseOptions(
+        baseUrl: dotenv.env['URL_BACK'].toString(),
+      ),
+    );
+
+    final response = await dio.get('/features/event_create');
+    try {
+      return response.data;
+    } catch (error) {
+      log('An error occurred while fetching events.', error: error);
+      throw ApiException(message: 'Unknown error');
+    }
+  }
 }
 
 //   static final String baseUrl = dotenv.env['URL_BACK'].toString();
