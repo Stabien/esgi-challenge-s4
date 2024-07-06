@@ -97,4 +97,7 @@ func InitRouter(e *echo.Echo) {
 	e.GET("/notifications/:id", controllers.GetAllNotifications)
 	e.PUT("/notifications/:id", controllers.UpdateNotification)
 	e.DELETE("/notifications/:id", controllers.DeleteNotification)
+
+	// Feature flipping
+	e.GET("/enabled", controllers.EnableFeature)
 }

@@ -13,6 +13,7 @@ var AllFixtures = []any{
 	Customers,
 	Events,
 	Reservations,
+	Features,
 }
 
 func LoadFixtures(db *gorm.DB) {
