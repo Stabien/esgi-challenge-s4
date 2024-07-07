@@ -47,7 +47,7 @@ func InitRouter(e *echo.Echo) {
 	// User routes
 	e.POST("/users", controllers.CreateUser)
 	e.GET("/users/:id", controllers.GetUser)
-	e.PUT("/users/:id", controllers.UpdateUser)
+	e.PATCH("/users/:id", controllers.UpdateUser)
 	e.DELETE("/users/:id", controllers.DeleteUser)
 	// Forgot password
 	e.POST("/send-mail-forgot-password", controllers.SendMailForgotPassword)
@@ -74,7 +74,7 @@ func InitRouter(e *echo.Echo) {
 	// Event routes
 	e.POST("/events", controllers.CreateEvent)
 	e.GET("/events/:id", controllers.GetEvent)
-	e.PUT("/events/:id", controllers.UpdateEvent)
+	e.PATCH("/events/:id", controllers.UpdateEvent)
 	e.DELETE("/events/:id", controllers.DeleteEvent)
 
 	// Rate routes
@@ -97,4 +97,9 @@ func InitRouter(e *echo.Echo) {
 	e.GET("/notifications/:id", controllers.GetAllNotifications)
 	e.PUT("/notifications/:id", controllers.UpdateNotification)
 	e.DELETE("/notifications/:id", controllers.DeleteNotification)
+
+	// Feature flipping
+	e.GET("/features", controllers.GetAllFeatures)
+	e.GET("/features/:name", controllers.IsEnabled)
+	e.PATCH("/features", controllers.UpdateState)
 }

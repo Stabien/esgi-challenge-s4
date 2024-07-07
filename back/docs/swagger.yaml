@@ -85,6 +85,21 @@ definitions:
       updatedAt:
         type: string
     type: object
+  easynight_internal_models.FeatureFlipping:
+    properties:
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      id:
+        type: string
+      isEnabled:
+        type: boolean
+      name:
+        type: string
+      updatedAt:
+        type: string
+    type: object
   easynight_internal_models.Message:
     properties:
       content:
@@ -668,6 +683,9 @@ paths:
         "400":
           description: Bad request
           schema: {}
+        "404":
+          description: Event not found
+          schema: {}
         "500":
           description: Internal server error
           schema: {}
@@ -787,6 +805,69 @@ paths:
       summary: Get events today
       tags:
       - Event
+  /features:
+    get:
+      consumes:
+      - application/json
+      description: Get all features
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/easynight_internal_models.FeatureFlipping'
+            type: array
+      summary: Get all features
+      tags:
+      - Feature Flipping
+    patch:
+      consumes:
+      - application/json
+      description: Update feature state
+      parameters:
+      - description: Feature name
+        in: formData
+        name: feature
+        required: true
+        type: string
+      - description: State
+        in: formData
+        name: is_enabled
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/easynight_internal_models.FeatureFlipping'
+      summary: Update feature state
+      tags:
+      - Feature Flipping
+  /features/{name}:
+    get:
+      consumes:
+      - application/json
+      description: Get feature state
+      parameters:
+      - description: Feature name
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: boolean
+      summary: Get feature state
+      tags:
+      - Feature Flipping
   /forgot-password:
     post:
       description: Change password with token
@@ -1479,7 +1560,7 @@ paths:
       summary: Get an user by ID
       tags:
       - users
-    put:
+    patch:
       consumes:
       - application/json
       description: Update an existing user identified by its ID

@@ -126,6 +126,7 @@ func CreateEvent(c echo.Context) error {
 	return c.String(http.StatusOK, "Event created successfully!")
 }
 
+// UpdateEvent met à jour partiellement un événement par ID
 // @Summary Update an existing event
 // @Tags Event
 // @Accept json
@@ -134,6 +135,7 @@ func CreateEvent(c echo.Context) error {
 // @Param event body EventInput true "Event input"
 // @Success 200 {string} string "Event updated successfully!"
 // @Failure 400 {object} error "Bad request"
+// @Failure 404 {object} error "Event not found"
 // @Failure 500 {object} error "Internal server error"
 // @Router /event/{id} [patch]
 func UpdateEvent(c echo.Context) error {
