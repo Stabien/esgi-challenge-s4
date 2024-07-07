@@ -26,18 +26,16 @@ type Room struct {
 
 var activeRooms = make(map[string]*Room)
 
-var activeConnections = make(map[string]*websocket.Conn)
-
 type Message struct {
 	Sender string    `json:"sender"`
 	Date   time.Time `json:"date"`
 	Text   string    `json:"text"`
+	UserId string    `json:"userId"`
 }
 
 func HandleRoomWebSocket(c echo.Context) error {
 	roomName := c.QueryParam("roomName")
 
-	// Vérifier si la room existe déjà, sinon la créer
 	room, ok := activeRooms[roomName]
 	if !ok {
 		room = &Room{
@@ -47,7 +45,6 @@ func HandleRoomWebSocket(c echo.Context) error {
 		activeRooms[roomName] = room
 	}
 
-	// Upgrade de la connexion WebSocket
 	ws, err := upgrader.Upgrade(c.Response(), c.Request(), nil)
 	if err != nil {
 		log.Println("Upgrade error:", err)
@@ -55,17 +52,14 @@ func HandleRoomWebSocket(c echo.Context) error {
 	}
 	defer ws.Close()
 
-	// Gérer la connexion dans la room
 	connectionID := "connection-" + uuid.New().String()
 	room.Connections[connectionID] = ws
 	defer delete(room.Connections, connectionID)
 
-	// Envoyer la liste des personnes connectées à tous les clients dans la room
 	sendConnectedClients(room)
 
-	// Boucle de lecture et d'écriture des messages
 	for {
-		// Lire le message JSON du client
+
 		var clientMessage Message
 		messageType, p, err := ws.ReadMessage()
 		if err != nil {
@@ -73,28 +67,22 @@ func HandleRoomWebSocket(c echo.Context) error {
 			break
 		}
 
-		// Décoder le message JSON du client
 		if err := json.Unmarshal(p, &clientMessage); err != nil {
 			log.Println("JSON unmarshal error:", err)
 			continue
 		}
 
-		// Vérifier si le champ `sender` est vide dans le message reçu
 		if clientMessage.Sender == "" {
-			clientMessage.Sender = connectionID // Utiliser `connectionID` comme nom par défaut si `sender` est vide
+			clientMessage.Sender = connectionID
 		}
 
-		// Ajouter la date actuelle au message
 		clientMessage.Date = time.Now()
 
-		// Convertir le message en JSON
 		messageJSON, err := json.Marshal(clientMessage)
 		if err != nil {
 			log.Println("JSON marshal error:", err)
 			continue
 		}
-
-		// Diffuser le message à tous les autres clients dans la room
 		for id, conn := range room.Connections {
 			if id != connectionID {
 				if err := conn.WriteMessage(messageType, messageJSON); err != nil {
@@ -109,20 +97,17 @@ func HandleRoomWebSocket(c echo.Context) error {
 }
 
 func sendConnectedClients(room *Room) {
-	// Construire la liste des clients connectés
 	var connectedClients []string
 	for id := range room.Connections {
 		connectedClients = append(connectedClients, id)
 	}
 
-	// Convertir la liste en JSON
 	clientsJSON, err := json.Marshal(connectedClients)
 	if err != nil {
 		log.Println("JSON marshal error:", err)
 		return
 	}
 
-	// Envoyer le message à tous les clients dans la room
 	for _, conn := range room.Connections {
 		if err := conn.WriteMessage(websocket.TextMessage, clientsJSON); err != nil {
 			log.Println("Write error:", err)

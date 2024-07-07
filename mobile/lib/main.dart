@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/api/firebase_api.dart';
+import 'package:mobile/events/chat_screen.dart';
 import 'package:mobile/events/create_event_form.dart';
 import 'package:mobile/events/join_event.dart';
 import 'package:mobile/events/update_event_form.dart';
@@ -110,6 +111,12 @@ class MyApp extends StatelessWidget {
               builder: (context) {
                 return EventMap(
                     lat: (args as List)[0] as double, lng: (args)[1] as double);
+              },
+            );
+          case '/event/message':
+            return MaterialPageRoute(
+              builder: (context) {
+                return MessagePage(id: args as String);
               },
             );
         }

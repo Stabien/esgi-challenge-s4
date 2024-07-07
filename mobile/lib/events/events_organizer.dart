@@ -3,8 +3,6 @@ import 'package:mobile/models/event.dart';
 import 'package:mobile/services/formatDate.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/components/expandable_fab.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
-import 'package:web_socket_channel/status.dart' as status;
 
 class EventsOrganizer extends StatefulWidget {
   const EventsOrganizer({super.key});
@@ -16,7 +14,6 @@ class EventsOrganizer extends StatefulWidget {
 class _EventsOrganizerState extends State<EventsOrganizer> {
   late List<Event> _events = [];
   bool _loading = false;
-  WebSocketChannel? _channel;
 
   @override
   void initState() {
@@ -35,33 +32,6 @@ class _EventsOrganizerState extends State<EventsOrganizer> {
         _events = data;
       });
     });
-  }
-
-  void _connectWebSocket() {
-    setState(() {
-      _channel = WebSocketChannel.connect(
-        Uri.parse('ws://10.0.2.2:3000/ws'),
-      );
-      print('essaye au serveur WebSocket');
-
-      _channel!.sink.add('Bonjour serveur, je suis connecté!');
-
-      _channel!.stream.listen((message) {
-        print('Message reçu: $message');
-      });
-    });
-  }
-
-  void _sendMessage(String message) {
-    if (_channel != null) {
-      _channel!.sink.add(message);
-    }
-  }
-
-  @override
-  void dispose() {
-    _channel?.sink.close(status.goingAway);
-    super.dispose();
   }
 
   @override
@@ -223,7 +193,11 @@ class _EventsOrganizerState extends State<EventsOrganizer> {
                                         child: const Text('Supprimer'),
                                       ),
                                       ElevatedButton(
-                                        onPressed: _connectWebSocket,
+                                        onPressed: () =>
+                                            Navigator.of(context).pushNamed(
+                                          '/event/message',
+                                          arguments: event.id,
+                                        ),
                                         child: const Text('Chat'),
                                       ),
                                     ],
