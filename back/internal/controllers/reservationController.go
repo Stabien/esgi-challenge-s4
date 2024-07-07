@@ -3,6 +3,7 @@ package controllers
 import (
 	"easynight/internal/db"
 	"easynight/internal/models"
+	"easynight/pkg/utils"
 	"time"
 
 	// "encoding/json"
@@ -102,13 +103,25 @@ func GetReservationsbyUser(c echo.Context) error {
 	var userReservations []UserReservation
 
 	for _, reservation := range reservations {
+		bannerContent, err := utils.ReadAndEncodeFile("./" + reservation.Event.Banner)
+
+		if err != nil {
+			return echo.NewHTTPError(http.StatusInternalServerError, err)
+		}
+
+		imageContent, err := utils.ReadAndEncodeFile("./" + reservation.Event.Image)
+
+		if err != nil {
+			return echo.NewHTTPError(http.StatusInternalServerError, err)
+		}
+
 		var reservationEvent SimpleEvent = SimpleEvent{
 			ID:          reservation.Event.ID,
 			Title:       reservation.Event.Title,
 			Description: reservation.Event.Description,
 			Tag:         reservation.Event.Tag,
-			Banner:      reservation.Event.Banner,
-			Image:       reservation.Event.Image,
+			Banner:      bannerContent,
+			Image:       imageContent,
 			Date:        reservation.Event.Date,
 			Place:       reservation.Event.Place,
 		}
@@ -187,15 +200,14 @@ func IsValid(c echo.Context) error {
 		return c.JSON(http.StatusOK, map[string]interface{}{"isValid": false, "message": "The event is in the past"})
 	}
 
-
 	// if err := db.DB().Preload("Event").Where("reservations.id = ? AND reservations.deleted_at IS NULL",  reservationId).First(&reservation).Error; err != nil {
 	// 	return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 	// }
 
-
 	// return c.JSON(http.StatusOK, true)!
 
 }
+
 // ReservationInput represents the input structure for creating or updating a reservation
 type ReservationInput struct {
 	CustomerID uuid.UUID `json:"customerId"`

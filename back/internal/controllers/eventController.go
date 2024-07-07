@@ -41,31 +41,49 @@ func CreateEvent(c echo.Context) error {
 	bannerFile, err := c.FormFile("banner")
 
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+		return c.JSON(http.StatusUnprocessableEntity, map[string]string{"error": err.Error()})
 	}
 
 	bannerPath, err := utils.UploadFile(bannerFile)
 
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+		return c.JSON(http.StatusUnprocessableEntity, map[string]string{"error": err.Error()})
+	}
+
+	imageFile, err := c.FormFile("image")
+
+	if err != nil {
+		return c.JSON(http.StatusUnprocessableEntity, map[string]string{"error": err.Error()})
+	}
+
+	imagePath, err := utils.UploadFile(imageFile)
+
+	if err != nil {
+		return c.JSON(http.StatusUnprocessableEntity, map[string]string{"error": err.Error()})
 	}
 
 	participantNumber, err := strconv.Atoi(c.FormValue("participantNumber"))
 
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+		return c.JSON(http.StatusUnprocessableEntity, map[string]string{"error": err.Error()})
 	}
 
 	lat, err := strconv.ParseFloat(c.FormValue("lat"), 32)
 
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+		return c.JSON(http.StatusUnprocessableEntity, map[string]string{"error": err.Error()})
 	}
 
 	lng, err := strconv.ParseFloat(c.FormValue("lng"), 32)
 
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+		return c.JSON(http.StatusUnprocessableEntity, map[string]string{"error": err.Error()})
+	}
+
+	date, err := time.Parse(time.RFC3339, c.FormValue("date"))
+
+	if err != nil {
+		return c.JSON(http.StatusUnprocessableEntity, map[string]string{"error": err.Error()})
 	}
 
 	// Create new event object
@@ -73,8 +91,8 @@ func CreateEvent(c echo.Context) error {
 		Title:             c.FormValue("title"),
 		Description:       c.FormValue("description"),
 		Banner:            bannerPath,
-		Image:             c.FormValue("image"),
-		Date:              time.Now(),
+		Image:             imagePath,
+		Date:              date,
 		ParticipantNumber: &participantNumber,
 		Lat:               float32(lat),
 		Lng:               float32(lng),
@@ -83,15 +101,6 @@ func CreateEvent(c echo.Context) error {
 		Place:             c.FormValue("place"),
 		Code:              utils.GenerateRandomString(6),
 	}
-
-	event.Banner = bannerPath
-
-	// var err error
-	// // event.Date, err = time.Parse(time.RFC3339, eventInput.Date)
-	// if err != nil {
-	// 	// handle error
-	// 	return err
-	// }
 
 	claims, err := utils.GetTokenFromHeader(c)
 	if err != nil {
@@ -131,14 +140,6 @@ func UpdateEvent(c echo.Context) error {
 	// Get event ID from URL
 	eventID := c.Param("id")
 
-	// Define EventInput struct
-	var updateInput EventInput
-
-	// Bind request body to EventInput struct
-	if err := c.Bind(&updateInput); err != nil {
-		return err
-	}
-
 	claims, err := utils.GetTokenFromHeader(c)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
@@ -162,19 +163,68 @@ func UpdateEvent(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "You are not the organizer of this event"})
 	}
 
-	// Update event fields
-	event.Title = updateInput.Title
-	event.Description = updateInput.Description
-	event.Banner = updateInput.Banner
-	event.Image = updateInput.Image
-	event.Location = updateInput.Location
-	event.ParticipantNumber = updateInput.ParticipantNumber
-	event.Lat = float32(updateInput.Lat)
-	event.Lng = float32(updateInput.Lng)
-	event.Tag = updateInput.Tag
-	event.Place = updateInput.Place
+	bannerFile, err := c.FormFile("banner")
 
-	event.Date, err = time.Parse(time.RFC3339, updateInput.Date)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+	}
+
+	bannerPath, err := utils.UploadFile(bannerFile)
+
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+	}
+
+	imageFile, err := c.FormFile("image")
+
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+	}
+
+	imagePath, err := utils.UploadFile(imageFile)
+
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+	}
+
+	participantNumber, err := strconv.Atoi(c.FormValue("participantNumber"))
+
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+	}
+
+	lat, err := strconv.ParseFloat(c.FormValue("lat"), 32)
+
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+	}
+
+	lng, err := strconv.ParseFloat(c.FormValue("lng"), 32)
+
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+	}
+
+	date, err := time.Parse(time.RFC3339, c.FormValue("date"))
+
+	if err != nil {
+		return c.JSON(http.StatusUnprocessableEntity, map[string]string{"error": err.Error()})
+	}
+
+	// Update event fields
+	event.Title = c.FormValue("title")
+	event.Description = c.FormValue("description")
+	event.Banner = bannerPath
+	event.Image = imagePath
+	event.Date = date
+	event.ParticipantNumber = &participantNumber
+	event.Lat = float32(lat)
+	event.Lng = float32(lng)
+	event.Location = c.FormValue("location")
+	event.Tag = c.FormValue("tag")
+	event.Place = c.FormValue("place")
+
+	// event.Date, err = time.Parse(time.RFC3339, updateInput.Date)
 	if err != nil {
 		return err
 	}
@@ -227,14 +277,26 @@ func GetEvent(c echo.Context) error {
 		return err
 	}
 
+	bannerContent, err := utils.ReadAndEncodeFile("./" + event.Banner)
+
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err)
+	}
+
+	imageContent, err := utils.ReadAndEncodeFile("./" + event.Image)
+
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err)
+	}
+
 	// Map fields from Event to EventDetails
 	eventDetails := EventDetails{
 		ID:                event.ID,
 		Title:             event.Title,
 		Description:       event.Description,
 		Tag:               event.Tag,
-		Banner:            event.Banner,
-		Image:             event.Image,
+		Banner:            bannerContent,
+		Image:             imageContent,
 		Date:              event.Date,
 		Place:             event.Place,
 		Lat:               event.Lat,
@@ -303,13 +365,25 @@ func GetAllEvents(c echo.Context) error {
 	// Convert events to SimpleEvent
 	var simpleEvents []SimpleEvent
 	for _, event := range events {
+		bannerContent, err := utils.ReadAndEncodeFile("./" + event.Banner)
+
+		if err != nil {
+			return echo.NewHTTPError(http.StatusInternalServerError, err)
+		}
+
+		imageContent, err := utils.ReadAndEncodeFile("./" + event.Image)
+
+		if err != nil {
+			return echo.NewHTTPError(http.StatusInternalServerError, err)
+		}
+
 		simpleEvents = append(simpleEvents, SimpleEvent{
 			ID:          event.ID,
 			Title:       event.Title,
 			Description: event.Description,
 			Tag:         event.Tag,
-			Banner:      event.Banner,
-			Image:       event.Image,
+			Banner:      bannerContent,
+			Image:       imageContent,
 			Date:        event.Date,
 			Place:       event.Place,
 		})
@@ -345,13 +419,25 @@ func GetAllEventsToday(c echo.Context) error {
 
 	var simpleEvents []SimpleEvent
 	for _, event := range events {
+		bannerContent, err := utils.ReadAndEncodeFile("./" + event.Banner)
+
+		if err != nil {
+			return echo.NewHTTPError(http.StatusInternalServerError, err)
+		}
+
+		imageContent, err := utils.ReadAndEncodeFile("./" + event.Image)
+
+		if err != nil {
+			return echo.NewHTTPError(http.StatusInternalServerError, err)
+		}
+
 		simpleEvents = append(simpleEvents, SimpleEvent{
 			ID:          event.ID,
 			Title:       event.Title,
 			Description: event.Description,
 			Tag:         event.Tag,
-			Banner:      event.Banner,
-			Image:       event.Image,
+			Banner:      bannerContent,
+			Image:       imageContent,
 			Date:        event.Date,
 			Place:       event.Place,
 		})
@@ -483,13 +569,25 @@ func GetEventsByOrganizer(c echo.Context) error {
 
 	var simpleEvents []SimpleEvent
 	for _, event := range events {
+		bannerContent, err := utils.ReadAndEncodeFile("./" + event.Banner)
+
+		if err != nil {
+			return echo.NewHTTPError(http.StatusInternalServerError, err)
+		}
+
+		imageContent, err := utils.ReadAndEncodeFile("./" + event.Image)
+
+		if err != nil {
+			return echo.NewHTTPError(http.StatusInternalServerError, err)
+		}
+
 		simpleEvents = append(simpleEvents, SimpleEvent{
 			ID:          event.ID,
 			Title:       event.Title,
 			Description: event.Description,
 			Tag:         event.Tag,
-			Banner:      event.Banner,
-			Image:       event.Image,
+			Banner:      bannerContent,
+			Image:       imageContent,
 			Date:        event.Date,
 			Place:       event.Place,
 		})

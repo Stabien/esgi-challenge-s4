@@ -1,7 +1,12 @@
 // ignore_for_file: use_build_context_synchronously, prefer_const_constructors
 
+import 'dart:developer';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:mobile/mobile/utils/file.dart';
 import 'package:mobile/mobile/utils/secureStorage.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
@@ -17,7 +22,6 @@ class _CreateEventFormState extends State<CreateEventForm> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
-  final TextEditingController _bannerController = TextEditingController();
   final TextEditingController _participantNumberController =
       TextEditingController();
   final TextEditingController _latController = TextEditingController();
@@ -27,6 +31,33 @@ class _CreateEventFormState extends State<CreateEventForm> {
   final TextEditingController _imageController = TextEditingController();
   final TextEditingController _placeController = TextEditingController();
 
+  File? _banner;
+  File? _image;
+
+  void pickBannerFile() async {
+    final XFile? image = await pickImage();
+
+    setState(() {
+      if (image != null) {
+        _banner = File(image.path);
+      } else {
+        log('No image selected.');
+      }
+    });
+  }
+
+  void pickImageFile() async {
+    final XFile? image = await pickImage();
+
+    setState(() {
+      if (image != null) {
+        _image = File(image.path);
+      } else {
+        log('No image selected.');
+      }
+    });
+  }
+
   void createEvent() async {
     var dio = Dio();
 
@@ -35,20 +66,24 @@ class _CreateEventFormState extends State<CreateEventForm> {
 
     String? apiUrl = '${dotenv.env['URL_BACK']}/event';
 
+    log(_participantNumberController.text);
+
     try {
-      var response = await dio.post(apiUrl!, data: {
+      var formData = FormData.fromMap({
         'title': _titleController.text,
         'description': _descriptionController.text,
         'date': _dateController.text,
-        'banner': _bannerController.text,
-        'participant_number': int.parse(_participantNumberController.text),
+        'banner': await MultipartFile.fromFile(_banner!.path),
+        'participantNumber': _participantNumberController.text,
         'lat': double.parse(_latController.text),
         'lng': double.parse(_lngController.text),
         'location': _locationController.text,
         'tag': _tagController.text,
-        'image': _imageController.text,
+        'image': await MultipartFile.fromFile(_image!.path),
         'place': _placeController.text,
       });
+
+      var response = await dio.post(apiUrl!, data: formData);
 
       if (response.statusCode == 200) {
         showDialog(
@@ -159,12 +194,17 @@ class _CreateEventFormState extends State<CreateEventForm> {
             ),
             Container(
               margin: const EdgeInsets.only(bottom: 16.0),
-              child: TextField(
-                style: TextStyle(color: Colors.white),
-                controller: _bannerController,
-                decoration: InputDecoration(
-                  labelText: "Bannière (URL)",
-                ),
+              child: Row(
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      pickBannerFile();
+                    },
+                    child: Text('Choisir une bannière'),
+                  ),
+                  Spacer(),
+                  Text(_banner?.path.split('/').last ?? "")
+                ],
               ),
             ),
             Container(
@@ -219,12 +259,17 @@ class _CreateEventFormState extends State<CreateEventForm> {
             ),
             Container(
               margin: const EdgeInsets.only(bottom: 16.0),
-              child: TextField(
-                style: TextStyle(color: Colors.white),
-                controller: _imageController,
-                decoration: InputDecoration(
-                  labelText: "Image (URL)",
-                ),
+              child: Row(
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      pickImageFile();
+                    },
+                    child: Text('Choisir une image'),
+                  ),
+                  Spacer(),
+                  Text(_image?.path.split('/').last ?? "")
+                ],
               ),
             ),
             Container(

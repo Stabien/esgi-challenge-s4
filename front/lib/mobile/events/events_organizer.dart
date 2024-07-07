@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:mobile/mobile/services/api_event_services.dart';
 import 'package:mobile/mobile/models/event.dart';
 import 'package:mobile/mobile/services/formatDate.dart';
@@ -45,9 +47,7 @@ class _EventsOrganizerState extends State<EventsOrganizer> {
         children: [
           ActionButton(
             onPressed: () async {
-              final result =
-                  await Navigator.of(context)
-                      .pushNamed(
+              final result = await Navigator.of(context).pushNamed(
                 '/event/create',
               );
               if (result == true) {
@@ -105,7 +105,7 @@ class _EventsOrganizerState extends State<EventsOrganizer> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Image(image: NetworkImage(event.image)),
+                                  Image.memory(base64Decode(event.image)),
                                   Text(
                                     event.title,
                                     style: const TextStyle(

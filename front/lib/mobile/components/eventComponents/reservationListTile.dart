@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:mobile/mobile/components/qr-code-button.dart';
 import 'package:mobile/mobile/eventsReservation/blocs/reservation_bloc.dart';
@@ -24,8 +26,8 @@ class ReservationListTile extends StatelessWidget {
           context.read<ReservationBloc>().add(ReservationDataLoaded());
         }),
         contentPadding: const EdgeInsets.symmetric(vertical: 15.0),
-        leading: Image.network(
-          reservation.event.image,
+        leading: Image.memory(
+          base64Decode(reservation.event.image),
           width: 100,
           height: 100,
           fit: BoxFit.cover,

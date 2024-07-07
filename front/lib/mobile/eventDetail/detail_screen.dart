@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:mobile/mobile/models/eventDetail.dart';
 import 'package:mobile/mobile/services/api_event_services.dart';
@@ -104,8 +106,8 @@ class _DetailScreen extends State<DetailScreen> {
               final eventDetail = _eventdetails[index];
               return Column(
                 children: [
-                  Image.network(
-                    eventDetail.banner,
+                  Image.memory(
+                    base64Decode(eventDetail.image),
                     width: double.infinity,
                     height: 200,
                   ),

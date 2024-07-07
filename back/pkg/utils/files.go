@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"encoding/base64"
 	"io"
 	"mime/multipart"
 	"os"
@@ -29,4 +30,14 @@ func UploadFile(file *multipart.FileHeader) (string, error) {
 	}
 
 	return dst.Name(), err
+}
+
+func ReadAndEncodeFile(filePath string) (string, error) {
+	data, err := os.ReadFile(filePath)
+	if err != nil {
+		return "", err
+	}
+
+	encodedData := base64.StdEncoding.EncodeToString(data)
+	return encodedData, nil
 }

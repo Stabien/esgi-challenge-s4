@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:mobile/mobile/models/event.dart';
 
@@ -18,8 +20,8 @@ class EventListTile extends StatelessWidget {
           arguments: event.id,
         ),
         contentPadding: const EdgeInsets.symmetric(vertical: 15.0),
-        leading: Image.network(
-          event.image,
+        leading: Image.memory(
+          base64Decode(event.image),
           width: 100,
           height: 100,
           fit: BoxFit.cover,

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:mobile/mobile/models/event.dart';
 import 'package:mobile/mobile/services/api_event_services.dart';
@@ -82,7 +84,7 @@ class _ScreenEventState extends State<ScreenEventToday> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Image(image: NetworkImage(event.image)),
+                                      Image.memory(base64Decode(event.image)),
                                       Text(
                                         event.title,
                                         style: const TextStyle(
