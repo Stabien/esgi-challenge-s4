@@ -76,7 +76,7 @@ func HandleRoomWebSocket(c echo.Context) error {
 			clientMessage.Sender = connectionID
 		}
 
-		clientMessage.Date = time.Now()
+		clientMessage.Date = time.Now().UTC()
 
 		messageJSON, err := json.Marshal(clientMessage)
 		if err != nil {

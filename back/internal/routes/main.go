@@ -74,6 +74,7 @@ func InitRouter(e *echo.Echo) {
 	e.GET("/messages/:id", controllers.GetMessage)
 	e.PUT("/messages/:id", controllers.UpdateMessage)
 	e.DELETE("/messages/:id", controllers.DeleteMessage)
+	e.GET("/messages/event/:id", controllers.GetAllMessageByEvent)
 
 	// Event routes
 	e.POST("/events", controllers.CreateEvent)
@@ -94,6 +95,7 @@ func InitRouter(e *echo.Echo) {
 	e.GET("/organizers/:id", controllers.GetAllOrganizers)
 	e.PUT("/organizers/:id", controllers.UpdateOrganizer)
 	e.DELETE("/organizers/:id", controllers.DeleteOrganizer)
+	e.GET("/organizers/id/:id", controllers.GetOrganizerID)
 
 	// Notification routes
 	e.POST("/notifications", controllers.CreateNotification)

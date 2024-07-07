@@ -1,13 +1,8 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "This is a sample server for using Swagger with Echo.",
-        "title": "Swagger Example API",
-        "contact": {},
-        "version": "1.0"
+        "contact": {}
     },
-    "host": "localhost:3000",
-    "basePath": "/",
     "paths": {
         "/auth": {
             "post": {
@@ -648,6 +643,38 @@
                 }
             }
         },
+        "/messages/event/{id}": {
+            "get": {
+                "description": "Get all message par event",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "messages"
+                ],
+                "summary": "Get all message by event",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Event ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/internal_controllers.MessageInput"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/messages/{id}": {
             "get": {
                 "description": "Retrieve a message based on its unique ID",
@@ -942,6 +969,35 @@
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {}
+                    }
+                }
+            }
+        },
+        "/organizers/id/{id}": {
+            "get": {
+                "description": "Get an organizer by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "organizers"
+                ],
+                "summary": "Get an organizer by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Organizer ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/easynight_internal_models.Organizer"
+                        }
                     }
                 }
             }
@@ -1998,10 +2054,10 @@
         "easynight_internal_models.Message": {
             "type": "object",
             "properties": {
-                "content": {
+                "createdAt": {
                     "type": "string"
                 },
-                "createdAt": {
+                "date": {
                     "type": "string"
                 },
                 "deletedAt": {
@@ -2020,6 +2076,12 @@
                     "$ref": "#/definitions/easynight_internal_models.Organizer"
                 },
                 "organizerID": {
+                    "type": "string"
+                },
+                "sender": {
+                    "type": "string"
+                },
+                "text": {
                     "type": "string"
                 },
                 "updatedAt": {
@@ -2075,6 +2137,9 @@
                     "$ref": "#/definitions/gorm.DeletedAt"
                 },
                 "firstname": {
+                    "type": "string"
+                },
+                "id": {
                     "type": "string"
                 },
                 "lastname": {
@@ -2296,13 +2361,19 @@
         "internal_controllers.MessageInput": {
             "type": "object",
             "properties": {
-                "content": {
+                "date": {
                     "type": "string"
                 },
                 "eventId": {
                     "type": "string"
                 },
                 "organizerId": {
+                    "type": "string"
+                },
+                "sender": {
+                    "type": "string"
+                },
+                "text": {
                     "type": "string"
                 }
             }
