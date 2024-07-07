@@ -1,14 +1,18 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:mobile/models/profil.dart';
-import 'package:mobile/utils/secureStorage.dart';
+import 'package:mobile/services/formatDate.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:web_socket_channel/status.dart' as status;
-import 'dart:convert';
 import 'package:mobile/models/message.dart';
+import 'package:mobile/models/organizer.dart';
+import 'package:mobile/models/profil.dart';
+import 'package:mobile/services/message_services.dart';
 import 'package:mobile/services/userServices.dart';
+import 'package:mobile/utils/secureStorage.dart';
 
 class MessagePage extends StatefulWidget {
   final String id;
+
   const MessagePage({super.key, required this.id});
 
   @override
@@ -21,11 +25,14 @@ class _MessagePageState extends State<MessagePage> {
   WebSocketChannel? _channel;
   var _userId = "";
   Profil? profil;
+  Organizer? orga;
 
   @override
   void initState() {
     super.initState();
     getprofil();
+    print("message");
+    print(widget.id);
   }
 
   Future<void> getprofil() async {
@@ -35,6 +42,20 @@ class _MessagePageState extends State<MessagePage> {
     });
     profil = await UserServices().profilOrga(_userId);
     _connectWebSocket();
+    orga = await UserServices().getOrgaByUser(_userId);
+    print("orga");
+    print(orga?.id.toString());
+    List<Message> oldMessages =
+        await MessageServices().getMessagesByEvent(widget.id);
+    setState(() {
+      _messages.addAll(oldMessages);
+      print("messages");
+      print(_messages);
+    });
+  }
+
+  void sendMessageBdd(Message message) async {
+    await MessageServices().postMessage(message);
   }
 
   void _sendMessageText() {
@@ -44,8 +65,10 @@ class _MessagePageState extends State<MessagePage> {
         sender: profil?.firstname ?? 'Unknown',
         date: DateTime.now().toUtc().toIso8601String(),
         text: text,
-        userId: _userId,
+        organizerId: orga?.id,
+        eventId: widget.id,
       );
+      sendMessageBdd(message);
       setState(() {
         _messages.add(message);
         _controller.clear();
@@ -108,12 +131,18 @@ class _MessagePageState extends State<MessagePage> {
               itemCount: _messages.length,
               itemBuilder: (context, index) {
                 final message = _messages[index];
-                final bool isCurrentUserMessage = message.userId == _userId;
+                final bool isCurrentUserMessage =
+                    message.organizerId == orga?.id;
+
+                // Vérifier si le message est envoyé par l'organisateur actuel
+                final bool isCurrentOrganizerMessage =
+                    message.organizerId == orga?.id;
+
                 return Padding(
                   padding: const EdgeInsets.symmetric(
                       horizontal: 8.0, vertical: 4.0),
                   child: Column(
-                    crossAxisAlignment: isCurrentUserMessage
+                    crossAxisAlignment: isCurrentOrganizerMessage
                         ? CrossAxisAlignment.end
                         : CrossAxisAlignment.start,
                     children: [
@@ -125,14 +154,14 @@ class _MessagePageState extends State<MessagePage> {
                         ),
                       ),
                       Align(
-                        alignment: isCurrentUserMessage
+                        alignment: isCurrentOrganizerMessage
                             ? Alignment.centerRight
                             : Alignment.centerLeft,
                         child: Container(
                           margin: const EdgeInsets.symmetric(vertical: 4.0),
                           padding: const EdgeInsets.all(10.0),
                           decoration: BoxDecoration(
-                            color: isCurrentUserMessage
+                            color: isCurrentOrganizerMessage
                                 ? Colors.blue[200]
                                 : Colors.grey[300],
                             borderRadius: BorderRadius.circular(15.0),
@@ -149,6 +178,7 @@ class _MessagePageState extends State<MessagePage> {
                               ),
                               const SizedBox(height: 5.0),
                               Text(
+                                // traduireDate(message.date),
                                 message.date,
                                 style: TextStyle(
                                   fontSize: 12.0,

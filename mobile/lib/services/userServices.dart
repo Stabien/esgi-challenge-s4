@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mobile/core/api_exception.dart';
+import 'package:mobile/models/organizer.dart';
 import 'package:mobile/models/profil.dart';
 import 'package:mobile/models/user.dart';
 import 'package:http/http.dart' as http;
@@ -92,6 +93,24 @@ class UserServices {
       } else {
         print("No data found");
         return Profil(firstname: "", lastname: "", email: "", password: "");
+      }
+    } catch (error) {
+      print('Unknown error dans profilCustomer: $error');
+      return null;
+    }
+  }
+
+  Future<Organizer?> getOrgaByUser(String id) async {
+    try {
+      final Response response = await dio.get('$baseUrl/organizers/id/$id');
+      print("la valeur est : ");
+      print(response.data.toString());
+
+      if (response.data is Map<String, dynamic>) {
+        return Organizer.fromJson(response.data);
+      } else {
+        print('La réponse n\'est pas un JSON valide');
+        return null;
       }
     } catch (error) {
       print('Unknown error dans profilCustomer: $error');

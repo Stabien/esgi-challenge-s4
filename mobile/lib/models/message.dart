@@ -1,21 +1,24 @@
 class Message {
-  final String? sender;
+  final String sender;
   final String date;
   final String text;
-  final String userId;
+  final String? organizerId;
+  final String? eventId;
 
   Message(
       {required this.sender,
       required this.date,
       required this.text,
-      required this.userId});
+      required this.organizerId,
+      required this.eventId});
 
   factory Message.fromJson(Map<String, dynamic> json) {
     return Message(
       sender: json['sender'],
       date: json['date'],
       text: json['text'],
-      userId: json['userId'],
+      organizerId: json['organizer_id'],
+      eventId: json['event_id'],
     );
   }
 
@@ -24,7 +27,8 @@ class Message {
       'sender': sender,
       'date': date,
       'text': text,
-      'userId': userId,
+      'organizerId': organizerId,
+      'eventId': eventId,
     };
   }
 }
