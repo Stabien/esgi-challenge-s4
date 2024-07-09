@@ -128,7 +128,7 @@ class _EventsOrganizerState extends State<EventsOrganizer> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Image.memory(base64Decode(event.image)),
+                                  // Image.memory(base64Decode(event.image)),
                                   Text(
                                     event.title,
                                     style: const TextStyle(
