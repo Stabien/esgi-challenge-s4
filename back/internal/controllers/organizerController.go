@@ -63,6 +63,23 @@ func GetOrganizer(c echo.Context) error {
 	return c.JSON(http.StatusOK, organizer)
 }
 
+// GetOrganizer godoc
+// @Summary Get an organizer by ID
+// @Description Get an organizer by ID
+// @Tags organizers
+// @Produce json
+// @Param id path string true "Organizer ID"
+// @Success 200 {object} models.Organizer
+// @Router /organizers/id/{id} [get]
+func GetOrganizerID(c echo.Context) error {
+	id := c.Param("id")
+	var organizer models.Organizer
+	if err := db.DB().Select("id").First(&organizer, "user_id = ?", id).Error; err != nil {
+		return c.JSON(http.StatusNotFound, err)
+	}
+	return c.JSON(http.StatusOK, map[string]interface{}{"id": organizer.ID})
+}
+
 // GetAllOrganizers godoc
 // @Summary Get all organizers
 // @Description Get all organizers

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/mobile/api/firebase_api.dart';
+import 'package:mobile/mobile/events/chat_screen.dart';
 import 'package:mobile/mobile/events/create_event_form.dart';
 import 'package:mobile/mobile/events/join_event.dart';
 import 'package:mobile/mobile/events/update_event_form.dart';
@@ -23,17 +24,17 @@ import 'firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // await dotenv.load();
-  // await dotenv.load(fileName: ".env.local");
+  await dotenv.load();
+  await dotenv.load(fileName: ".env.local");
   runApp(const MobileApp());
 
-  if (dotenv.env['FIREBASE_API_KEY'] != "default" &&
-      dotenv.env['FIREBASE_API_KEY'] != null) {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
-    await FirebaseApi().initNotifications();
-  }
+  // if (dotenv.env['FIREBASE_API_KEY'] != "default" &&
+  //     dotenv.env['FIREBASE_API_KEY'] != null) {
+  //   await Firebase.initializeApp(
+  //     options: DefaultFirebaseOptions.currentPlatform,
+  //   );
+  //   await FirebaseApi().initNotifications();
+  // }
 }
 
 class MobileApp extends StatelessWidget {
@@ -110,6 +111,12 @@ class MobileApp extends StatelessWidget {
               builder: (context) {
                 return EventMap(
                     lat: (args as List)[0] as double, lng: (args)[1] as double);
+              },
+            );
+          case '/event/message':
+            return MaterialPageRoute(
+              builder: (context) {
+                return MessagePage(id: args as String);
               },
             );
         }

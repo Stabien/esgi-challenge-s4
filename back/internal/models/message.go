@@ -1,6 +1,8 @@
 package models
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
@@ -12,5 +14,7 @@ type Message struct {
 	Event       Event
 	OrganizerID uuid.UUID `gorm:"type:uuid"`
 	Organizer   Organizer
-	Content     string
+	Text        string
+	Sender      string
+	Date        time.Time `gorm:"type:timestamp"`
 }

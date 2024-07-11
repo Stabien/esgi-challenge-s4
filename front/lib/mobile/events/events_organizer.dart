@@ -108,10 +108,10 @@ class _EventsOrganizerState extends State<EventsOrganizer> {
         ],
       ),
       body: Center(
-          child: _loading
-              ? const CircularProgressIndicator()
-              : Container(
-                  child: Column(
+        child: _loading
+            ? const CircularProgressIndicator()
+            : Container(
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Expanded(
@@ -161,8 +161,7 @@ class _EventsOrganizerState extends State<EventsOrganizer> {
                                         width: 1,
                                       ), // Bordure blanche fine
                                       borderRadius: BorderRadius.circular(
-                                        8,
-                                      ), // Bordures arrondies
+                                          8), // Bordures arrondies
                                     ),
                                     child: Text(
                                       event.tag,
@@ -219,6 +218,14 @@ class _EventsOrganizerState extends State<EventsOrganizer> {
                                         ),
                                         child: const Text('Supprimer'),
                                       ),
+                                      ElevatedButton(
+                                        onPressed: () =>
+                                            Navigator.of(context).pushNamed(
+                                          '/event/message',
+                                          arguments: event.id,
+                                        ),
+                                        child: const Text('Chat'),
+                                      ),
                                     ],
                                   ),
                                 ],
@@ -230,7 +237,9 @@ class _EventsOrganizerState extends State<EventsOrganizer> {
                       ),
                     ),
                   ],
-                ))),
+                ),
+              ),
+      ),
     );
   }
 }
