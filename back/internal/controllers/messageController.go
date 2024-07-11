@@ -4,6 +4,7 @@ import (
 	"easynight/internal/db"
 	"easynight/internal/models"
 	"net/http"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
@@ -12,7 +13,9 @@ import (
 type MessageInput struct {
 	EventID     uuid.UUID `json:"eventId"`
 	OrganizerID uuid.UUID `json:"organizerId"`
-	Content     string    `json:"content"`
+	Text        string    `json:"text"`
+	Date        time.Time `json:"date"`
+	Sender      string    `json:"sender"`
 }
 
 // CreateMessage creates a new message
@@ -34,7 +37,9 @@ func CreateMessage(c echo.Context) error {
 	message := models.Message{
 		EventID:     input.EventID,
 		OrganizerID: input.OrganizerID,
-		Content:     input.Content,
+		Text:        input.Text,
+		Date:        input.Date,
+		Sender:      input.Sender,
 	}
 
 	if err := db.DB().Create(&message).Error; err != nil {
@@ -82,6 +87,54 @@ func GetAllMessage(c echo.Context) error {
 	return c.JSON(http.StatusOK, rates)
 }
 
+type MessageResponse struct {
+	EventID     string `json:"event_id"`
+	OrganizerID string `json:"organizer_id"`
+	Text        string `json:"text"`
+	Date        string `json:"date"`
+	Sender      string `json:"sender"`
+}
+
+// GetAllRates godoc
+// @Summary Get all message by event
+// @Description Get all message par event
+// @Tags messages
+// @Param id path string true "Event ID"
+// @Produce json
+// @Success 200 {array} MessageInput
+// @Router /messages/event/{id} [get]
+func GetAllMessageByEvent(c echo.Context) error {
+	// Parse the event ID from the URL parameter
+	id, err := uuid.Parse(c.Param("id"))
+	if err != nil {
+		return err
+	}
+
+	// Define a slice to hold the response data, initialized as an empty slice
+	messagesResponse := []MessageResponse{}
+
+	// Query the database for messages with the specified event ID
+	var messages []models.Message
+	if err := db.DB().Where("event_id = ?", id).Find(&messages).Error; err != nil {
+		return c.JSON(http.StatusInternalServerError, err)
+	}
+
+	// Iterate through the retrieved messages and populate the response structure
+	for _, msg := range messages {
+		message := MessageResponse{
+			EventID:     msg.EventID.String(), // Convert uuid.UUID to string
+			OrganizerID: msg.OrganizerID.String(),
+			Text:        msg.Text,
+			Date:        msg.Date.Format(time.RFC3339),
+			Sender:      msg.Sender,
+		}
+		messagesResponse = append(messagesResponse, message)
+	}
+
+	// Return the response JSON, will return [] if no messages found
+	return c.JSON(http.StatusOK, messagesResponse)
+}
+
 // UpdateMessageByID updates a message by ID
 // @Summary Update a message by ID
 // @Description Update an existing message identified by its ID
@@ -111,7 +164,8 @@ func UpdateMessage(c echo.Context) error {
 
 	message.EventID = input.EventID
 	message.OrganizerID = input.OrganizerID
-	message.Content = input.Content
+	message.Text = input.Text
+	message.Date = input.Date
 
 	if err := db.DB().Save(&message).Error; err != nil {
 		return err

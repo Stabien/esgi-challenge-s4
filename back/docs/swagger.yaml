@@ -1,4 +1,3 @@
-basePath: /
 definitions:
   easynight_internal_models.Admin:
     properties:
@@ -102,9 +101,9 @@ definitions:
     type: object
   easynight_internal_models.Message:
     properties:
-      content:
-        type: string
       createdAt:
+        type: string
+      date:
         type: string
       deletedAt:
         $ref: '#/definitions/gorm.DeletedAt'
@@ -117,6 +116,10 @@ definitions:
       organizer:
         $ref: '#/definitions/easynight_internal_models.Organizer'
       organizerID:
+        type: string
+      sender:
+        type: string
+      text:
         type: string
       updatedAt:
         type: string
@@ -153,6 +156,8 @@ definitions:
       deletedAt:
         $ref: '#/definitions/gorm.DeletedAt'
       firstname:
+        type: string
+      id:
         type: string
       lastname:
         type: string
@@ -298,11 +303,15 @@ definitions:
     type: object
   internal_controllers.MessageInput:
     properties:
-      content:
+      date:
         type: string
       eventId:
         type: string
       organizerId:
+        type: string
+      sender:
+        type: string
+      text:
         type: string
     type: object
   internal_controllers.NotificationInput:
@@ -373,7 +382,6 @@ definitions:
       password:
         type: string
     type: object
-<<<<<<< Updated upstream
   internal_controllers.UpdateUserRequest:
     properties:
       email:
@@ -385,8 +393,6 @@ definitions:
       password:
         type: string
     type: object
-=======
->>>>>>> Stashed changes
   internal_controllers.UserInput:
     properties:
       email:
@@ -405,12 +411,8 @@ definitions:
       token:
         type: string
     type: object
-host: localhost:3000
 info:
   contact: {}
-  description: This is a sample server for using Swagger with Echo.
-  title: Swagger Example API
-  version: "1.0"
 paths:
   /auth:
     post:
@@ -872,11 +874,7 @@ paths:
     post:
       description: Change password with token
       parameters:
-<<<<<<< Updated upstream
       - description: User Token
-=======
-      - description: User Email
->>>>>>> Stashed changes
         in: path
         name: token
         required: true
@@ -968,6 +966,27 @@ paths:
           schema:
             $ref: '#/definitions/easynight_internal_models.Message'
       summary: Update a message by ID
+      tags:
+      - messages
+  /messages/event/{id}:
+    get:
+      description: Get all message par event
+      parameters:
+      - description: Event ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/internal_controllers.MessageInput'
+            type: array
+      summary: Get all message by event
       tags:
       - messages
   /notifications:
@@ -1168,6 +1187,25 @@ paths:
           schema:
             $ref: '#/definitions/easynight_internal_models.Organizer'
       summary: Update an organizer by ID
+      tags:
+      - organizers
+  /organizers/id/{id}:
+    get:
+      description: Get an organizer by ID
+      parameters:
+      - description: Organizer ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/easynight_internal_models.Organizer'
+      summary: Get an organizer by ID
       tags:
       - organizers
   /rates:

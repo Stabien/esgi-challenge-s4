@@ -1,13 +1,8 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "This is a sample server for using Swagger with Echo.",
-        "title": "Swagger Example API",
-        "contact": {},
-        "version": "1.0"
+        "contact": {}
     },
-    "host": "localhost:3000",
-    "basePath": "/",
     "paths": {
         "/auth": {
             "post": {
@@ -697,11 +692,7 @@
                 "parameters": [
                     {
                         "type": "string",
-<<<<<<< Updated upstream
                         "description": "User Token",
-=======
-                        "description": "User Email",
->>>>>>> Stashed changes
                         "name": "token",
                         "in": "path",
                         "required": true
@@ -746,6 +737,38 @@
                         "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/easynight_internal_models.Message"
+                        }
+                    }
+                }
+            }
+        },
+        "/messages/event/{id}": {
+            "get": {
+                "description": "Get all message par event",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "messages"
+                ],
+                "summary": "Get all message by event",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Event ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/internal_controllers.MessageInput"
+                            }
                         }
                     }
                 }
@@ -1045,6 +1068,35 @@
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {}
+                    }
+                }
+            }
+        },
+        "/organizers/id/{id}": {
+            "get": {
+                "description": "Get an organizer by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "organizers"
+                ],
+                "summary": "Get an organizer by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Organizer ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/easynight_internal_models.Organizer"
+                        }
                     }
                 }
             }
@@ -1966,95 +2018,6 @@
                     }
                 }
             }
-        },
-        "/users/{id}": {
-            "get": {
-                "description": "Retrieve an user based on its unique ID",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "users"
-                ],
-                "summary": "Get an user by ID",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "User ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/easynight_internal_models.User"
-                        }
-                    }
-                }
-            },
-            "put": {
-                "description": "Update an existing user identified by its ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "users"
-                ],
-                "summary": "Update an user by ID",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "User ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Updated user data",
-                        "name": "user",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/internal_controllers.UserInput"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/easynight_internal_models.User"
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "description": "Delete an existing user identified by its ID",
-                "tags": [
-                    "users"
-                ],
-                "summary": "Delete a user by ID",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "User ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": "No Content"
-                    }
-                }
-            }
         }
     },
     "definitions": {
@@ -2213,10 +2176,10 @@
         "easynight_internal_models.Message": {
             "type": "object",
             "properties": {
-                "content": {
+                "createdAt": {
                     "type": "string"
                 },
-                "createdAt": {
+                "date": {
                     "type": "string"
                 },
                 "deletedAt": {
@@ -2235,6 +2198,12 @@
                     "$ref": "#/definitions/easynight_internal_models.Organizer"
                 },
                 "organizerID": {
+                    "type": "string"
+                },
+                "sender": {
+                    "type": "string"
+                },
+                "text": {
                     "type": "string"
                 },
                 "updatedAt": {
@@ -2290,6 +2259,9 @@
                     "$ref": "#/definitions/gorm.DeletedAt"
                 },
                 "firstname": {
+                    "type": "string"
+                },
+                "id": {
                     "type": "string"
                 },
                 "lastname": {
@@ -2511,13 +2483,19 @@
         "internal_controllers.MessageInput": {
             "type": "object",
             "properties": {
-                "content": {
+                "date": {
                     "type": "string"
                 },
                 "eventId": {
                     "type": "string"
                 },
                 "organizerId": {
+                    "type": "string"
+                },
+                "sender": {
+                    "type": "string"
+                },
+                "text": {
                     "type": "string"
                 }
             }
@@ -2626,7 +2604,6 @@
                 }
             }
         },
-<<<<<<< Updated upstream
         "internal_controllers.UpdateUserRequest": {
             "type": "object",
             "properties": {
@@ -2644,8 +2621,6 @@
                 }
             }
         },
-=======
->>>>>>> Stashed changes
         "internal_controllers.UserInput": {
             "type": "object",
             "properties": {

@@ -12,21 +12,21 @@ part 'profil_state.dart';
 class ProfilBloc extends Bloc<ProfilEvent, ProfilState> {
   String _userId = "";
   String _role = "";
-  
 
   ProfilBloc() : super(ProfilInitial()) {
     on<ProfilEvent>((event, emit) async {
-    emit(ProfilLoading());
-   try {
+      emit(ProfilLoading());
+      try {
         await initUser();
-         Profil? profil;
+        Profil? profil;
         if (_role == "organizer") {
+          print(_userId);
           profil = await UserServices().profilOrga(_userId);
         } else {
           profil = await UserServices().profilCustomer(_userId);
         }
         print("le profil est dans le bloc");
-        print(profil);
+        print(profil?.email);
         emit(ProfilDataLoadingSuccess(profil: profil));
       } on ApiException catch (error) {
         emit(ProfilDataLoadingError(errorMessage: error.message));

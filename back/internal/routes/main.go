@@ -2,6 +2,7 @@ package routes
 
 import (
 	"easynight/internal/controllers"
+	"easynight/internal/ws"
 
 	"github.com/labstack/echo/v4"
 	echoSwagger "github.com/swaggo/echo-swagger"
@@ -9,6 +10,9 @@ import (
 
 func InitRouter(e *echo.Echo) {
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
+
+	// e.GET("/ws", ws.HandleWebSocket)
+	e.GET("/ws/room", ws.HandleRoomWebSocket)
 
 	e.POST("/event", controllers.CreateEvent)
 	e.DELETE("/event/:id", controllers.DeleteEvent)
@@ -70,6 +74,7 @@ func InitRouter(e *echo.Echo) {
 	e.GET("/messages/:id", controllers.GetMessage)
 	e.PUT("/messages/:id", controllers.UpdateMessage)
 	e.DELETE("/messages/:id", controllers.DeleteMessage)
+	e.GET("/messages/event/:id", controllers.GetAllMessageByEvent)
 
 	// Event routes
 	e.POST("/events", controllers.CreateEvent)
@@ -90,6 +95,7 @@ func InitRouter(e *echo.Echo) {
 	e.GET("/organizers/:id", controllers.GetAllOrganizers)
 	e.PUT("/organizers/:id", controllers.UpdateOrganizer)
 	e.DELETE("/organizers/:id", controllers.DeleteOrganizer)
+	e.GET("/organizers/id/:id", controllers.GetOrganizerID)
 
 	// Notification routes
 	e.POST("/notifications", controllers.CreateNotification)

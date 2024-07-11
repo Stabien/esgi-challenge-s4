@@ -703,11 +703,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-<<<<<<< Updated upstream
                         "description": "User Token",
-=======
-                        "description": "User Email",
->>>>>>> Stashed changes
                         "name": "token",
                         "in": "path",
                         "required": true
@@ -752,6 +748,38 @@ const docTemplate = `{
                         "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/easynight_internal_models.Message"
+                        }
+                    }
+                }
+            }
+        },
+        "/messages/event/{id}": {
+            "get": {
+                "description": "Get all message par event",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "messages"
+                ],
+                "summary": "Get all message by event",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Event ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/internal_controllers.MessageInput"
+                            }
                         }
                     }
                 }
@@ -1051,6 +1079,35 @@ const docTemplate = `{
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {}
+                    }
+                }
+            }
+        },
+        "/organizers/id/{id}": {
+            "get": {
+                "description": "Get an organizer by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "organizers"
+                ],
+                "summary": "Get an organizer by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Organizer ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/easynight_internal_models.Organizer"
+                        }
                     }
                 }
             }
@@ -1972,95 +2029,6 @@ const docTemplate = `{
                     }
                 }
             }
-        },
-        "/users/{id}": {
-            "get": {
-                "description": "Retrieve an user based on its unique ID",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "users"
-                ],
-                "summary": "Get an user by ID",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "User ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/easynight_internal_models.User"
-                        }
-                    }
-                }
-            },
-            "put": {
-                "description": "Update an existing user identified by its ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "users"
-                ],
-                "summary": "Update an user by ID",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "User ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Updated user data",
-                        "name": "user",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/internal_controllers.UserInput"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/easynight_internal_models.User"
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "description": "Delete an existing user identified by its ID",
-                "tags": [
-                    "users"
-                ],
-                "summary": "Delete a user by ID",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "User ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": "No Content"
-                    }
-                }
-            }
         }
     },
     "definitions": {
@@ -2219,10 +2187,10 @@ const docTemplate = `{
         "easynight_internal_models.Message": {
             "type": "object",
             "properties": {
-                "content": {
+                "createdAt": {
                     "type": "string"
                 },
-                "createdAt": {
+                "date": {
                     "type": "string"
                 },
                 "deletedAt": {
@@ -2241,6 +2209,12 @@ const docTemplate = `{
                     "$ref": "#/definitions/easynight_internal_models.Organizer"
                 },
                 "organizerID": {
+                    "type": "string"
+                },
+                "sender": {
+                    "type": "string"
+                },
+                "text": {
                     "type": "string"
                 },
                 "updatedAt": {
@@ -2296,6 +2270,9 @@ const docTemplate = `{
                     "$ref": "#/definitions/gorm.DeletedAt"
                 },
                 "firstname": {
+                    "type": "string"
+                },
+                "id": {
                     "type": "string"
                 },
                 "lastname": {
@@ -2517,13 +2494,19 @@ const docTemplate = `{
         "internal_controllers.MessageInput": {
             "type": "object",
             "properties": {
-                "content": {
+                "date": {
                     "type": "string"
                 },
                 "eventId": {
                     "type": "string"
                 },
                 "organizerId": {
+                    "type": "string"
+                },
+                "sender": {
+                    "type": "string"
+                },
+                "text": {
                     "type": "string"
                 }
             }
@@ -2632,7 +2615,6 @@ const docTemplate = `{
                 }
             }
         },
-<<<<<<< Updated upstream
         "internal_controllers.UpdateUserRequest": {
             "type": "object",
             "properties": {
@@ -2650,8 +2632,6 @@ const docTemplate = `{
                 }
             }
         },
-=======
->>>>>>> Stashed changes
         "internal_controllers.UserInput": {
             "type": "object",
             "properties": {
@@ -2685,12 +2665,12 @@ const docTemplate = `{
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "1.0",
-	Host:             "localhost:3000",
-	BasePath:         "/",
+	Version:          "",
+	Host:             "",
+	BasePath:         "",
 	Schemes:          []string{},
-	Title:            "Swagger Example API",
-	Description:      "This is a sample server for using Swagger with Echo.",
+	Title:            "",
+	Description:      "",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",
