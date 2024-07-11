@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:mobile/mobile/services/api_reservation_services.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'dart:io';
 
 class QRCodeScannerScreen extends StatefulWidget {
@@ -11,6 +14,15 @@ class _QRCodeScannerScreenState extends State<QRCodeScannerScreen> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   QRViewController? controller;
   String qrText = '';
+  bool _isLoading = false;
+
+  bool isValidUUID(String uuid) {
+    final uuidRegExp = RegExp(
+      r'^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$',
+      caseSensitive: false,
+    );
+    return uuidRegExp.hasMatch(uuid);
+  }
 
   @override
   void reassemble() {
@@ -26,21 +38,29 @@ class _QRCodeScannerScreenState extends State<QRCodeScannerScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Scanner QR Code')),
-      body: Column(
+      body: Stack(
         children: <Widget>[
-          Expanded(
-            flex: 5,
-            child: QRView(
-              key: qrKey,
-              onQRViewCreated: _onQRViewCreated,
-            ),
+          Column(
+            children: <Widget>[
+              Expanded(
+                flex: 5,
+                child: QRView(
+                  key: GlobalKey(),
+                  onQRViewCreated: _onQRViewCreated,
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: Center(
+                  child: Text('Reservation: $qrText'),
+                ),
+              ),
+            ],
           ),
-          Expanded(
-            flex: 1,
-            child: Center(
-              child: Text('Scan result: $qrText'),
+          if (_isLoading)
+            Center(
+              child: CircularProgressIndicator(), // Indicateur de chargement
             ),
-          ),
         ],
       ),
     );
@@ -48,10 +68,41 @@ class _QRCodeScannerScreenState extends State<QRCodeScannerScreen> {
 
   void _onQRViewCreated(QRViewController controller) {
     this.controller = controller;
-    controller.scannedDataStream.listen((scanData) {
+    controller.scannedDataStream.listen((scanData) async {
+      String scannedText = scanData.code!;
+      print("Scanned QR Code: $scannedText");
+
       setState(() {
-        qrText = scanData.code!;
+        qrText = scannedText;
       });
+
+      if (isValidUUID(scannedText)) {
+        setState(() {
+          _isLoading = true;
+        });
+
+        try {
+          ReservationStatus status = await ApiReservation.isValid(scannedText);
+
+          setState(() {
+            _isLoading = false;
+            if (status.isValid) {
+              qrText = 'Réservation valide';
+            } else {
+              qrText = 'Réservation invalide';
+            }
+          });
+        } catch (e) {
+          setState(() {
+            _isLoading = false;
+            qrText = 'Error: $e';
+          });
+        }
+      } else {
+        setState(() {
+          qrText = 'QR Code invalide';
+        });
+      }
     });
   }
 

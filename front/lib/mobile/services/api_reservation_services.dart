@@ -3,7 +3,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mobile/mobile/models/reservation.dart';
 
 class ApiReservation {
-
   static Future<void> reserveEvent(String eventId, String customerID) async {
     try {
       Dio dio = Dio();
@@ -47,11 +46,11 @@ class ApiReservation {
       Response response = await dio.get(url);
       print("Response data: ${response.data}");
 
-      final data = response.data as ReservationStatus;
+      final data = ReservationStatus.fromJson(response.data);
       return data;
     } catch (error) {
       print('Unknown error: $error');
-      return {isValid: false} as ReservationStatus;
+      return ReservationStatus(isValid: false);
     }
   }
 

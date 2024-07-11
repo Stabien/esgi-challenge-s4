@@ -42,9 +42,7 @@ class ReservationListTile extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 10),
-          QRButton(
-              text: reservation
-                  .event.title) // TODO: Change qr code text for reservation ID
+          QRButton(text: reservation.id)
         ]),
         subtitle: Row(
           children: [
