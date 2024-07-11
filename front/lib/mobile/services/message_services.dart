@@ -18,32 +18,26 @@ class MessageServices {
         throw Exception('BaseUrl is null');
       }
 
-      final Response response = await Dio().get(
-          '$baseUrl/messages/event/$id'); // Utilisation de Dio pour effectuer la requête GET
-      print("la valeur est : ");
-      print(response.data.toString());
+      final Response response = await Dio().get('$baseUrl/messages/event/$id');
 
       if (response.statusCode == 200) {
-        // Vérifier que la requête a réussi
-        List<Message> messages = []; // Initialiser une liste vide de messages
+        List<Message> messages = [];
 
-        // Vérifier que response.data est une liste
         if (response.data is List) {
-          // Mapper chaque élément de la liste en un objet Message
           messages = (response.data as List)
               .map((item) => Message.fromJson(item as Map<String, dynamic>))
               .toList();
         }
 
-        return messages; // Retourner la liste des messages
+        return messages;
       } else {
         print(
             'Erreur lors de la récupération des messages: ${response.statusCode}');
-        return []; // Retourner une liste vide si la requête a échoué
+        return [];
       }
     } catch (error) {
       print('Erreur inconnue dans getMessagesByEvent: $error');
-      return []; // Retourner une liste vide en cas d'erreur
+      return [];
     }
   }
 

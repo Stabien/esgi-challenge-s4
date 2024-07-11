@@ -1,13 +1,14 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:mobile/mobile/services/formatDate.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:web_socket_channel/status.dart' as status;
 import 'package:mobile/mobile/models/message.dart';
 import 'package:mobile/mobile/models/organizer.dart';
 import 'package:mobile/mobile/models/profil.dart';
 import 'package:mobile/mobile/services/message_services.dart';
 import 'package:mobile/mobile/services/userServices.dart';
 import 'package:mobile/mobile/utils/secureStorage.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
-import 'package:web_socket_channel/status.dart' as status;
 
 class MessagePage extends StatefulWidget {
   final String id;
@@ -30,28 +31,21 @@ class _MessagePageState extends State<MessagePage> {
   void initState() {
     super.initState();
     getprofil();
-    print("message");
     print(widget.id);
   }
 
   Future<void> getprofil() async {
     final userId = await SecureStorage.getStorageItem('userId');
-    // const userId = "0e4fdd5c-3e4d-401f-b19e-4222ae9bbc5f";
-
     setState(() {
       _userId = userId!;
     });
     profil = await UserServices().profilOrga(_userId);
     _connectWebSocket();
     orga = await UserServices().getOrgaByUser(_userId);
-    print("orga");
-    print(orga?.id.toString());
     List<Message> oldMessages =
         await MessageServices().getMessagesByEvent(widget.id);
     setState(() {
       _messages.addAll(oldMessages);
-      print("messages");
-      print(_messages);
     });
   }
 
