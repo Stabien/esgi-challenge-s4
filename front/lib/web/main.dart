@@ -8,6 +8,7 @@ import 'pages/rates.dart';
 import 'pages/reservations.dart';
 import 'pages/users.dart';
 import 'pages/feature_flipping.dart';
+import 'pages/logs.dart';
 
 class WebApp extends StatelessWidget {
   const WebApp({super.key});
@@ -33,6 +34,7 @@ class WebApp extends StatelessWidget {
         '/rates': (context) => const RatePage(),
         '/reservations': (context) => const ReservationsPage(),
         '/feature_flipping': (context) => const FeatureFlippingPage(),
+        '/logs': (context) => const LogsPage(),
       },
     );
   }

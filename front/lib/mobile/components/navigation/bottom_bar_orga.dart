@@ -34,25 +34,9 @@ class _BottomBarOrgaState extends State<BottomBarOrga> {
             icon: Icon(Icons.home),
             label: 'Accueil',
           ),
-          // BottomNavigationBarItem(
-          //   icon: Icon(Icons.login),
-          //   label: 'Connexion',
-          // ),
-          // BottomNavigationBarItem(
-          //   icon: Icon(Icons.login),
-          //   label: 'Inscription utilisateur',
-          // ),
-          // BottomNavigationBarItem(
-          //   icon: Icon(Icons.login),
-          //   label: 'Inscription organisateur',
-          // ),
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Events Organizer',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.insert_drive_file_outlined),
-            label: 'Logs',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
