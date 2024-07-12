@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/mobile/events/events_organizer.dart';
-import 'package:mobile/mobile/screens/home_screen.dart';
 import 'package:mobile/mobile/utils/navigation.dart';
 import 'components/navigation/bottom_bar.dart';
 import 'components/navigation/bottom_bar_orga.dart';
@@ -45,7 +44,6 @@ class _LayoutState extends State<Layout> {
   }
 
   static const List<Widget> _pages = <Widget>[
-    HomeScreen(),
     ScreenEventToday(),
     ScreenEvent(),
     ScreenEventReservation(),
@@ -53,7 +51,6 @@ class _LayoutState extends State<Layout> {
   ];
 
   final List<Widget> _pagesOrga = <Widget>[
-    const HomeScreen(),
     const EventsOrganizer(),
     const ProfilScreen(),
     QRCodeScannerScreen()

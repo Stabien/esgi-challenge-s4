@@ -32,10 +32,6 @@ class _BottomBarOrgaState extends State<BottomBarOrga> {
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: 'Accueil',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
             label: 'Events Organizer',
           ),
           BottomNavigationBarItem(

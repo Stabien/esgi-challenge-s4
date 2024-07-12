@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/mobile/usersScreen/bloc/profil_bloc.dart';
 import 'package:mobile/mobile/usersScreen/edit_profil_screen.dart';
+import 'package:mobile/mobile/components/disconnect-button.dart';
 
 class ProfilScreen extends StatelessWidget {
   const ProfilScreen({super.key});
@@ -13,6 +14,10 @@ class ProfilScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Profile'),
+          // add DisconnectButton to the AppBar
+          actions: const <Widget>[
+            DisconnectButton(),
+          ],
         ),
         body: BlocBuilder<ProfilBloc, ProfilState>(
           builder: (context, state) {

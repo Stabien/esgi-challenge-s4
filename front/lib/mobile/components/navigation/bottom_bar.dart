@@ -30,10 +30,6 @@ class _BottomBarState extends State<BottomBar> {
         unselectedItemColor: Colors.white54,
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Accueil',
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.flash_on),
             label: 'Today',
           ),
