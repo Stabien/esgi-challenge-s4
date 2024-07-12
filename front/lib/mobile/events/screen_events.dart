@@ -63,6 +63,7 @@ class _ScreenEventState extends State<ScreenEvent> {
             },
           ),
         ],
+        automaticallyImplyLeading: !ModalRoute.of(context)!.isFirst,
       ),
       body: Column(
         children: [

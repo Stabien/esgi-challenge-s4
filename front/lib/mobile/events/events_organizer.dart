@@ -54,6 +54,7 @@ class _EventsOrganizerState extends State<EventsOrganizer> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Evénements organisateur'),
+        automaticallyImplyLeading: !ModalRoute.of(context)!.isFirst,
       ),
       floatingActionButton: ExpandableFab(
         distance: 112,
