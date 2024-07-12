@@ -1,17 +1,16 @@
-// ignore_for_file: library_private_types_in_public_api
-
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:mobile/web/ui/appbar.dart';
 
-class LogsScreen extends StatefulWidget {
-  const LogsScreen({super.key});
+class LogsPage extends StatefulWidget {
+  const LogsPage({super.key});
 
   @override
-  State<LogsScreen> createState() => _LogsScreenState();
+  State<LogsPage> createState() => _LogsPageState();
 }
 
-class _LogsScreenState extends State<LogsScreen> {
+class _LogsPageState extends State<LogsPage> {
   List<String> logs = [];
 
   @override
@@ -39,9 +38,7 @@ class _LogsScreenState extends State<LogsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Logs'),
-      ),
+      appBar: const WebAppBar(),
       body: FractionallySizedBox(
         widthFactor: 0.8,
         child: ListView.builder(
@@ -50,10 +47,6 @@ class _LogsScreenState extends State<LogsScreen> {
             return ListTile(
               title: Text(
                 logs[index],
-                style: const TextStyle(
-                  fontSize: 12.0,
-                  color: Colors.white70,
-                ),
               ),
             );
           },
