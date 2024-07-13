@@ -551,7 +551,7 @@ func JoinEvent(c echo.Context) error {
 // @Failure 400 {object} error "Bad request"
 // @Failure 404 {object} error "Events not found"
 // @Failure 500 {object} error "Internal server error"
-// @Router /events/organizer/{id} [get]
+// @Router /events/organizer [get]
 func GetEventsByOrganizer(c echo.Context) error {
 	claims, err := utils.GetTokenFromHeader(c)
 	if err != nil {
