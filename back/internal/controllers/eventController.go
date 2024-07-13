@@ -322,6 +322,7 @@ type SimpleEvent struct {
 	Image       string    `json:"image"`
 	Date        time.Time `json:"date"`
 	Place       string    `json:"place"`
+	IsPending   bool      `json:"is_pending"`
 }
 
 // @Summary Get events
@@ -341,22 +342,23 @@ func GetAllEvents(c echo.Context) error {
 
 	nameFilter = c.QueryParam("name")
 	tagFilter := c.QueryParam("tag")
+	today := time.Now()
 
 	if tagFilter != "" && nameFilter != "" {
-		if err := db.DB().Where("LOWER(title) LIKE ? AND tag = ?", "%"+strings.ToLower(nameFilter)+"%", tagFilter).Find(&events).Error; err != nil {
+		if err := db.DB().Where("LOWER(title) LIKE ? AND tag = ? AND is_pending = false AND deleted_at IS NULL AND date > ?", "%"+strings.ToLower(nameFilter)+"%", tagFilter, today).Find(&events).Error; err != nil {
 			return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 		}
 	} else if tagFilter != "" && nameFilter == "" {
-		if err := db.DB().Where("tag = ?", tagFilter).Find(&events).Error; err != nil {
+		if err := db.DB().Where("tag = ? AND is_pending = false AND deleted_at IS NULL  AND date > ?", tagFilter, today).Find(&events).Error; err != nil {
 			return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 		}
 	} else if tagFilter == "" && nameFilter != "" {
 		nameFilter = "%" + strings.ToLower(nameFilter) + "%"
-		if err := db.DB().Where("LOWER(title) LIKE ?", nameFilter).Find(&events).Error; err != nil {
+		if err := db.DB().Where("LOWER(title) LIKE ? AND is_pending = false AND deleted_at IS NULL  AND date > ? ", nameFilter, today).Find(&events).Error; err != nil {
 			return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 		}
 	} else {
-		if err := db.DB().Find(&events).Error; err != nil {
+		if err := db.DB().Where("is_pending = false AND deleted_at IS NULL  AND date > ?", today).Find(&events).Error; err != nil {
 			return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 		}
 	}
@@ -389,6 +391,7 @@ func GetAllEvents(c echo.Context) error {
 			Image:       imageContent,
 			Date:        event.Date,
 			Place:       event.Place,
+			IsPending:   event.IsPending,
 		})
 	}
 
@@ -412,7 +415,7 @@ func GetAllEventsToday(c echo.Context) error {
 	dateStart := currentDate + " 00:00:00"
 	dateEnd := currentDate + " 23:59:59"
 
-	if err := db.DB().Where("date BETWEEN ? AND ?", dateStart, dateEnd).Find(&events).Error; err != nil {
+	if err := db.DB().Where("deleted_at IS NULL  AND is_pending = false AND date BETWEEN ? AND ? ", dateStart, dateEnd).Find(&events).Error; err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 	}
 

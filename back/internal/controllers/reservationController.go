@@ -155,7 +155,7 @@ func IsReserv(c echo.Context) error {
 	eventID := c.Param("eventId")
 
 	var reservations []models.Reservation
-	if err := db.DB().Where("customer_id = ? AND event_id = ?", customerID, eventID).Find(&reservations).Error; err != nil {
+	if err := db.DB().Where("customer_id = ? AND event_id = ? ", customerID, eventID).Find(&reservations).Error; err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 	}
 
