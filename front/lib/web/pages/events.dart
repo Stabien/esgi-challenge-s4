@@ -71,7 +71,22 @@ class EventsPageState extends State<EventsPage> {
                       final event = _allEvents[index];
                       return ListTile(
                         title: Text(event.title),
-                        subtitle: Text(event.description),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(event.description),
+                            Text(
+                              event.isPending
+                                  ? 'En attente de validation'
+                                  : 'Validé',
+                              style: TextStyle(
+                                color: event.isPending
+                                    ? Colors.orange
+                                    : Colors.green,
+                              ),
+                            ),
+                          ],
+                        ),
                         leading: Image.memory(
                           base64Decode(event.banner),
                           width: 100,
@@ -112,7 +127,18 @@ class EventsPageState extends State<EventsPage> {
                       final event = _pendingEvents[index];
                       return ListTile(
                         title: Text(event.title),
-                        subtitle: Text(event.description),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(event.description),
+                            const Text(
+                              'En attente de validation',
+                              style: TextStyle(
+                                color: Colors.orange,
+                              ),
+                            ),
+                          ],
+                        ),
                         leading: Image.memory(
                           base64Decode(event.banner),
                           width: 100,
@@ -150,6 +176,7 @@ class Event {
   final String banner;
   final String date;
   final String place;
+  final bool isPending;
 
   Event({
     required this.id,
@@ -159,6 +186,7 @@ class Event {
     required this.banner,
     required this.date,
     required this.place,
+    required this.isPending,
   });
 }
 
@@ -182,6 +210,7 @@ Future<List<Event>> fetchAllEvents() async {
               banner: json['banner'],
               date: json['date'],
               place: json['place'],
+              isPending: json['is_pending'],
             ))
         .toList();
   } catch (error) {
@@ -209,6 +238,7 @@ Future<List<Event>> fetchPendingEvents() async {
               banner: json['banner'],
               date: json['date'],
               place: json['place'],
+              isPending: json['is_pending'],
             ))
         .toList();
   } catch (error) {
