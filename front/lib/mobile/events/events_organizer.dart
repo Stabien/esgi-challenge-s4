@@ -129,13 +129,39 @@ class _EventsOrganizerState extends State<EventsOrganizer> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Image.memory(base64Decode(event.image)),
-                                  Text(
-                                    event.title,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                      color: Colors.white,
-                                    ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        event.title,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      const Spacer(),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8, vertical: 4),
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: Colors.white,
+                                            width: 1,
+                                          ), // Bordure blanche fine
+                                          borderRadius: BorderRadius.circular(
+                                              8), // Bordures arrondies
+                                        ),
+                                        child: Text(
+                                          event.isPending
+                                              ? 'En attente'
+                                              : 'Open',
+                                          style: const TextStyle(
+                                            fontSize: 10,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                   Text(
                                     event.place,

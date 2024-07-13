@@ -81,9 +81,9 @@ func InitRouter(e *echo.Echo) {
 
 	// Event routes
 	e.POST("/events", controllers.CreateEvent)
-	e.GET("/events/:id", controllers.GetEvent)
-	e.PATCH("/events/:id", controllers.UpdateEvent)
-	e.DELETE("/events/:id", controllers.DeleteEvent)
+	// e.GET("/events/:id", controllers.GetEvent)
+	// e.PATCH("/events/:id", controllers.UpdateEvent)
+	// e.DELETE("/events/:id", controllers.DeleteEvent)
 
 	// Rate routes
 	e.POST("/rates", controllers.CreateRate)
