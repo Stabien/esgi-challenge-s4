@@ -19,6 +19,8 @@ func InitRouter(e *echo.Echo) {
 	e.PATCH("/event/:id", controllers.UpdateEvent)
 	e.GET("/event/:id", controllers.GetEvent)
 	e.GET("/events", controllers.GetAllEvents)
+	e.GET("/events/pending", controllers.GetAllPendingEvents)
+	e.PATCH("/events/:id/validate", controllers.ValidateEvent)
 	e.GET("/events/today", controllers.GetAllEventsToday)
 	// e.POST("/event/:id/code", controllers.CreateCode)
 	e.POST("/event/join/:code", controllers.JoinEvent)

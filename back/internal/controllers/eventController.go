@@ -100,6 +100,7 @@ func CreateEvent(c echo.Context) error {
 		Tag:               c.FormValue("tag"),
 		Place:             c.FormValue("place"),
 		Code:              utils.GenerateRandomString(6),
+		IsPending:         true,
 	}
 
 	claims, err := utils.GetTokenFromHeader(c)
@@ -640,4 +641,61 @@ func DeleteEvent(c echo.Context) error {
 	}
 
 	return c.String(http.StatusOK, "Event deleted successfully!")
+}
+
+func GetAllPendingEvents(c echo.Context) error {
+	var events []models.Event
+
+	if err := db.DB().Where("is_pending = true").Find(&events).Error; err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+	}
+
+	if len(events) == 0 {
+		return c.JSON(http.StatusOK, []SimpleEvent{})
+	}
+
+	var simpleEvents []SimpleEvent
+	for _, event := range events {
+		bannerContent, err := utils.ReadAndEncodeFile("./" + event.Banner)
+
+		if err != nil {
+			return echo.NewHTTPError(http.StatusInternalServerError, err)
+		}
+
+		imageContent, err := utils.ReadAndEncodeFile("./" + event.Image)
+
+		if err != nil {
+			return echo.NewHTTPError(http.StatusInternalServerError, err)
+		}
+
+		simpleEvents = append(simpleEvents, SimpleEvent{
+			ID:          event.ID,
+			Title:       event.Title,
+			Description: event.Description,
+			Tag:         event.Tag,
+			Banner:      bannerContent,
+			Image:       imageContent,
+			Date:        event.Date,
+			Place:       event.Place,
+		})
+	}
+
+	return c.JSON(http.StatusOK, simpleEvents)
+}
+
+func ValidateEvent(c echo.Context) error {
+	eventID := c.Param("id")
+
+	var event models.Event
+	if err := db.DB().First(&event, "id = ?", eventID).Error; err != nil {
+		return err
+	}
+
+	event.IsPending = false
+
+	if err := db.DB().Save(&event).Error; err != nil {
+		return err
+	}
+
+	return c.String(http.StatusOK, "Event validated successfully!")
 }

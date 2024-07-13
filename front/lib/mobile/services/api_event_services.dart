@@ -109,7 +109,6 @@ class ApiServices {
     String? apiUrl = '${dotenv.env['URL_BACK']}/events/organizer';
     var response = await dio.get(apiUrl);
     List<dynamic> data = response.data;
-    // Convertissez les données en une liste d'objets Event
     List<Event> events = data.map((json) => Event.fromJson(json)).toList();
     return events;
   }
