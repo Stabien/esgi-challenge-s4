@@ -45,7 +45,6 @@ class _LayoutState extends State<Layout> {
   }
 
   static const List<Widget> _pages = <Widget>[
-    HomeScreen(),
     ScreenEventToday(),
     ScreenEvent(),
     ScreenEventReservation(),
@@ -54,11 +53,9 @@ class _LayoutState extends State<Layout> {
   ];
 
   static const List<Widget> _pagesOrga = <Widget>[
-    HomeScreen(),
     EventsOrganizer(),
     LogsScreen(),
     ProfilScreen(),
-
   ];
 
   void _onBottomBarItemTapped(int index) {

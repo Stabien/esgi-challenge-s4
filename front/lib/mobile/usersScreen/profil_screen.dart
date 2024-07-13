@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mobile/mobile/components/disconnect-button.dart';
 import 'package:mobile/mobile/usersScreen/bloc/profil_bloc.dart';
 import 'package:mobile/mobile/usersScreen/edit_profil_screen.dart';
 
@@ -56,6 +57,8 @@ class ProfilScreen extends StatelessWidget {
                     profil.email,
                     style: const TextStyle(color: Colors.white),
                   ),
+                  const SizedBox(height: 200),
+                  DisconnectButton(),
                 ],
               );
             } else {

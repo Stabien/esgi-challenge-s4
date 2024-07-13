@@ -30,10 +30,10 @@ class _BottomBarOrgaState extends State<BottomBarOrga> {
         selectedItemColor: Colors.white,
         unselectedItemColor: Colors.white54,
         items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Accueil',
-          ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(Icons.home),
+          //   label: 'Accueil',
+          // ),
           // BottomNavigationBarItem(
           //   icon: Icon(Icons.login),
           //   label: 'Connexion',
