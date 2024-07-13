@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/web/services/auth_service.dart';
+import 'package:mobile/web/services/check_auth_page.dart';
 import 'package:mobile/web/ui/appbar.dart';
 import 'pages/events.dart';
 import 'pages/messages.dart';
@@ -29,7 +30,7 @@ class WebApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
       routes: {
-        '/': (context) => const WebAppPage(),
+        '/': (context) => const CheckAuthPage(),
         '/users': (context) => const AuthGuard(child: WebUserPage()),
         '/events': (context) => const AuthGuard(child: EventsPage()),
         '/messages': (context) => const AuthGuard(child: MessagesPage()),
