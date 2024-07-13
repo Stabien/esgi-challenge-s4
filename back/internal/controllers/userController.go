@@ -265,9 +265,6 @@ func UpdateUserByIdOrga(c echo.Context) error {
 	if updateUser.Email != nil {
 		userUpdates["email"] = *updateUser.Email
 	}
-	if updateUser.Password != nil {
-		userUpdates["password"] = *updateUser.Password
-	}
 
 	organizerUpdates := map[string]interface{}{}
 	if updateUser.FirstName != nil {
@@ -322,9 +319,6 @@ func UpdateUserByIdCustomer(c echo.Context) error {
 	if updateUser.Email != nil {
 		userUpdates["email"] = *updateUser.Email
 	}
-	if updateUser.Password != nil {
-		userUpdates["password"] = *updateUser.Password
-	}
 
 	customerUpdates := map[string]interface{}{}
 	if updateUser.FirstName != nil {
@@ -358,7 +352,6 @@ func UpdateUserByIdCustomer(c echo.Context) error {
 // Define UpdateUserRequest struct
 type UpdateUserRequest struct {
 	Email     *string `json:"email"`
-	Password  *string `json:"password"`
 	FirstName *string `json:"firstname"`
 	LastName  *string `json:"lastname"`
 }
@@ -436,7 +429,6 @@ func UpdateUser(c echo.Context) error {
 		return err
 	}
 
-		// Update only fields that are provided in the input
 	if input.Email != "" {
 		user.Email = input.Email
 	}
