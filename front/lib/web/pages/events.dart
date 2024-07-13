@@ -55,71 +55,84 @@ class EventsPageState extends State<EventsPage> {
       body: Column(
         children: [
           const Text('Tous les événements', style: TextStyle(fontSize: 20)),
+          const SizedBox(height: 20),
           Expanded(
             child: FutureBuilder<List<Event>>(
               future: _allEventsFuture,
               builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else {
-            return ListView.builder(
-              itemCount: _allEvents.length,
-              itemBuilder: (context, index) {
-                final event = _allEvents[index];
-                return ListTile(
-            title: Text(event.title),
-            subtitle: Text(event.description),
-            leading: Image.memory(
-              base64Decode(event.banner),
-              width: 100,
-              height: 100,
-              fit: BoxFit.cover,
-            ),
-                );
-              },
-            );
-          }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else {
+                  return ListView.builder(
+                    itemCount: _allEvents.length,
+                    itemBuilder: (context, index) {
+                      final event = _allEvents[index];
+                      return ListTile(
+                        title: Text(event.title),
+                        subtitle: Text(event.description),
+                        leading: Image.memory(
+                          base64Decode(event.banner),
+                          width: 100,
+                          height: 100,
+                          fit: BoxFit.cover,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          side: BorderSide(
+                            color: Colors.grey[400]!,
+                            width: 1,
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                }
               },
             ),
           ),
-          const Divider(height: 2),
-          // add title pending events
           const Text('Événements en attente de validation',
               style: TextStyle(fontSize: 20)),
+          const SizedBox(height: 20),
           Expanded(
             child: FutureBuilder<List<Event>>(
               future: _pendingEventsFuture,
               builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (_pendingEvents.isEmpty) {
-            return const Center(child: Text('Aucun événement en attente'));
-          } else {
-            return ListView.builder(
-              itemCount: _pendingEvents.length,
-              itemBuilder: (context, index) {
-                final event = _pendingEvents[index];
-                return ListTile(
-            title: Text(event.title),
-            subtitle: Text(event.description),
-            leading: Image.memory(
-              base64Decode(event.banner),
-              width: 100,
-              height: 100,
-              fit: BoxFit.cover,
-            ),
-            trailing: ElevatedButton(
-              onPressed: () => _validateEvent(event.id),
-              child: const Text('Valider'),
-            ),
-                );
-              },
-            );
-          }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else if (_pendingEvents.isEmpty) {
+                  return const Center(
+                      child: Text('Aucun événement en attente'));
+                } else {
+                  return ListView.builder(
+                    itemCount: _pendingEvents.length,
+                    itemBuilder: (context, index) {
+                      final event = _pendingEvents[index];
+                      return ListTile(
+                        title: Text(event.title),
+                        subtitle: Text(event.description),
+                        leading: Image.memory(
+                          base64Decode(event.banner),
+                          width: 100,
+                          height: 100,
+                          fit: BoxFit.cover,
+                        ),
+                        trailing: ElevatedButton(
+                          onPressed: () => _validateEvent(event.id),
+                          child: const Text('Valider'),
+                        ),
+                        shape: RoundedRectangleBorder(
+                          side: BorderSide(
+                            color: Colors.grey[400]!,
+                            width: 1,
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                }
               },
             ),
           ),

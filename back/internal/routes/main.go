@@ -52,6 +52,7 @@ func InitRouter(e *echo.Echo) {
 
 	// User routes
 	e.POST("/users", controllers.CreateUser)
+	e.GET("/users", controllers.GetAllUsers)
 	e.GET("/users/:id", controllers.GetUser)
 	e.PATCH("/users/:id", controllers.UpdateUser)
 	e.DELETE("/users/:id", controllers.DeleteUser)
