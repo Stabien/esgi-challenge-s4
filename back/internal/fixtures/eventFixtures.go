@@ -28,6 +28,7 @@ var Events = []models.Event{
 		Tag:               "Disco",
 		Organizers:        []models.Organizer{Organizers[0], Organizers[1], Organizers[2]},
 		Code:              utils.GenerateRandomString(6),
+		IsPending:         false,
 	},
 	{
 		ID:                uuid.New(),
@@ -44,6 +45,7 @@ var Events = []models.Event{
 		Tag:               "Jazz",
 		Organizers:        []models.Organizer{Organizers[1]},
 		Code:              utils.GenerateRandomString(6),
+		IsPending:         true,
 	},
 	{
 		ID:                uuid.New(),
@@ -60,5 +62,6 @@ var Events = []models.Event{
 		Tag:               "Techno",
 		Organizers:        []models.Organizer{Organizers[2]},
 		Code:              utils.GenerateRandomString(6),
+		IsPending:         false,
 	},
 }

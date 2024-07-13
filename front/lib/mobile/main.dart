@@ -18,7 +18,6 @@ import 'package:mobile/mobile/events/screen_events.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:mobile/mobile/usersScreen/edit_profil_screen.dart';
 import 'firebase_options.dart';
 
 void main() async {
