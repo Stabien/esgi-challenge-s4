@@ -1,15 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
-
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:mobile/mobile/core/api_exception.dart';
 import 'package:mobile/mobile/models/organizer.dart';
 import 'package:mobile/mobile/models/profil.dart';
 import 'package:mobile/mobile/models/user.dart';
-import 'package:http/http.dart' as http;
-import 'package:flinq/flinq.dart';
+import 'package:mobile/web/utils/api_utils.dart';
 
 class UserServices {
   final String baseUrl = dotenv.env['URL_BACK'].toString();
@@ -52,18 +48,13 @@ class UserServices {
 
   Future<Profil?> profilCustomer(String id) async {
     try {
-      final Response response = await dio.get('$baseUrl/users/custom/$id');
-      print("la valeur est : ");
-      print(response.data.toString());
+      var response = await ApiUtils.get('/users/custom/$id');
 
       final List<dynamic> dataList = response.data;
-      print("Parsing response data...");
 
       if (dataList.isNotEmpty) {
         final Map<String, dynamic> data = dataList.first;
-        print("Parsing item: $data");
         Profil profil = Profil.fromJson(data);
-        print("Parsed profil: $profil");
         return profil;
       } else {
         print("No data found");
@@ -76,21 +67,14 @@ class UserServices {
   }
 
   Future<Profil?> profilOrga(String id) async {
-    print(baseUrl);
-
     try {
-      final Response response = await dio.get('$baseUrl/users/orga/$id');
-      print("la valeur est : ");
-      print(response.data.toString());
+      var response = await ApiUtils.get('/users/orga/$id');
 
       final List<dynamic> dataList = response.data;
-      print("Parsing response data...");
 
       if (dataList.isNotEmpty) {
         final Map<String, dynamic> data = dataList.first;
-        print("Parsing item: $data");
         Profil profil = Profil.fromJson(data);
-        print("Parsed profil: $profil");
         return profil;
       } else {
         print("No data found");
@@ -104,9 +88,7 @@ class UserServices {
 
   Future<Organizer?> getOrgaByUser(String id) async {
     try {
-      final Response response = await dio.get('$baseUrl/organizers/id/$id');
-      print("la valeur est : ");
-      print(response.data.toString());
+      var response = await ApiUtils.get('/organizers/id/$id');
 
       if (response.data is Map<String, dynamic>) {
         return Organizer.fromJson(response.data);
@@ -122,15 +104,11 @@ class UserServices {
 
   Future<Profil?> patchProfilOrga(String id, Profil profil) async {
     try {
-      final Response response = await dio.patch(
-        '$baseUrl/users/orga/$id',
-        data: {
-          "lastname": profil.lastname,
-          "firstname": profil.firstname,
-          "email": profil.email,
-        },
-        options: Options(headers: {"Content-Type": "application/json"}),
-      );
+      var response = await ApiUtils.patch('/users/orga/$id', {
+        "lastname": profil.lastname,
+        "firstname": profil.firstname,
+        "email": profil.email,
+      });
 
       if (response.data != null && response.data.isNotEmpty) {
         final Map<String, dynamic> data = response.data is String
@@ -145,9 +123,6 @@ class UserServices {
     } catch (e) {
       if (e is DioException) {
         print('Dio error: ${e.message}');
-        print('Request: ${e.requestOptions}');
-        print('Response: ${e.response}');
-        print('Type: ${e.type}');
       } else {
         print('Unknown error in patchProfilOrga: $e');
       }
@@ -157,15 +132,11 @@ class UserServices {
 
   Future<Profil?> patchProfilCusto(String id, Profil profil) async {
     try {
-      final Response response = await dio.patch(
-        '$baseUrl/users/custom/$id',
-        data: {
-          "lastname": profil.lastname,
-          "firstname": profil.firstname,
-          "email": profil.email,
-        },
-        options: Options(headers: {"Content-Type": "application/json"}),
-      );
+      var response = await ApiUtils.patch('/users/custom/$id', {
+        "lastname": profil.lastname,
+        "firstname": profil.firstname,
+        "email": profil.email,
+      });
 
       if (response.data != null && response.data.isNotEmpty) {
         final Map<String, dynamic> data = response.data is String
@@ -180,9 +151,6 @@ class UserServices {
     } catch (e) {
       if (e is DioException) {
         print('Dio error: ${e.message}');
-        print('Request: ${e.requestOptions}');
-        print('Response: ${e.response}');
-        print('Type: ${e.type}');
       } else {
         print('Unknown error in patchProfilOrga: $e');
       }

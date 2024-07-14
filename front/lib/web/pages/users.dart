@@ -3,20 +3,14 @@ import 'package:mobile/web/ui/appbar.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mobile/mobile/utils/secureStorage.dart';
+import 'package:mobile/web/utils/api_utils.dart';
 
 class WebUserPage extends StatelessWidget {
   const WebUserPage({super.key});
 
   Future<List<User>> fetchAllUsers() async {
-    final dio = Dio();
-
     try {
-      final token = await SecureStorage.getStorageItem('token');
-      dio.options.headers['Authorization'] = 'Bearer $token';
-      dio.options.connectTimeout = const Duration(milliseconds: 10000);
-
-      final apiUrl = '${dotenv.env['URL_BACK']}/users';
-      final response = await dio.get(apiUrl);
+      final response = await ApiUtils.get('/users');
       final List<dynamic> jsonList = response.data;
       return jsonList
           .map((json) => User(

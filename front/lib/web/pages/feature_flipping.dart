@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mobile/web/ui/appbar.dart';
+import 'package:mobile/web/utils/api_utils.dart';
 
 class FeatureFlippingPage extends StatefulWidget {
   const FeatureFlippingPage({super.key});
@@ -11,9 +11,6 @@ class FeatureFlippingPage extends StatefulWidget {
 }
 
 class _FeatureFlippingPageState extends State<FeatureFlippingPage> {
-  final Dio _dio = Dio(BaseOptions(
-    baseUrl: dotenv.env['URL_BACK'] ?? 'http://localhost:3000',
-  ));
   List<dynamic> _features = [];
   bool _loading = true;
 
@@ -29,7 +26,8 @@ class _FeatureFlippingPageState extends State<FeatureFlippingPage> {
     });
 
     try {
-      final response = await _dio.get('/features');
+      var response = await ApiUtils.get('/features');
+
       setState(() {
         _features = response.data;
         _loading = false;
@@ -44,13 +42,13 @@ class _FeatureFlippingPageState extends State<FeatureFlippingPage> {
 
   Future<void> _updateFeature(String name, bool isEnabled) async {
     try {
-      final response = await _dio.patch(
-        '/features',
-        data: FormData.fromMap({
-          'feature': name,
-          'is_enabled': isEnabled.toString(),
-        }),
-      );
+      var response = await ApiUtils.patch(
+          '/features',
+          FormData.fromMap({
+            'feature': name,
+            'is_enabled': isEnabled.toString(),
+          }));
+
       if (response.statusCode == 200) {
         setState(() {
           _features.firstWhere(

@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mobile/mobile/utils/secureStorage.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
+import 'package:mobile/web/utils/api_utils.dart';
 
 class UpdateEventForm extends StatefulWidget {
   final String eventId;
@@ -49,10 +50,7 @@ class _UpdateEventFormState extends State<UpdateEventForm> {
 
   void _fetchEventDetails() async {
     try {
-      var dio = Dio();
-      dio.options.connectTimeout = const Duration(milliseconds: 10000);
-      String? apiUrl = '${dotenv.env['URL_BACK']}/event/${widget.eventId}';
-      var response = await dio.get(apiUrl);
+      var response = await ApiUtils.get('/event/${widget.eventId}');
       if (response.statusCode == 200) {
         setState(() {
           _event = Event.fromJson(response.data);
@@ -76,15 +74,8 @@ class _UpdateEventFormState extends State<UpdateEventForm> {
   }
 
   void _updateEvent() async {
-    var dio = Dio();
-
-    String? token = await SecureStorage.getStorageItem('token');
-    dio.options.headers['Authorization'] = 'Bearer $token';
-
-    String? apiUrl = '${dotenv.env['URL_BACK']}/event/${widget.eventId}';
-
     try {
-      var response = await dio.patch(apiUrl, data: {
+      var data = {
         'title': _titleController.text,
         'description': _descriptionController.text,
         'date': _dateController.text,
@@ -96,7 +87,8 @@ class _UpdateEventFormState extends State<UpdateEventForm> {
         'tag': _tagController.text,
         'image': _imageController.text,
         'place': _placeController.text,
-      });
+      };
+      var response = await ApiUtils.patch('/event/${widget.eventId}', data);
 
       if (response.statusCode == 200) {
         showDialog(
