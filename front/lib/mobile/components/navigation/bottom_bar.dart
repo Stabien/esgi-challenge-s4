@@ -45,14 +45,6 @@ class _BottomBarState extends State<BottomBar> {
             icon: Icon(Icons.person),
             label: 'Profil',
           ),
-          // BottomNavigationBarItem(
-          //   icon: Icon(Icons.home),
-          //   label: 'Events Organizer',
-          // ),
-          // BottomNavigationBarItem(
-          //   icon: Icon(Icons.insert_drive_file_outlined),
-          //   label: 'Logs',
-          // ),
         ],
         currentIndex: widget.selectedIndex,
         onTap: widget.onItemTapped,

@@ -129,7 +129,6 @@ class _MessagePageState extends State<MessagePage> {
                 final bool isCurrentUserMessage =
                     message.organizerId == orga?.id;
 
-                // Vérifier si le message est envoyé par l'organisateur actuel
                 final bool isCurrentOrganizerMessage =
                     message.organizerId == orga?.id;
 
@@ -173,7 +172,6 @@ class _MessagePageState extends State<MessagePage> {
                               ),
                               const SizedBox(height: 5.0),
                               Text(
-                                // traduireDate(message.date),
                                 message.date,
                                 style: TextStyle(
                                   fontSize: 12.0,

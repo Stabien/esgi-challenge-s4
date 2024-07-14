@@ -202,10 +202,6 @@ class _UpdateEventFormState extends State<UpdateEventForm> {
                       showTitleActions: true,
                       minTime: DateTime.now(),
                       maxTime: DateTime.now().add(const Duration(days: 730)),
-                      // onChanged: (date) {
-                      //   print('change $date');
-                      //   print('change ${date.toUtc().toIso8601String()}');
-                      // },
                       onConfirm: (date) {
                         setState(() {
                           _dateController.text = date.toUtc().toIso8601String();

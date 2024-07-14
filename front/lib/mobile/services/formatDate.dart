@@ -29,8 +29,3 @@ String traduireDate(String dateString) {
 
   return formattedDate;
 }
-
-// void main() {
-//   String dateTransformed = transformerDate("2024-07-15T00:00:00Z");
-//   print(dateTransformed); // Output: 19 juil 2024
-// }
