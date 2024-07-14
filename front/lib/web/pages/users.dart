@@ -23,6 +23,20 @@ class WebUserPage extends StatelessWidget {
                 id: json['ID'],
                 email: json['Email'],
                 role: json['Role'],
+                firstname:
+                    json['Customers'] != null && json['Customers'].isNotEmpty
+                        ? json['Customers'][0]['Firstname']
+                        : json['Organizers'] != null &&
+                                json['Organizers'].isNotEmpty
+                            ? json['Organizers'][0]['Firstname']
+                            : "Admin",
+                lastname:
+                    json['Customers'] != null && json['Customers'].isNotEmpty
+                        ? json['Customers'][0]['Lastname']
+                        : json['Organizers'] != null &&
+                                json['Organizers'].isNotEmpty
+                            ? json['Organizers'][0]['Lastname']
+                            : "account",
               ))
           .toList();
     } catch (error) {
@@ -45,6 +59,8 @@ class WebUserPage extends StatelessWidget {
                 final user = users![index];
                 return ListTile(
                   title: Text(
+                    "${user.firstname ?? ''} ${user.lastname ?? ''}"
+                    '\n'
                     "ID: ${user.id}",
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
@@ -93,10 +109,14 @@ class User {
   final String id;
   final String email;
   final String role;
+  final String? firstname;
+  final String? lastname;
 
   User({
     required this.id,
     required this.email,
     required this.role,
+    this.firstname,
+    this.lastname,
   });
 }
