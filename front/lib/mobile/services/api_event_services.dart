@@ -35,9 +35,8 @@ class ApiServices {
       if (response.statusCode! < 200 || response.statusCode! >= 400) {
         throw ApiException(message: 'Bad request');
       }
-      final data =
-          json.decode(utf8.decode(response.data)) as Map<String, dynamic>;
-      // log(data.toString());
+      final data = response.data;
+
       return EventDetail.fromJson(data);
     } on SocketException catch (error) {
       log('Network error.', error: error);
@@ -55,9 +54,8 @@ class ApiServices {
       if (response.statusCode! < 200 || response.statusCode! >= 400) {
         throw ApiException(message: 'Bad request');
       }
-      final data =
-          json.decode(utf8.decode(response.data)) as List<dynamic>;
-      // log(data.toString());
+      final data = response.data as List<dynamic>;
+
       return data.mapList((e) => UserReservation.fromJson(e));
     } on SocketException catch (error) {
       log('Network error.', error: error);
@@ -75,8 +73,7 @@ class ApiServices {
       if (response.statusCode! < 200 || response.statusCode! >= 400) {
         throw ApiException(message: 'Bad request');
       }
-      final data =
-          json.decode(utf8.decode(response.data)) as List<dynamic>;
+      final data = response.data as List<dynamic>;
       return data.mapList((e) => Event.fromJson(e));
     } on SocketException catch (error) {
       log('Network error.', error: error);
