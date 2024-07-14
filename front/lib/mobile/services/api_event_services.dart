@@ -15,15 +15,22 @@ import 'package:mobile/mobile/utils/secureStorage.dart';
 class ApiServices {
   static final String baseUrl = dotenv.env['URL_BACK'].toString();
   static Future<List<Event>> getEvents(search, tag) async {
+    var dio = Dio();
+
+    String? token = await SecureStorage.getStorageItem('token');
+
+    dio.options.headers['Authorization'] = 'Bearer $token';
+    dio.options.connectTimeout = const Duration(milliseconds: 10000);
+
+    String? apiUrl = '${dotenv.env['URL_BACK']}/events?name=$search&tag=$tag';
+
+    var response = await dio.get(apiUrl);
     try {
-      final response =
-          await http.get(Uri.parse('$baseUrl/events?name=$search&tag=$tag'));
       await Future.delayed(const Duration(seconds: 1));
-      if (response.statusCode < 200 || response.statusCode >= 400) {
+      if (response.statusCode != 200) {
         throw ApiException(message: 'Bad request');
       }
-      final data =
-          json.decode(utf8.decode(response.bodyBytes)) as List<dynamic>;
+      final data = response.data as List<dynamic>;
       log(data.toString());
       return data.mapList((e) => Event.fromJson(e));
     } on SocketException catch (error) {
