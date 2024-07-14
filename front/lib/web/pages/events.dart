@@ -4,6 +4,7 @@ import 'package:mobile/web/ui/appbar.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mobile/mobile/utils/secureStorage.dart';
+import 'package:mobile/web/utils/api_utils.dart';
 
 class EventsPage extends StatefulWidget {
   const EventsPage({super.key});
@@ -192,14 +193,8 @@ class Event {
 
 Future<List<Event>> fetchAllEvents() async {
   try {
-    final dio = Dio();
+    var response = await ApiUtils.get('/events');
 
-    final token = await SecureStorage.getStorageItem('token');
-    dio.options.headers['Authorization'] = 'Bearer $token';
-    dio.options.connectTimeout = const Duration(milliseconds: 10000);
-
-    final apiUrl = '${dotenv.env['URL_BACK']}/events';
-    final response = await dio.get(apiUrl);
     final List<dynamic> jsonList = response.data;
     return jsonList
         .map((json) => Event(
@@ -220,14 +215,8 @@ Future<List<Event>> fetchAllEvents() async {
 
 Future<List<Event>> fetchPendingEvents() async {
   try {
-    final dio = Dio();
+    var response = await ApiUtils.get('/events/pending');
 
-    final token = await SecureStorage.getStorageItem('token');
-    dio.options.headers['Authorization'] = 'Bearer $token';
-    dio.options.connectTimeout = const Duration(milliseconds: 10000);
-
-    final apiUrl = '${dotenv.env['URL_BACK']}/events/pending';
-    final response = await dio.get(apiUrl);
     final List<dynamic> jsonList = response.data;
     return jsonList
         .map((json) => Event(
@@ -248,14 +237,8 @@ Future<List<Event>> fetchPendingEvents() async {
 
 Future<void> validateEvent(String eventId) async {
   try {
-    final dio = Dio();
+    await ApiUtils.patch('/events/$eventId/validate', {});
 
-    final token = await SecureStorage.getStorageItem('token');
-    dio.options.headers['Authorization'] = 'Bearer $token';
-    dio.options.connectTimeout = const Duration(milliseconds: 10000);
-
-    final apiUrl = '${dotenv.env['URL_BACK']}/events/$eventId/validate';
-    await dio.patch(apiUrl);
   } catch (error) {
     throw Exception('An error occurred while validating the event');
   }

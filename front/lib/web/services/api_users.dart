@@ -1,39 +1,31 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'package:mobile/web/utils/api_utils.dart';
 
 class UserService {
-  final String baseUrl;
-
-  UserService({required this.baseUrl});
-
   Future<List<dynamic>> getAllUsers() async {
-    final response = await http.get(Uri.parse('$baseUrl/users'));
+    var response = await ApiUtils.get('/users');
+
     if (response.statusCode == 200) {
-      return json.decode(response.body);
+      return json.decode(response.data);
     } else {
       throw Exception('Failed to load users');
     }
   }
 
   Future<Map<String, dynamic>> getUser(String id) async {
-    final response = await http.get(Uri.parse('$baseUrl/users/$id'));
+    var response = await ApiUtils.get('/users/$id');
+
     if (response.statusCode == 200) {
-      return json.decode(response.body);
+      return json.decode(response.data);
     } else {
       throw Exception('Failed to load user');
     }
   }
 
   Future<Map<String, dynamic>> createUser(Map<String, dynamic> user) async {
-    final response = await http.post(
-      Uri.parse('$baseUrl/users'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: json.encode(user),
-    );
+    var response = await ApiUtils.post('/users', user);
     if (response.statusCode == 201) {
-      return json.decode(response.body);
+      return json.decode(response.data);
     } else {
       throw Exception('Failed to create user');
     }
@@ -41,22 +33,18 @@ class UserService {
 
   Future<Map<String, dynamic>> updateUser(
       String id, Map<String, dynamic> user) async {
-    final response = await http.patch(
-      Uri.parse('$baseUrl/users/$id'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: json.encode(user),
-    );
+    var response = await ApiUtils.patch('/users/$id', user);
+
     if (response.statusCode == 200) {
-      return json.decode(response.body);
+      return json.decode(response.data);
     } else {
       throw Exception('Failed to update user');
     }
   }
 
   Future<void> deleteUser(String id) async {
-    final response = await http.delete(Uri.parse('$baseUrl/users/$id'));
+    var response = await ApiUtils.delete('/users/$id', {});
+
     if (response.statusCode != 204) {
       throw Exception('Failed to delete user');
     }

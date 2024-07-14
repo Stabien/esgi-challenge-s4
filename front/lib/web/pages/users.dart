@@ -3,26 +3,34 @@ import 'package:mobile/web/ui/appbar.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mobile/mobile/utils/secureStorage.dart';
+import 'package:mobile/web/utils/api_utils.dart';
 
 class WebUserPage extends StatelessWidget {
   const WebUserPage({super.key});
 
   Future<List<User>> fetchAllUsers() async {
-    final dio = Dio();
-
     try {
-      final token = await SecureStorage.getStorageItem('token');
-      dio.options.headers['Authorization'] = 'Bearer $token';
-      dio.options.connectTimeout = const Duration(milliseconds: 10000);
-
-      final apiUrl = '${dotenv.env['URL_BACK']}/users';
-      final response = await dio.get(apiUrl);
+      final response = await ApiUtils.get('/users');
       final List<dynamic> jsonList = response.data;
       return jsonList
           .map((json) => User(
                 id: json['ID'],
                 email: json['Email'],
                 role: json['Role'],
+                firstname:
+                    json['Customers'] != null && json['Customers'].isNotEmpty
+                        ? json['Customers'][0]['Firstname']
+                        : json['Organizers'] != null &&
+                                json['Organizers'].isNotEmpty
+                            ? json['Organizers'][0]['Firstname']
+                            : "Admin",
+                lastname:
+                    json['Customers'] != null && json['Customers'].isNotEmpty
+                        ? json['Customers'][0]['Lastname']
+                        : json['Organizers'] != null &&
+                                json['Organizers'].isNotEmpty
+                            ? json['Organizers'][0]['Lastname']
+                            : "account",
               ))
           .toList();
     } catch (error) {
@@ -45,6 +53,8 @@ class WebUserPage extends StatelessWidget {
                 final user = users![index];
                 return ListTile(
                   title: Text(
+                    "${user.firstname ?? ''} ${user.lastname ?? ''}"
+                    '\n'
                     "ID: ${user.id}",
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
@@ -93,10 +103,14 @@ class User {
   final String id;
   final String email;
   final String role;
+  final String? firstname;
+  final String? lastname;
 
   User({
     required this.id,
     required this.email,
     required this.role,
+    this.firstname,
+    this.lastname,
   });
 }

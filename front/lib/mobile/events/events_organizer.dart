@@ -147,9 +147,9 @@ class _EventsOrganizerState extends State<EventsOrganizer> {
                                           border: Border.all(
                                             color: Colors.white,
                                             width: 1,
-                                          ), // Bordure blanche fine
-                                          borderRadius: BorderRadius.circular(
-                                              8), // Bordures arrondies
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(8),
                                         ),
                                         child: Text(
                                           event.isPending
@@ -185,9 +185,8 @@ class _EventsOrganizerState extends State<EventsOrganizer> {
                                       border: Border.all(
                                         color: Colors.white,
                                         width: 1,
-                                      ), // Bordure blanche fine
-                                      borderRadius: BorderRadius.circular(
-                                          8), // Bordures arrondies
+                                      ),
+                                      borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: Text(
                                       event.tag,

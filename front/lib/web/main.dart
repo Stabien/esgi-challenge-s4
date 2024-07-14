@@ -5,8 +5,6 @@ import 'package:mobile/web/ui/appbar.dart';
 import 'pages/events.dart';
 import 'pages/messages.dart';
 import 'pages/notifications.dart';
-import 'pages/organizers.dart';
-import 'pages/rates.dart';
 import 'pages/reservations.dart';
 import 'pages/users.dart';
 import 'pages/feature_flipping.dart';
@@ -37,8 +35,6 @@ class WebApp extends StatelessWidget {
         '/messages': (context) => const AuthGuard(child: MessagesPage()),
         '/notification': (context) =>
             const AuthGuard(child: NotificationPage()),
-        '/organizer': (context) => const AuthGuard(child: OrganizerPage()),
-        '/rates': (context) => const AuthGuard(child: RatePage()),
         '/reservations': (context) =>
             const AuthGuard(child: ReservationsPage()),
         '/feature_flipping': (context) =>
