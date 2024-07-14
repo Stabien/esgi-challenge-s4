@@ -344,7 +344,16 @@ func GetAllEvents(c echo.Context) error {
 	tagFilter := c.QueryParam("tag")
 	today := time.Now()
 
-	if tagFilter != "" && nameFilter != "" {
+	claims, err := utils.GetTokenFromHeader(c)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+	}
+
+	if claims["role"].(string) == "admin" {
+		if err := db.DB().Find(&events).Error; err != nil {
+			return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+		}
+	} else if tagFilter != "" && nameFilter != "" {
 		if err := db.DB().Where("LOWER(title) LIKE ? AND tag = ? AND is_pending = false AND deleted_at IS NULL AND date > ?", "%"+strings.ToLower(nameFilter)+"%", tagFilter, today).Find(&events).Error; err != nil {
 			return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 		}

@@ -12,12 +12,6 @@ class WebAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       actions: <Widget>[
         IconButton(
-          icon: const Icon(Icons.home),
-          onPressed: () {
-            Navigator.pushNamed(context, '/');
-          },
-        ),
-        IconButton(
           icon: const Icon(Icons.person),
           onPressed: () {
             Navigator.pushNamed(context, '/users');
