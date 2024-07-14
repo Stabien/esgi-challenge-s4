@@ -227,9 +227,6 @@ func UpdateEvent(c echo.Context) error {
 	event.Place = c.FormValue("place")
 
 	// event.Date, err = time.Parse(time.RFC3339, updateInput.Date)
-	if err != nil {
-		return err
-	}
 
 	if err := db.DB().Model(&event).Updates(&event).Error; err != nil {
 		return err
