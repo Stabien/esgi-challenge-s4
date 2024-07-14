@@ -30,6 +30,7 @@ class WebApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
       routes: {
+        '/login': (context) => const Login(),
         '/': (context) => const CheckAuthPage(),
         '/users': (context) => const AuthGuard(child: WebUserPage()),
         '/events': (context) => const AuthGuard(child: EventsPage()),
@@ -55,7 +56,7 @@ class WebAppPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final authService = AuthService();
     return Scaffold(
-      appBar: authService.isLoggedIn ? WebAppBar() : null,
+      appBar: authService.isLoggedIn ? const WebAppBar() : null,
       body: Center(
         child:
             authService.isLoggedIn ? const Text('Bienvenue!') : const Login(),
@@ -67,7 +68,7 @@ class WebAppPage extends StatelessWidget {
 class AuthGuard extends StatelessWidget {
   final Widget child;
 
-  const AuthGuard({required this.child, Key? key}) : super(key: key);
+  const AuthGuard({required this.child, super.key});
 
   @override
   Widget build(BuildContext context) {
