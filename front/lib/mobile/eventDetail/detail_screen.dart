@@ -67,7 +67,6 @@ class _DetailScreen extends State<DetailScreen> {
   }
 
   void _updateReservationStatus() {
-    print('update reservation status');
     ApiReservation.isreserv(widget.id, _userId).then((data) {
       setState(() {
         if (data.isEmpty) {

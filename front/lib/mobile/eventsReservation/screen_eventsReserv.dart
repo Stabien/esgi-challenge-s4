@@ -12,6 +12,7 @@ class ScreenEventReservation extends StatelessWidget {
       create: (context) => ReservationBloc()..add(ReservationDataLoaded()),
       child: Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           title:
               const Text('Mes billets', style: TextStyle(color: Colors.white)),
           bottom: const PreferredSize(
