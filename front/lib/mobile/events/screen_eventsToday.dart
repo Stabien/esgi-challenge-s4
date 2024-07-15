@@ -122,10 +122,9 @@ class _ScreenEventState extends State<ScreenEventToday> {
                                             horizontal: 8, vertical: 4),
                                         decoration: BoxDecoration(
                                           border: Border.all(
-                                              color: Colors.white,
-                                              width: 1), // Bordure blanche fine
-                                          borderRadius: BorderRadius.circular(
-                                              8), // Bordures arrondies
+                                              color: Colors.white, width: 1),
+                                          borderRadius:
+                                              BorderRadius.circular(8),
                                         ),
                                         child: Text(
                                           event.tag,

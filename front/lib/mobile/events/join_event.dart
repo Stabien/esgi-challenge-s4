@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:mobile/mobile/utils/secureStorage.dart';
+import 'package:mobile/web/utils/api_utils.dart';
 
 class JoinEvent extends StatefulWidget {
   const JoinEvent({super.key});
@@ -21,17 +20,9 @@ class JoinEventState extends State<JoinEvent> {
       _errorMessage = null;
     });
 
-    String? token = await SecureStorage.getStorageItem('token');
-
     try {
-      var dio = Dio();
-      dio.options.connectTimeout = const Duration(milliseconds: 10000);
-      String? apiUrl = '${dotenv.env['URL_BACK']}/event/join/$code';
+      var response = await ApiUtils.post('/event/join/$code', {});
 
-      // add bearer token
-      dio.options.headers['Authorization'] = 'Bearer $token';
-
-      var response = await dio.post(apiUrl);
       if (response.statusCode == 200) {
         showDialog(
           context: context,

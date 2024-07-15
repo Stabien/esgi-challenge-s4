@@ -24,7 +24,6 @@ class LoginScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              // forgot password
               TextButton(
                 onPressed: () => redirectToPath(context, '/forgot-password'),
                 child: Text(

@@ -396,7 +396,7 @@ func GetUser(c echo.Context) error {
 func GetAllUsers(c echo.Context) error {
 
 	var users []models.User
-	if err := db.DB().Find(&users).Error; err != nil {
+	if err := db.DB().Preload("Admins").Preload("Organizers").Preload("Customers").Find(&users).Error; err != nil {
 		return err
 	}
 

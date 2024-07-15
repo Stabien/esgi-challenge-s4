@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:dio/dio.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mobile/web/ui/appbar.dart';
+import 'package:mobile/web/utils/api_utils.dart';
 
 class LogsPage extends StatefulWidget {
   const LogsPage({super.key});
@@ -19,11 +18,8 @@ class _LogsPageState extends State<LogsPage> {
     fetchLogs();
   }
 
-  final String baseUrl = dotenv.env['URL_BACK'].toString();
-  final Dio dio = Dio();
-
   void fetchLogs() async {
-    final Response response = await dio.get('$baseUrl/logs');
+    var response = await ApiUtils.get('/logs');
 
     if (response.statusCode == 200) {
       setState(() {

@@ -176,7 +176,7 @@ class _DetailScreen extends State<DetailScreen> {
                             border: Border(
                               top: BorderSide(
                                 color: Colors.grey,
-                                width: 1, // Épaisseur de la bordure
+                                width: 1,
                               ),
                             ),
                           ),
@@ -208,7 +208,7 @@ class _DetailScreen extends State<DetailScreen> {
                             border: Border(
                               top: BorderSide(
                                 color: Colors.grey,
-                                width: 1, // Épaisseur de la bordure
+                                width: 1,
                               ),
                             ),
                           ),

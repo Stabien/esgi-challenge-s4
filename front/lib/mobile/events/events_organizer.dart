@@ -146,17 +146,23 @@ class _EventsOrganizerState extends State<EventsOrganizer> {
                                             horizontal: 8, vertical: 4),
                                         decoration: BoxDecoration(
                                           border: Border.all(
-                                            color: Colors.white,
+                                            color: event.isPending
+                                                ? Colors.orange
+                                                : Colors.green,
                                             width: 1,
-                                          ), // Bordure blanche fine
-                                          borderRadius: BorderRadius.circular(
-                                              8), // Bordures arrondies
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(8),
                                         ),
                                         child: Text(
-                                          event.isPending ? 'true' : 'false',
-                                          style: const TextStyle(
+                                          event.isPending
+                                              ? 'En Attente'
+                                              : 'Valider',
+                                          style: TextStyle(
                                             fontSize: 10,
-                                            color: Colors.white,
+                                            color: event.isPending
+                                                ? Colors.orange
+                                                : Colors.green,
                                           ),
                                         ),
                                       ),
@@ -184,9 +190,8 @@ class _EventsOrganizerState extends State<EventsOrganizer> {
                                       border: Border.all(
                                         color: Colors.white,
                                         width: 1,
-                                      ), // Bordure blanche fine
-                                      borderRadius: BorderRadius.circular(
-                                          8), // Bordures arrondies
+                                      ),
+                                      borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: Text(
                                       event.tag,

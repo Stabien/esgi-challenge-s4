@@ -1,24 +1,11 @@
-import 'dart:io';
-
 import 'package:dio/dio.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mobile/mobile/models/message.dart';
+import 'package:mobile/web/utils/api_utils.dart';
 
 class MessageServices {
-  static final String baseUrl = dotenv.env['URL_BACK'].toString();
-  final Dio dio = Dio(BaseOptions(
-    headers: {
-      HttpHeaders.contentTypeHeader: 'application/json',
-    },
-  ));
-
   Future<List<Message>> getMessagesByEvent(String id) async {
     try {
-      if (baseUrl == null) {
-        throw Exception('BaseUrl is null');
-      }
-
-      final Response response = await Dio().get('$baseUrl/messages/event/$id');
+      var response = await ApiUtils.get('/messages/event/$id');
 
       if (response.statusCode == 200) {
         List<Message> messages = [];
@@ -42,13 +29,15 @@ class MessageServices {
   }
 
   Future<Response> postMessage(payload) async {
-    Response response = await dio.post('$baseUrl/messages', data: {
+    var data = {
       'date': payload.date,
       'sender': payload.sender,
       'organizerId': payload.organizerId,
       'eventId': payload.eventId,
       'text': payload.text,
-    });
+    };
+
+    var response = await ApiUtils.post('/messages', data);
 
     return response;
   }

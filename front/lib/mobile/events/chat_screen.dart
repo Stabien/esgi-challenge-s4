@@ -129,7 +129,6 @@ class _MessagePageState extends State<MessagePage> {
                 final bool isCurrentUserMessage =
                     message.organizerId == orga?.id;
 
-                // Vérifier si le message est envoyé par l'organisateur actuel
                 final bool isCurrentOrganizerMessage =
                     message.organizerId == orga?.id;
 
