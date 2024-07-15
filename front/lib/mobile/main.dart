@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/mobile/api/firebase_api.dart';
 import 'package:mobile/mobile/events/chat_screen.dart';
 import 'package:mobile/mobile/events/create_event_form.dart';
 import 'package:mobile/mobile/events/join_event.dart';
@@ -17,23 +16,14 @@ import 'package:mobile/mobile/events/screen_events.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await dotenv.load();
   await dotenv.load(fileName: ".env.local");
-  runApp(const MobileApp());
 
-  // if (dotenv.env['FIREBASE_API_KEY'] != "default" &&
-  //     dotenv.env['FIREBASE_API_KEY'] != null) {
-  //   await Firebase.initializeApp(
-  //     options: DefaultFirebaseOptions.currentPlatform,
-  //   );
-  //   await FirebaseApi().initNotifications();
-  // }
+  runApp(const MobileApp());
 }
 
 class MobileApp extends StatelessWidget {

@@ -7,6 +7,7 @@ import 'package:mobile/mobile/services/api_reservation_services.dart';
 import 'package:mobile/mobile/services/formatDate.dart';
 import 'package:mobile/mobile/utils/secureStorage.dart';
 import 'package:flutter/services.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 class DetailScreen extends StatefulWidget {
   final String id;
@@ -68,13 +69,18 @@ class _DetailScreen extends State<DetailScreen> {
 
   void _updateReservationStatus() {
     ApiReservation.isreserv(widget.id, _userId).then((data) {
-      setState(() {
+      setState(() async {
         if (data.isEmpty) {
           _isReserv = false;
           _textReserv = "Reserver";
+          await FirebaseMessaging.instance.unsubscribeFromTopic("test");
+          print("unsubscribeFromTopic");
         } else {
           _isReserv = true;
           _textReserv = "Annuler";
+          print("--------------------------");
+          await FirebaseMessaging.instance.subscribeToTopic("test");
+          print("subscribeToTopic");
         }
       });
     }).catchError((error) {

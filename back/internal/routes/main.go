@@ -42,7 +42,9 @@ func InitRouter(e *echo.Echo) {
 	e.PATCH("/users/orga/:id", controllers.UpdateUserByIdOrga)
 	e.PATCH("/users/custom/:id", controllers.UpdateUserByIdCustomer)
 
-	e.POST("/send-notification", controllers.SendNotification)
+	// e.POST("/send-notification", controllers.SendNotification)
+	e.POST("/send-notification", controllers.SendNotificationToTopic)
+
 	e.GET("/logs", controllers.GetAllLogs) // TODO: add middleware to check if user is admin
 
 	// Admin
