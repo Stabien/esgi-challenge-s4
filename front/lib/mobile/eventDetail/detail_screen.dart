@@ -68,7 +68,6 @@ class _DetailScreen extends State<DetailScreen> {
   }
 
   void _updateReservationStatus() async {
-    print('update reservation status');
     try {
       final data = await ApiReservation.isreserv(widget.id, _userId);
       setState(() {

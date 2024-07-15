@@ -54,6 +54,7 @@ class _ScreenEventState extends State<ScreenEvent> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: const Text('Événements'),
         actions: [
           IconButton(

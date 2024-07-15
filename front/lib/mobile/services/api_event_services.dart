@@ -18,7 +18,6 @@ class ApiServices {
         throw ApiException(message: 'Bad request');
       }
       final data = response.data as List<dynamic>;
-      log(data.toString());
       return data.mapList((e) => Event.fromJson(e));
     } on SocketException catch (error) {
       log('Network error.', error: error);
@@ -89,7 +88,6 @@ class ApiServices {
 
     List<dynamic> data = response.data;
     List<Event> events = data.map((json) => Event.fromJson(json)).toList();
-    print(data.toString());
     return events;
   }
 
