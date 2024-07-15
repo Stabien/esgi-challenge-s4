@@ -3,15 +3,13 @@ package services
 import (
 	"easynight/internal/db"
 	"easynight/internal/models"
-	"log"
 
 	"github.com/google/uuid"
 )
 
 func ContainsOrganizerId(organizers []models.Organizer, organizerId uuid.UUID) bool {
-	log.Fatal(organizers)
 	for _, organizer := range organizers {
-		if organizer.ID == organizerId {
+		if organizer.UserID == organizerId {
 			return true
 		}
 	}
@@ -26,7 +24,7 @@ func DoesOrganizerBelongsToEvent(eventId uuid.UUID, organizerId uuid.UUID) bool 
 	}
 
 	db := db.DB()
-	db.Where(query).Find(&event)
+	db.Preload("Organizers").Where(query).Find(&event)
 
 	return ContainsOrganizerId(event.Organizers, organizerId)
 }
