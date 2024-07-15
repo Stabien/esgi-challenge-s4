@@ -1,8 +1,7 @@
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
-import 'package:dio/dio.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:mobile/web/utils/api_utils.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -17,14 +16,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
-  final String baseUrl = dotenv.env['URL_BACK'].toString();
-  final Dio dio = Dio();
   bool _showResetForm = false;
 
   void sendTokenByMail(String email) async {
     try {
-      final Response response =
-          await dio.post('$baseUrl/send-mail-forgot-password?email=$email');
+      var response =
+          await ApiUtils.post('/send-mail-forgot-password?email=$email', {});
 
       if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -45,12 +42,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   void resetPassword(String token, String password) async {
     try {
-      final Response response = await dio.post(
-        '$baseUrl/forgot-password?token=$token',
-        data: {
-          'password': password,
-        },
-      );
+      var response = await ApiUtils.post('/forgot-password?token=$token', {
+        'password': password,
+      });
 
       if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(

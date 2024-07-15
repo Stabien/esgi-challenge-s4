@@ -15,7 +15,6 @@ class ProfilScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Profile'),
-          // add DisconnectButton to the AppBar
           actions: const <Widget>[
             DisconnectButton(),
           ],

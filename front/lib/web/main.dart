@@ -5,8 +5,6 @@ import 'package:mobile/web/ui/appbar.dart';
 import 'pages/events.dart';
 import 'pages/messages.dart';
 import 'pages/notifications.dart';
-import 'pages/organizers.dart';
-import 'pages/rates.dart';
 import 'pages/reservations.dart';
 import 'pages/users.dart';
 import 'pages/feature_flipping.dart';
@@ -30,14 +28,13 @@ class WebApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
       routes: {
+        '/login': (context) => const Login(),
         '/': (context) => const CheckAuthPage(),
         '/users': (context) => const AuthGuard(child: WebUserPage()),
         '/events': (context) => const AuthGuard(child: EventsPage()),
         '/messages': (context) => const AuthGuard(child: MessagesPage()),
         '/notification': (context) =>
             const AuthGuard(child: NotificationPage()),
-        '/organizer': (context) => const AuthGuard(child: OrganizerPage()),
-        '/rates': (context) => const AuthGuard(child: RatePage()),
         '/reservations': (context) =>
             const AuthGuard(child: ReservationsPage()),
         '/feature_flipping': (context) =>
@@ -55,7 +52,7 @@ class WebAppPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final authService = AuthService();
     return Scaffold(
-      appBar: authService.isLoggedIn ? WebAppBar() : null,
+      appBar: authService.isLoggedIn ? const WebAppBar() : null,
       body: Center(
         child:
             authService.isLoggedIn ? const Text('Bienvenue!') : const Login(),
@@ -67,7 +64,7 @@ class WebAppPage extends StatelessWidget {
 class AuthGuard extends StatelessWidget {
   final Widget child;
 
-  const AuthGuard({required this.child, Key? key}) : super(key: key);
+  const AuthGuard({required this.child, super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -1,39 +1,32 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'package:mobile/web/utils/api_utils.dart';
 
 class EventService {
-  final String baseUrl;
-
-  EventService({required this.baseUrl});
-
   Future<List<dynamic>> getAllEvents() async {
-    final response = await http.get(Uri.parse('$baseUrl/events'));
+    var response = await ApiUtils.get('/events');
+
     if (response.statusCode == 200) {
-      return json.decode(response.body);
+      return json.decode(response.data);
     } else {
       throw Exception('Failed to load events');
     }
   }
 
   Future<Map<String, dynamic>> getEvent(String id) async {
-    final response = await http.get(Uri.parse('$baseUrl/events/$id'));
+    var response = await ApiUtils.get('/events/$id');
+
     if (response.statusCode == 200) {
-      return json.decode(response.body);
+      return json.decode(response.data);
     } else {
       throw Exception('Failed to load event');
     }
   }
 
   Future<Map<String, dynamic>> createEvent(Map<String, dynamic> event) async {
-    final response = await http.post(
-      Uri.parse('$baseUrl/events'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: json.encode(event),
-    );
+    var response = await ApiUtils.post('/events', event);
+
     if (response.statusCode == 201) {
-      return json.decode(response.body);
+      return json.decode(response.data);
     } else {
       throw Exception('Failed to create event');
     }
@@ -41,22 +34,17 @@ class EventService {
 
   Future<Map<String, dynamic>> updateEvent(
       String id, Map<String, dynamic> event) async {
-    final response = await http.patch(
-      Uri.parse('$baseUrl/events/$id'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: json.encode(event),
-    );
+    var response = await ApiUtils.patch('/events/$id', event);
     if (response.statusCode == 200) {
-      return json.decode(response.body);
+      return json.decode(response.data);
     } else {
       throw Exception('Failed to update event');
     }
   }
 
   Future<void> deleteEvent(String id) async {
-    final response = await http.delete(Uri.parse('$baseUrl/events/$id'));
+    var response = await ApiUtils.delete('/events/$id', {});
+
     if (response.statusCode != 204) {
       throw Exception('Failed to delete event');
     }
