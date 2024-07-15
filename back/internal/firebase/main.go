@@ -2,41 +2,52 @@ package firebase
 
 import (
 	"context"
-	"easynight/pkg/utils"
+	"fmt"
 	"log"
-	"os"
 
-	"golang.org/x/oauth2/google"
+	firebase "firebase.google.com/go"
+	"firebase.google.com/go/messaging"
+	"google.golang.org/api/option"
 )
 
-func GetAccessToken() (string, error) {
+func InitFirebaseApp() (*firebase.App, error) {
+	credentialsPath := "./account_key.json"
+
+	opt := option.WithCredentialsFile(credentialsPath)
+	config := &firebase.Config{ProjectID: "challenges4notification"}
+	app, err := firebase.NewApp(context.Background(), config, opt)
+	if err != nil {
+		return nil, fmt.Errorf("error initializing app: %v", err)
+	}
+
+	return app, nil
+}
+
+func SendNotificationToTopic() error {
+	app, err := InitFirebaseApp()
+	if err != nil {
+		return err
+	}
+
 	ctx := context.Background()
-
-	// Load json file containing credentials
-	keyFile := "./internal/firebase/" + utils.GetEnvVariable("FIREBASE_KEY_FILE")
-	jsonKey, err := os.ReadFile(keyFile)
-
+	client, err := app.Messaging(ctx)
 	if err != nil {
-		log.Println(err)
-		return "", err
+		log.Fatalf("error getting Messaging client: %v\n", err)
 	}
 
-	// Retrieve a JWT configuration from the JSON key file
-	conf, err := google.JWTConfigFromJSON(jsonKey, "https://www.googleapis.com/auth/cloud-platform")
-	if err != nil {
-		log.Println(err)
-		return "", err
+	message := &messaging.Message{
+		Topic: "edit-event",
+		Notification: &messaging.Notification{
+			Title: "Un des événements que vous suivez a été modifié",
+			Body:  "Cliquez pour voir les détails",
+		},
 	}
 
-	// Create a JWT token source using the configuration
-	tokenSource := conf.TokenSource(ctx)
-
-	// Retrieve a token from the token source
-	token, err := tokenSource.Token()
+	response, err := client.Send(context.Background(), message)
 	if err != nil {
-		log.Println(err)
-		return "", err
+		return fmt.Errorf("error sending message: %v", err)
 	}
+	fmt.Println("Successfully sent message:", response)
 
-	return token.AccessToken, nil
+	return nil
 }
