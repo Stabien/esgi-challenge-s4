@@ -172,7 +172,8 @@ class _MessagePageState extends State<MessagePage> {
                               ),
                               const SizedBox(height: 5.0),
                               Text(
-                                message.date,
+                                traduireDate(message.date),
+                                // message.date,
                                 style: TextStyle(
                                   fontSize: 12.0,
                                   color: Colors.grey[600],

@@ -89,6 +89,7 @@ class ApiServices {
 
     List<dynamic> data = response.data;
     List<Event> events = data.map((json) => Event.fromJson(json)).toList();
+    print(data.toString());
     return events;
   }
 

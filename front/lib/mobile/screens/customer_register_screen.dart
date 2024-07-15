@@ -12,6 +12,16 @@ class CustomerRegisterScreen extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(100),
+              child: Image.asset(
+                "assets/images/iconFlutter.png",
+                width: 150,
+                height: 150,
+                fit: BoxFit.contain,
+              ),
+            ),
+            const SizedBox(height: 40),
             const FractionallySizedBox(
               widthFactor: 0.8,
               child: CustomerRegisterForm(),

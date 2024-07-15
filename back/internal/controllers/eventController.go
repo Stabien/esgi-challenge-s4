@@ -342,7 +342,7 @@ func GetAllEvents(c echo.Context) error {
 
 	nameFilter = c.QueryParam("name")
 	tagFilter := c.QueryParam("tag")
-	today := time.Now()
+	today := time.Now().AddDate(0, 0, -1)
 
 	claims, err := utils.GetTokenFromHeader(c)
 	if err != nil {
@@ -354,20 +354,20 @@ func GetAllEvents(c echo.Context) error {
 			return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 		}
 	} else if tagFilter != "" && nameFilter != "" {
-		if err := db.DB().Where("LOWER(title) LIKE ? AND tag = ? AND is_pending = false AND deleted_at IS NULL AND date > ?", "%"+strings.ToLower(nameFilter)+"%", tagFilter, today).Find(&events).Error; err != nil {
+		if err := db.DB().Where("LOWER(title) LIKE ? AND tag = ? AND is_pending = false AND deleted_at IS NULL AND date >= ?", "%"+strings.ToLower(nameFilter)+"%", tagFilter, today).Find(&events).Error; err != nil {
 			return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 		}
 	} else if tagFilter != "" && nameFilter == "" {
-		if err := db.DB().Where("tag = ? AND is_pending = false AND deleted_at IS NULL  AND date > ?", tagFilter, today).Find(&events).Error; err != nil {
+		if err := db.DB().Where("tag = ? AND is_pending = false AND deleted_at IS NULL  AND date >= ?", tagFilter, today).Find(&events).Error; err != nil {
 			return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 		}
 	} else if tagFilter == "" && nameFilter != "" {
 		nameFilter = "%" + strings.ToLower(nameFilter) + "%"
-		if err := db.DB().Where("LOWER(title) LIKE ? AND is_pending = false AND deleted_at IS NULL  AND date > ? ", nameFilter, today).Find(&events).Error; err != nil {
+		if err := db.DB().Where("LOWER(title) LIKE ? AND is_pending = false AND deleted_at IS NULL  AND date >= ? ", nameFilter, today).Find(&events).Error; err != nil {
 			return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 		}
 	} else {
-		if err := db.DB().Where("is_pending = false AND deleted_at IS NULL  AND date > ?", today).Find(&events).Error; err != nil {
+		if err := db.DB().Where("is_pending = false AND deleted_at IS NULL  AND date >= ?", today).Find(&events).Error; err != nil {
 			return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 		}
 	}
@@ -455,6 +455,7 @@ func GetAllEventsToday(c echo.Context) error {
 			Image:       imageContent,
 			Date:        event.Date,
 			Place:       event.Place,
+			IsPending:   event.IsPending,
 		})
 	}
 
@@ -605,6 +606,7 @@ func GetEventsByOrganizer(c echo.Context) error {
 			Image:       imageContent,
 			Date:        event.Date,
 			Place:       event.Place,
+			IsPending:   event.IsPending,
 		})
 	}
 

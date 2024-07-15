@@ -68,6 +68,7 @@ class _DetailScreen extends State<DetailScreen> {
   }
 
   void _updateReservationStatus() {
+    print('update reservation status');
     ApiReservation.isreserv(widget.id, _userId).then((data) {
       setState(() async {
         if (data.isEmpty) {
@@ -271,17 +272,17 @@ class _DetailScreen extends State<DetailScreen> {
                                       foregroundColor: Colors.black,
                                       backgroundColor: Colors.white,
                                     ),
-                                    onPressed: () {
+                                    onPressed: () async {
                                       if (!_isReserv &&
                                           eventDetail.placerestante > 0) {
-                                        ApiReservation.reserveEvent(
+                                        await ApiReservation.reserveEvent(
                                             eventDetail.id, _userId);
                                         _updateReservationStatus();
                                         _fetchEvents();
                                       } else if (_isReserv &&
                                           eventDetail.placerestante <= 0) {
                                       } else {
-                                        ApiReservation.cancelReservation(
+                                        await ApiReservation.cancelReservation(
                                             eventDetail.id, _userId);
                                         _updateReservationStatus();
                                         _fetchEvents();
