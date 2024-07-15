@@ -36,10 +36,10 @@ func SendNotificationToTopic() error {
 	}
 
 	message := &messaging.Message{
-		Topic: "test",
+		Topic: "edit-event",
 		Notification: &messaging.Notification{
-			Title: "FCM Message",
-			Body:  "This is an FCM Message",
+			Title: "Un des événements que vous suivez a été modifié",
+			Body:  "Cliquez pour voir les détails",
 		},
 	}
 

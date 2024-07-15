@@ -67,29 +67,30 @@ class _DetailScreen extends State<DetailScreen> {
     _updateReservationStatus();
   }
 
-  void _updateReservationStatus() {
+  void _updateReservationStatus() async {
     print('update reservation status');
-    ApiReservation.isreserv(widget.id, _userId).then((data) {
-      setState(() async {
+    try {
+      final data = await ApiReservation.isreserv(widget.id, _userId);
+      setState(() {
         if (data.isEmpty) {
           _isReserv = false;
           _textReserv = "Reserver";
-          await FirebaseMessaging.instance.unsubscribeFromTopic("test");
-          print("unsubscribeFromTopic");
         } else {
           _isReserv = true;
           _textReserv = "Annuler";
-          print("--------------------------");
-          await FirebaseMessaging.instance.subscribeToTopic("test");
-          print("subscribeToTopic");
         }
       });
-    }).catchError((error) {
+      if (data.isEmpty) {
+        await FirebaseMessaging.instance.unsubscribeFromTopic("edit-event");
+      } else {
+        await FirebaseMessaging.instance.subscribeToTopic("edit-event");
+      }
+    } catch (error) {
       setState(() {
-        _error = error;
+        _error = error as Error?;
         _loading = false;
       });
-    });
+    }
   }
 
   @override

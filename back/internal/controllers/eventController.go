@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"easynight/internal/db"
+	"easynight/internal/firebase"
 	"easynight/internal/models"
 	"easynight/pkg/utils"
 
@@ -234,6 +235,12 @@ func UpdateEvent(c echo.Context) error {
 
 	if err := db.DB().Model(&event).Updates(&event).Error; err != nil {
 		return err
+	}
+
+	// Send notification to inform users that the event has been updated
+	err = firebase.SendNotificationToTopic()
+	if err != nil {
+		return c.String(http.StatusInternalServerError, err.Error())
 	}
 
 	return c.String(http.StatusOK, "Event updated successfully!")
