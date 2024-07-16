@@ -10,7 +10,7 @@ import (
 )
 
 func InitRouter(e *echo.Echo) {
-	e.GET("/swagger/*", echoSwagger.WrapHandler)
+	e.GET("/swagger/*", middlewares.CheckUserRole(echoSwagger.WrapHandler, "admin"))
 
 	e.GET("/ws/room", ws.HandleRoomWebSocket)
 
