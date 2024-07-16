@@ -195,7 +195,16 @@ func IsValid(c echo.Context) error {
 	}
 
 	if reservation.Event.Date.After(time.Now()) {
-		return c.JSON(http.StatusOK, map[string]bool{"isValid": true})
+		if reservation.IsScanned {
+			return c.JSON(http.StatusOK, map[string]interface{}{"isValid": false, "message": "The reservation has already been scanned"})
+		} else {
+			reservation.IsScanned = true
+			if err := db.DB().Save(&reservation).Error; err != nil {
+				return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+			}
+
+			return c.JSON(http.StatusOK, map[string]interface{}{"isValid": true})
+		}
 	} else {
 		return c.JSON(http.StatusOK, map[string]interface{}{"isValid": false, "message": "The event is in the past"})
 	}
