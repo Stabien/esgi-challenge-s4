@@ -1,17 +1,15 @@
-// ignore_for_file: library_private_types_in_public_api
-
 import 'package:flutter/material.dart';
-import 'package:dio/dio.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:mobile/web/ui/appbar.dart';
+import 'package:mobile/web/utils/api_utils.dart';
 
-class LogsScreen extends StatefulWidget {
-  const LogsScreen({super.key});
+class LogsPage extends StatefulWidget {
+  const LogsPage({super.key});
 
   @override
-  State<LogsScreen> createState() => _LogsScreenState();
+  State<LogsPage> createState() => _LogsPageState();
 }
 
-class _LogsScreenState extends State<LogsScreen> {
+class _LogsPageState extends State<LogsPage> {
   List<String> logs = [];
 
   @override
@@ -20,11 +18,8 @@ class _LogsScreenState extends State<LogsScreen> {
     fetchLogs();
   }
 
-  final String baseUrl = dotenv.env['URL_BACK'].toString();
-  final Dio dio = Dio();
-
   void fetchLogs() async {
-    final Response response = await dio.get('$baseUrl/logs');
+    var response = await ApiUtils.get('/logs');
 
     if (response.statusCode == 200) {
       setState(() {
@@ -39,9 +34,7 @@ class _LogsScreenState extends State<LogsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Logs'),
-      ),
+      appBar: const WebAppBar(),
       body: FractionallySizedBox(
         widthFactor: 0.8,
         child: ListView.builder(
@@ -50,10 +43,6 @@ class _LogsScreenState extends State<LogsScreen> {
             return ListTile(
               title: Text(
                 logs[index],
-                style: const TextStyle(
-                  fontSize: 12.0,
-                  color: Colors.white70,
-                ),
               ),
             );
           },

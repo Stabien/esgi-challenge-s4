@@ -1,20 +1,14 @@
-import 'package:dio/dio.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mobile/mobile/models/reservation.dart';
+import 'package:mobile/web/utils/api_utils.dart';
 
 class ApiReservation {
-
   static Future<void> reserveEvent(String eventId, String customerID) async {
     try {
-      Dio dio = Dio();
-      String url = '${dotenv.env['URL_BACK']}/reservations';
-
       Map<String, dynamic> data = {
         'eventID': eventId,
         'customerID': customerID,
       };
-
-      Response response = await dio.post(url, data: data);
+      await ApiUtils.post('/reservations', data);
     } catch (error) {
       print('Erreur inconnue lors de la réservation de l\'événement: $error');
     }
@@ -23,13 +17,8 @@ class ApiReservation {
   static Future<List<Reservation>> isreserv(
       String eventId, String customerID) async {
     try {
-      Dio dio = Dio();
-      String url =
-          '${dotenv.env['URL_BACK']}/reservations/isreserv/$customerID/$eventId';
-
-      Response response = await dio.get(url);
-      print("Response data: ${response.data}");
-
+      var response =
+          await ApiUtils.get('/reservations/isreserv/$customerID/$eventId');
       final data = response.data as List;
       return data.map((item) => Reservation.fromJson(item)).toList();
     } catch (error) {
@@ -40,33 +29,25 @@ class ApiReservation {
 
   static Future<ReservationStatus> isValid(String reservationId) async {
     try {
-      Dio dio = Dio();
-      String url =
-          '${dotenv.env['URL_BACK']}/reservations/isValid/$reservationId';
+      var response = await ApiUtils.get('/reservations/isValid/$reservationId');
 
-      Response response = await dio.get(url);
-      print("Response data: ${response.data}");
-
-      final data = response.data as ReservationStatus;
+      final data = ReservationStatus.fromJson(response.data);
       return data;
     } catch (error) {
       print('Unknown error: $error');
-      return {isValid: false} as ReservationStatus;
+      return ReservationStatus(isValid: false);
     }
   }
 
   static Future<void> cancelReservation(
       String eventId, String customerID) async {
     try {
-      Dio dio = Dio();
-      String url = '${dotenv.env['URL_BACK']}/reservations';
-
       Map<String, dynamic> data = {
         'eventID': eventId,
         'customerID': customerID,
       };
 
-      Response response = await dio.delete(url, data: data);
+      await ApiUtils.delete('/reservations', data);
     } catch (error) {
       print(
           'Erreur inconnue lors de l\'annulation de la réservation de l\'événement: $error');

@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/web/services/auth_service.dart';
+import 'package:mobile/web/services/check_auth_page.dart';
 import 'package:mobile/web/ui/appbar.dart';
 import 'pages/events.dart';
 import 'pages/messages.dart';
 import 'pages/notifications.dart';
-import 'pages/organizers.dart';
-import 'pages/rates.dart';
 import 'pages/reservations.dart';
 import 'pages/users.dart';
 import 'pages/feature_flipping.dart';
+import 'pages/logs.dart';
+import 'pages/login.dart';
+
+void main() {
+  runApp(const WebApp());
+}
 
 class WebApp extends StatelessWidget {
   const WebApp({super.key});
@@ -22,17 +28,16 @@ class WebApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
       routes: {
-        // When navigating to the "/" route, build the FirstScreen widget.
-        '/': (context) => const WebAppPage(),
-        // When navigating to the "/second" route, build the SecondScreen widget.
-        '/users': (context) => const WebUserPage(),
-        '/events': (context) => const EventsPage(),
-        '/messages': (context) => const MessagesPage(),
-        '/notification': (context) => const NotificationPage(),
-        '/organizer': (context) => const OrganizerPage(),
-        '/rates': (context) => const RatePage(),
-        '/reservations': (context) => const ReservationsPage(),
-        '/feature_flipping': (context) => const FeatureFlippingPage(),
+        '/login': (context) => const Login(),
+        '/': (context) => const CheckAuthPage(),
+        '/users': (context) => const AuthGuard(child: WebUserPage()),
+        '/events': (context) => const AuthGuard(child: EventsPage()),
+        '/messages': (context) => const AuthGuard(child: MessagesPage()),
+        '/reservations': (context) =>
+            const AuthGuard(child: ReservationsPage()),
+        '/feature_flipping': (context) =>
+            const AuthGuard(child: FeatureFlippingPage()),
+        '/logs': (context) => const AuthGuard(child: LogsPage()),
       },
     );
   }
@@ -43,15 +48,31 @@ class WebAppPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authService = AuthService();
     return Scaffold(
-      appBar: const WebAppBar(),
+      appBar: authService.isLoggedIn ? const WebAppBar() : null,
       body: Center(
-        child: ElevatedButton(
-            onPressed: () {
-              Navigator.pushNamed(context, '/users');
-            },
-            child: Text('Go to Users Page')),
+        child:
+            authService.isLoggedIn ? const Text('Bienvenue!') : const Login(),
       ),
     );
+  }
+}
+
+class AuthGuard extends StatelessWidget {
+  final Widget child;
+
+  const AuthGuard({required this.child, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final authService = AuthService();
+    if (!authService.isLoggedIn) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.of(context).pushReplacementNamed('/');
+      });
+      return const SizedBox.shrink();
+    }
+    return child;
   }
 }

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/mobile/events/events_organizer.dart';
-import 'package:mobile/mobile/screens/home_screen.dart';
-import 'package:mobile/mobile/screens/logs_screen.dart';
 import 'package:mobile/mobile/utils/navigation.dart';
 import 'components/navigation/bottom_bar.dart';
 import 'components/navigation/bottom_bar_orga.dart';
@@ -10,6 +8,7 @@ import 'package:mobile/mobile/eventsReservation/screen_eventsReserv.dart';
 import 'package:mobile/mobile/events/screen_eventsToday.dart';
 import 'package:mobile/mobile/utils/secureStorage.dart';
 import 'package:mobile/mobile/usersScreen/profil_screen.dart';
+import 'package:mobile/mobile/screens/qr_code_scanner_screen.dart';
 
 class Layout extends StatefulWidget {
   const Layout({super.key});
@@ -45,20 +44,16 @@ class _LayoutState extends State<Layout> {
   }
 
   static const List<Widget> _pages = <Widget>[
-    HomeScreen(),
     ScreenEventToday(),
     ScreenEvent(),
     ScreenEventReservation(),
     ProfilScreen(),
-    // LogsScreen(),
   ];
 
-  static const List<Widget> _pagesOrga = <Widget>[
-    HomeScreen(),
-    EventsOrganizer(),
-    LogsScreen(),
-    ProfilScreen(),
-
+  final List<Widget> _pagesOrga = <Widget>[
+    const EventsOrganizer(),
+    const ProfilScreen(),
+    QRCodeScannerScreen()
   ];
 
   void _onBottomBarItemTapped(int index) {

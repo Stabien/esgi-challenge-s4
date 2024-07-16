@@ -6,6 +6,7 @@ class Event {
   final String image;
   final String date;
   final String place;
+  final bool isPending;
 
   Event({
     required this.id,
@@ -15,6 +16,7 @@ class Event {
     required this.image,
     required this.date,
     required this.place,
+    required this.isPending,
   });
 
   factory Event.fromJson(Map<String, dynamic> json) {
@@ -26,6 +28,7 @@ class Event {
       image: json['image'],
       date: json['date'],
       place: json['place'],
+      isPending: json['is_pending'],
     );
   }
 }

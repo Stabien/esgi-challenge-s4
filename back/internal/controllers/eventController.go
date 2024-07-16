@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"easynight/internal/db"
+	"easynight/internal/firebase"
 	"easynight/internal/models"
 	"easynight/pkg/utils"
 
@@ -100,6 +101,7 @@ func CreateEvent(c echo.Context) error {
 		Tag:               c.FormValue("tag"),
 		Place:             c.FormValue("place"),
 		Code:              utils.GenerateRandomString(6),
+		IsPending:         true,
 	}
 
 	claims, err := utils.GetTokenFromHeader(c)
@@ -232,6 +234,12 @@ func UpdateEvent(c echo.Context) error {
 		return err
 	}
 
+	// Send notification to inform users that the event has been updated
+	err = firebase.SendNotificationToTopic()
+	if err != nil {
+		return c.String(http.StatusInternalServerError, err.Error())
+	}
+
 	return c.String(http.StatusOK, "Event updated successfully!")
 }
 
@@ -318,6 +326,7 @@ type SimpleEvent struct {
 	Image       string    `json:"image"`
 	Date        time.Time `json:"date"`
 	Place       string    `json:"place"`
+	IsPending   bool      `json:"is_pending"`
 }
 
 // @Summary Get events
@@ -337,22 +346,32 @@ func GetAllEvents(c echo.Context) error {
 
 	nameFilter = c.QueryParam("name")
 	tagFilter := c.QueryParam("tag")
+	today := time.Now().AddDate(0, 0, -1)
 
-	if tagFilter != "" && nameFilter != "" {
-		if err := db.DB().Where("LOWER(title) LIKE ? AND tag = ?", "%"+strings.ToLower(nameFilter)+"%", tagFilter).Find(&events).Error; err != nil {
+	claims, err := utils.GetTokenFromHeader(c)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+	}
+
+	if claims["role"].(string) == "admin" {
+		if err := db.DB().Find(&events).Error; err != nil {
+			return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+		}
+	} else if tagFilter != "" && nameFilter != "" {
+		if err := db.DB().Where("LOWER(title) LIKE ? AND tag = ? AND is_pending = false AND deleted_at IS NULL AND date >= ?", "%"+strings.ToLower(nameFilter)+"%", tagFilter, today).Find(&events).Error; err != nil {
 			return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 		}
 	} else if tagFilter != "" && nameFilter == "" {
-		if err := db.DB().Where("tag = ?", tagFilter).Find(&events).Error; err != nil {
+		if err := db.DB().Where("tag = ? AND is_pending = false AND deleted_at IS NULL  AND date >= ?", tagFilter, today).Find(&events).Error; err != nil {
 			return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 		}
 	} else if tagFilter == "" && nameFilter != "" {
 		nameFilter = "%" + strings.ToLower(nameFilter) + "%"
-		if err := db.DB().Where("LOWER(title) LIKE ?", nameFilter).Find(&events).Error; err != nil {
+		if err := db.DB().Where("LOWER(title) LIKE ? AND is_pending = false AND deleted_at IS NULL  AND date >= ? ", nameFilter, today).Find(&events).Error; err != nil {
 			return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 		}
 	} else {
-		if err := db.DB().Find(&events).Error; err != nil {
+		if err := db.DB().Where("is_pending = false AND deleted_at IS NULL  AND date >= ?", today).Find(&events).Error; err != nil {
 			return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 		}
 	}
@@ -385,6 +404,7 @@ func GetAllEvents(c echo.Context) error {
 			Image:       imageContent,
 			Date:        event.Date,
 			Place:       event.Place,
+			IsPending:   event.IsPending,
 		})
 	}
 
@@ -408,7 +428,7 @@ func GetAllEventsToday(c echo.Context) error {
 	dateStart := currentDate + " 00:00:00"
 	dateEnd := currentDate + " 23:59:59"
 
-	if err := db.DB().Where("date BETWEEN ? AND ?", dateStart, dateEnd).Find(&events).Error; err != nil {
+	if err := db.DB().Where("deleted_at IS NULL  AND is_pending = false AND date BETWEEN ? AND ? ", dateStart, dateEnd).Find(&events).Error; err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 	}
 
@@ -439,6 +459,7 @@ func GetAllEventsToday(c echo.Context) error {
 			Image:       imageContent,
 			Date:        event.Date,
 			Place:       event.Place,
+			IsPending:   event.IsPending,
 		})
 	}
 
@@ -547,7 +568,7 @@ func JoinEvent(c echo.Context) error {
 // @Failure 400 {object} error "Bad request"
 // @Failure 404 {object} error "Events not found"
 // @Failure 500 {object} error "Internal server error"
-// @Router /events/organizer/{id} [get]
+// @Router /events/organizer [get]
 func GetEventsByOrganizer(c echo.Context) error {
 	claims, err := utils.GetTokenFromHeader(c)
 	if err != nil {
@@ -589,6 +610,7 @@ func GetEventsByOrganizer(c echo.Context) error {
 			Image:       imageContent,
 			Date:        event.Date,
 			Place:       event.Place,
+			IsPending:   event.IsPending,
 		})
 	}
 
@@ -637,4 +659,61 @@ func DeleteEvent(c echo.Context) error {
 	}
 
 	return c.String(http.StatusOK, "Event deleted successfully!")
+}
+
+func GetAllPendingEvents(c echo.Context) error {
+	var events []models.Event
+
+	if err := db.DB().Where("is_pending = true").Find(&events).Error; err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+	}
+
+	if len(events) == 0 {
+		return c.JSON(http.StatusOK, []SimpleEvent{})
+	}
+
+	var simpleEvents []SimpleEvent
+	for _, event := range events {
+		bannerContent, err := utils.ReadAndEncodeFile("./" + event.Banner)
+
+		if err != nil {
+			return echo.NewHTTPError(http.StatusInternalServerError, err)
+		}
+
+		imageContent, err := utils.ReadAndEncodeFile("./" + event.Image)
+
+		if err != nil {
+			return echo.NewHTTPError(http.StatusInternalServerError, err)
+		}
+
+		simpleEvents = append(simpleEvents, SimpleEvent{
+			ID:          event.ID,
+			Title:       event.Title,
+			Description: event.Description,
+			Tag:         event.Tag,
+			Banner:      bannerContent,
+			Image:       imageContent,
+			Date:        event.Date,
+			Place:       event.Place,
+		})
+	}
+
+	return c.JSON(http.StatusOK, simpleEvents)
+}
+
+func ValidateEvent(c echo.Context) error {
+	eventID := c.Param("id")
+
+	var event models.Event
+	if err := db.DB().First(&event, "id = ?", eventID).Error; err != nil {
+		return err
+	}
+
+	event.IsPending = false
+
+	if err := db.DB().Save(&event).Error; err != nil {
+		return err
+	}
+
+	return c.String(http.StatusOK, "Event validated successfully!")
 }

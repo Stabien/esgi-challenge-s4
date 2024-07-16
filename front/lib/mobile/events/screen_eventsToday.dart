@@ -25,21 +25,30 @@ class _ScreenEventState extends State<ScreenEventToday> {
     _fetchEvents();
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   void _fetchEvents() {
     setState(() {
       _loading = true;
     });
     ApiServices.getEventsToday().then((data) {
-      setState(() {
-        _error = null;
-        _events = data;
-        _loading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _error = null;
+          _events = data;
+          _loading = false;
+        });
+      }
     }).catchError((error) {
-      setState(() {
-        _error = error;
-        _loading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _error = error;
+          _loading = false;
+        });
+      }
     });
   }
 
@@ -113,10 +122,9 @@ class _ScreenEventState extends State<ScreenEventToday> {
                                             horizontal: 8, vertical: 4),
                                         decoration: BoxDecoration(
                                           border: Border.all(
-                                              color: Colors.white,
-                                              width: 1), // Bordure blanche fine
-                                          borderRadius: BorderRadius.circular(
-                                              8), // Bordures arrondies
+                                              color: Colors.white, width: 1),
+                                          borderRadius:
+                                              BorderRadius.circular(8),
                                         ),
                                         child: Text(
                                           event.tag,

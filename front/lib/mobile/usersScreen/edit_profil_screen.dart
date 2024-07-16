@@ -76,14 +76,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
+            const SizedBox(height: 20),
             TextField(
               controller: _lastnameController,
               decoration: const InputDecoration(labelText: 'Nom'),
             ),
+            const SizedBox(height: 20),
             TextField(
               controller: _emailController,
               decoration: const InputDecoration(labelText: 'Email'),
             ),
+            const SizedBox(height: 20),
             TextField(
               controller: _firstnameController,
               decoration: const InputDecoration(labelText: 'Prénom'),

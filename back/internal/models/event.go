@@ -26,5 +26,6 @@ type Event struct {
 	Place             string
 	Tag               string
 	Code              string
+	IsPending         bool
 	DeletedAt         *time.Time `gorm:"index"`
 }

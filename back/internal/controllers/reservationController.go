@@ -155,7 +155,7 @@ func IsReserv(c echo.Context) error {
 	eventID := c.Param("eventId")
 
 	var reservations []models.Reservation
-	if err := db.DB().Where("customer_id = ? AND event_id = ?", customerID, eventID).Find(&reservations).Error; err != nil {
+	if err := db.DB().Where("customer_id = ? AND event_id = ? ", customerID, eventID).Find(&reservations).Error; err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 	}
 
@@ -244,9 +244,19 @@ func GetReservation(c echo.Context) error {
 // @Success 200 {array} models.Reservation
 // @Router /reservations [get]
 func GetAllReservations(c echo.Context) error {
+	claims, err := utils.GetTokenFromHeader(c)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+	}
+
+	userRole := claims["role"].(string)
+
+	if userRole != "admin" {
+		return c.JSON(http.StatusForbidden, map[string]string{"error": "You do not have the permission to access this resource"})
+	}
 
 	var reservations []models.Reservation
-	if err := db.DB().Preload("Customer").Preload("Event").Find(&reservations).Error; err != nil {
+	if err := db.DB().Preload("Customer").Preload("Customer.User").Preload("Event").Find(&reservations).Error; err != nil {
 		return err
 	}
 

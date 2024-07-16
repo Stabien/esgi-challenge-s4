@@ -54,6 +54,7 @@ class _EventsOrganizerState extends State<EventsOrganizer> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Evénements organisateur'),
+        automaticallyImplyLeading: false,
       ),
       floatingActionButton: ExpandableFab(
         distance: 112,
@@ -124,18 +125,49 @@ class _EventsOrganizerState extends State<EventsOrganizer> {
                               arguments: event.id,
                             ),
                             child: Padding(
-                              padding: const EdgeInsets.all(50.0),
+                              padding: const EdgeInsets.all(35.0),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  // Image.memory(base64Decode(event.image)),
-                                  Text(
-                                    event.title,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                      color: Colors.white,
-                                    ),
+                                  Image.memory(base64Decode(event.image)),
+                                  const SizedBox(height: 10),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        event.title,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      const Spacer(),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8, vertical: 4),
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: event.isPending
+                                                ? Colors.orange
+                                                : Colors.green,
+                                            width: 1,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                        child: Text(
+                                          event.isPending
+                                              ? 'En Attente'
+                                              : 'Valider',
+                                          style: TextStyle(
+                                            fontSize: 10,
+                                            color: event.isPending
+                                                ? Colors.orange
+                                                : Colors.green,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                   Text(
                                     event.place,
@@ -159,9 +191,8 @@ class _EventsOrganizerState extends State<EventsOrganizer> {
                                       border: Border.all(
                                         color: Colors.white,
                                         width: 1,
-                                      ), // Bordure blanche fine
-                                      borderRadius: BorderRadius.circular(
-                                          8), // Bordures arrondies
+                                      ),
+                                      borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: Text(
                                       event.tag,
@@ -171,23 +202,46 @@ class _EventsOrganizerState extends State<EventsOrganizer> {
                                       ),
                                     ),
                                   ),
+                                  const SizedBox(height: 10),
                                   Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      ElevatedButton(
-                                        onPressed: () async {
-                                          final result =
-                                              await Navigator.of(context)
-                                                  .pushNamed(
-                                            '/event/update',
-                                            arguments: event.id,
-                                          );
-                                          if (result == true) {
-                                            _fetchEvents();
-                                          }
-                                        },
-                                        child: const Text('Modifier'),
+                                      Row(
+                                        children: [
+                                          ElevatedButton(
+                                            onPressed: () async {
+                                              final result =
+                                                  await Navigator.of(context)
+                                                      .pushNamed(
+                                                '/event/update',
+                                                arguments: event.id,
+                                              );
+                                              if (result == true) {
+                                                _fetchEvents();
+                                              }
+                                            },
+                                            child: const Text('Modifier',
+                                                style: TextStyle(
+                                                  fontSize: 15,
+                                                )),
+                                          ),
+                                          Spacer(),
+                                          ElevatedButton(
+                                            onPressed: () =>
+                                                Navigator.of(context).pushNamed(
+                                              '/event/message',
+                                              arguments: event.id,
+                                            ),
+                                            child: const IntrinsicWidth(
+                                              child: Row(
+                                                children: [
+                                                  Icon(Icons.message_outlined),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                       ElevatedButton(
                                         onPressed: () => showDialog(
@@ -217,14 +271,6 @@ class _EventsOrganizerState extends State<EventsOrganizer> {
                                           ),
                                         ),
                                         child: const Text('Supprimer'),
-                                      ),
-                                      ElevatedButton(
-                                        onPressed: () =>
-                                            Navigator.of(context).pushNamed(
-                                          '/event/message',
-                                          arguments: event.id,
-                                        ),
-                                        child: const Text('Chat'),
                                       ),
                                     ],
                                   ),

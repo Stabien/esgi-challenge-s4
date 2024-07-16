@@ -7,6 +7,7 @@ import 'package:mobile/mobile/services/api_reservation_services.dart';
 import 'package:mobile/mobile/services/formatDate.dart';
 import 'package:mobile/mobile/utils/secureStorage.dart';
 import 'package:flutter/services.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 class DetailScreen extends StatefulWidget {
   final String id;
@@ -66,8 +67,9 @@ class _DetailScreen extends State<DetailScreen> {
     _updateReservationStatus();
   }
 
-  void _updateReservationStatus() {
-    ApiReservation.isreserv(widget.id, _userId).then((data) {
+  void _updateReservationStatus() async {
+    try {
+      final data = await ApiReservation.isreserv(widget.id, _userId);
       setState(() {
         if (data.isEmpty) {
           _isReserv = false;
@@ -77,12 +79,12 @@ class _DetailScreen extends State<DetailScreen> {
           _textReserv = "Annuler";
         }
       });
-    }).catchError((error) {
+    } catch (error) {
       setState(() {
-        _error = error;
+        _error = error as dynamic;
         _loading = false;
       });
-    });
+    }
   }
 
   @override
@@ -176,7 +178,7 @@ class _DetailScreen extends State<DetailScreen> {
                             border: Border(
                               top: BorderSide(
                                 color: Colors.grey,
-                                width: 1, // Épaisseur de la bordure
+                                width: 1,
                               ),
                             ),
                           ),
@@ -208,7 +210,7 @@ class _DetailScreen extends State<DetailScreen> {
                             border: Border(
                               top: BorderSide(
                                 color: Colors.grey,
-                                width: 1, // Épaisseur de la bordure
+                                width: 1,
                               ),
                             ),
                           ),
@@ -265,20 +267,22 @@ class _DetailScreen extends State<DetailScreen> {
                                       foregroundColor: Colors.black,
                                       backgroundColor: Colors.white,
                                     ),
-                                    onPressed: () {
+                                    onPressed: () async {
                                       if (!_isReserv &&
                                           eventDetail.placerestante > 0) {
-                                        ApiReservation.reserveEvent(
+                                        await ApiReservation.reserveEvent(
                                             eventDetail.id, _userId);
-                                        _updateReservationStatus();
                                         _fetchEvents();
+                                        await FirebaseMessaging.instance
+                                            .subscribeToTopic("edit-event");
                                       } else if (_isReserv &&
                                           eventDetail.placerestante <= 0) {
                                       } else {
-                                        ApiReservation.cancelReservation(
+                                        await ApiReservation.cancelReservation(
                                             eventDetail.id, _userId);
-                                        _updateReservationStatus();
                                         _fetchEvents();
+                                        await FirebaseMessaging.instance
+                                            .unsubscribeFromTopic("edit-event");
                                       }
                                     },
                                     child: Text(
