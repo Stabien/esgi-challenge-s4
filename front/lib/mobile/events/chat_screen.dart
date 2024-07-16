@@ -10,6 +10,7 @@ import 'package:mobile/mobile/models/profil.dart';
 import 'package:mobile/mobile/services/message_services.dart';
 import 'package:mobile/mobile/services/userServices.dart';
 import 'package:mobile/mobile/utils/secureStorage.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class MessagePage extends StatefulWidget {
   final String id;
