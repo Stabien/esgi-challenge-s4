@@ -10,14 +10,15 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 void main() async {
   await dotenv.load();
   await dotenv.load(fileName: ".env.local");
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  await FirebaseMessaging.instance.requestPermission();
 
   if (kIsWeb) {
     runApp(const WebApp());
   } else {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    await FirebaseMessaging.instance.requestPermission();
+
     runApp(const MobileApp());
   }
 }
