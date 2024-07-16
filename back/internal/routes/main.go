@@ -63,6 +63,7 @@ func InitRouter(e *echo.Echo) {
 	e.POST("/forgot-password", controllers.ForgotPassword)
 
 	// Reservation routes
+	e.GET("/reservations", controllers.GetAllReservations)
 	e.POST("/reservations", controllers.PostReservation)
 	// e.GET("/reservations/:id", controllers.GetReservation)
 	e.PUT("/reservations/:id", controllers.UpdateReservation)

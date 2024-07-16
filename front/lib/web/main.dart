@@ -33,8 +33,6 @@ class WebApp extends StatelessWidget {
         '/users': (context) => const AuthGuard(child: WebUserPage()),
         '/events': (context) => const AuthGuard(child: EventsPage()),
         '/messages': (context) => const AuthGuard(child: MessagesPage()),
-        '/notification': (context) =>
-            const AuthGuard(child: NotificationPage()),
         '/reservations': (context) =>
             const AuthGuard(child: ReservationsPage()),
         '/feature_flipping': (context) =>
