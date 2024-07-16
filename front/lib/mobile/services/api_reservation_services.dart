@@ -1,5 +1,3 @@
-import 'package:dio/dio.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mobile/mobile/models/reservation.dart';
 import 'package:mobile/web/utils/api_utils.dart';
 

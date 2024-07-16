@@ -79,14 +79,9 @@ class _DetailScreen extends State<DetailScreen> {
           _textReserv = "Annuler";
         }
       });
-      if (data.isEmpty) {
-        await FirebaseMessaging.instance.unsubscribeFromTopic("edit-event");
-      } else {
-        await FirebaseMessaging.instance.subscribeToTopic("edit-event");
-      }
     } catch (error) {
       setState(() {
-        _error = error as Error?;
+        _error = error as dynamic;
         _loading = false;
       });
     }
@@ -277,15 +272,17 @@ class _DetailScreen extends State<DetailScreen> {
                                           eventDetail.placerestante > 0) {
                                         await ApiReservation.reserveEvent(
                                             eventDetail.id, _userId);
-                                        _updateReservationStatus();
                                         _fetchEvents();
+                                        await FirebaseMessaging.instance
+                                            .subscribeToTopic("edit-event");
                                       } else if (_isReserv &&
                                           eventDetail.placerestante <= 0) {
                                       } else {
                                         await ApiReservation.cancelReservation(
                                             eventDetail.id, _userId);
-                                        _updateReservationStatus();
                                         _fetchEvents();
+                                        await FirebaseMessaging.instance
+                                            .unsubscribeFromTopic("edit-event");
                                       }
                                     },
                                     child: Text(
