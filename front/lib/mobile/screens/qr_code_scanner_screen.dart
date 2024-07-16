@@ -93,7 +93,8 @@ class _QRCodeScannerScreenState extends State<QRCodeScannerScreen> {
             });
 
             if (status.isValid) {
-              _showResultDialog(true, 'Réservation valide');
+              _showResultDialog(
+                  true, 'Réservation valide pour l\'événement ${status.event}');
             } else {
               _showResultDialog(
                   false, status.message ?? 'Réservation invalide');

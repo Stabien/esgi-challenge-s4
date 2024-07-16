@@ -189,32 +189,25 @@ func IsValid(c echo.Context) error {
 
 	if err := db.DB().Preload("Event").Where("id = ? AND deleted_at IS NULL", reservationId).First(&reservation).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
-			return c.JSON(http.StatusNotFound, map[string]string{"error": "Reservation not found or already deleted"})
+			return c.JSON(http.StatusNotFound, map[string]string{"error": "Réservation non trouvé ou supprimé"})
 		}
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 	}
 
 	if reservation.Event.Date.After(time.Now()) {
 		if reservation.IsScanned {
-			return c.JSON(http.StatusOK, map[string]interface{}{"isValid": false, "message": "The reservation has already been scanned"})
+			return c.JSON(http.StatusOK, map[string]interface{}{"isValid": false, "message": "Le QR code a déjà été scanné"})
 		} else {
 			reservation.IsScanned = true
 			if err := db.DB().Save(&reservation).Error; err != nil {
 				return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 			}
 
-			return c.JSON(http.StatusOK, map[string]interface{}{"isValid": true})
+			return c.JSON(http.StatusOK, map[string]interface{}{"isValid": true, "event": reservation.Event.Title})
 		}
 	} else {
-		return c.JSON(http.StatusOK, map[string]interface{}{"isValid": false, "message": "The event is in the past"})
+		return c.JSON(http.StatusOK, map[string]interface{}{"isValid": false, "message": "L'événement est déjà passé"})
 	}
-
-	// if err := db.DB().Preload("Event").Where("reservations.id = ? AND reservations.deleted_at IS NULL",  reservationId).First(&reservation).Error; err != nil {
-	// 	return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
-	// }
-
-	// return c.JSON(http.StatusOK, true)!
-
 }
 
 // ReservationInput represents the input structure for creating or updating a reservation
