@@ -77,14 +77,12 @@ class ProfilScreen extends StatelessWidget {
               final profil = state.profil!;
               return FloatingActionButton(
                 backgroundColor: Colors.orange,
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          EditProfilePage(userProfile: profil),
-                    ),
-                  );
+                onPressed: () async {
+                  final result = await Navigator.of(context)
+                      .pushNamed('/profil/update', arguments: profil)
+                      .then((_) {
+                    context.read<ProfilBloc>().add(ProfilDataLoaded());
+                  });
                 },
                 child: const Icon(
                   Icons.edit,

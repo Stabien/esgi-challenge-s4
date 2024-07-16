@@ -4,6 +4,7 @@ import 'package:mobile/mobile/events/create_event_form.dart';
 import 'package:mobile/mobile/events/join_event.dart';
 import 'package:mobile/mobile/events/update_event_form.dart';
 import 'package:mobile/mobile/map/map.dart';
+import 'package:mobile/mobile/models/profil.dart';
 import 'package:mobile/mobile/screens/customer_register_screen.dart';
 import 'package:mobile/mobile/screens/login_screen.dart';
 import 'package:mobile/mobile/screens/organizer_register_screen.dart';
@@ -16,6 +17,7 @@ import 'package:mobile/mobile/events/screen_events.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mobile/mobile/usersScreen/edit_profil_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -106,6 +108,12 @@ class MobileApp extends StatelessWidget {
             return MaterialPageRoute(
               builder: (context) {
                 return MessagePage(id: args as String);
+              },
+            );
+          case '/profil/update':
+            return MaterialPageRoute(
+              builder: (context) {
+                return EditProfilePage(userProfile: args as Profil);
               },
             );
         }

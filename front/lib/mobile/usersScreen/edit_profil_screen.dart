@@ -51,7 +51,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       widget.userProfile.firstname = _firstnameController.text;
     });
     updateBDD();
-    Navigator.pop(context);
+    Navigator.of(context).pop(true);
   }
 
   void updateBDD() {
