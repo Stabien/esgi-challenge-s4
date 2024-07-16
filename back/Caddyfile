@@ -2,6 +2,6 @@
         reverse_proxy api:3000
 }
 
-3.95.214.105.nip.io {
-				reverse_proxy localhost:80
+esgi-challenge.api-easynight.com {
+	      reverse_proxy localhost:80
 }

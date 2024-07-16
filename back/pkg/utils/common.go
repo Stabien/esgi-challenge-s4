@@ -2,8 +2,8 @@ package utils
 
 import (
 	"log"
-	"os"
 	"math/rand"
+	"os"
 	"strings"
 	"time"
 

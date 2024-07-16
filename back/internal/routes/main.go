@@ -2,6 +2,7 @@ package routes
 
 import (
 	"easynight/internal/controllers"
+	"easynight/internal/middlewares"
 	"easynight/internal/ws"
 
 	"github.com/labstack/echo/v4"
@@ -14,9 +15,9 @@ func InitRouter(e *echo.Echo) {
 	// e.GET("/ws", ws.HandleWebSocket)
 	e.GET("/ws/room", ws.HandleRoomWebSocket)
 
-	e.POST("/event", controllers.CreateEvent)
-	e.DELETE("/event/:id", controllers.DeleteEvent)
-	e.PATCH("/event/:id", controllers.UpdateEvent)
+	e.POST("/event", middlewares.CheckUserRole(controllers.CreateEvent, "organizer"))
+	e.DELETE("/event/:id", middlewares.CheckEventBelongsToOrganizer(controllers.DeleteEvent))
+	e.PATCH("/event/:id", middlewares.CheckEventBelongsToOrganizer(controllers.UpdateEvent))
 	e.GET("/event/:id", controllers.GetEvent)
 	e.GET("/events", controllers.GetAllEvents)
 	e.GET("/events/pending", controllers.GetAllPendingEvents)
@@ -29,9 +30,9 @@ func InitRouter(e *echo.Echo) {
 	e.GET("/reservations/isreserv/:customerId/:eventId", controllers.IsReserv)
 	e.GET("/reservations/isValid/:reservationId", controllers.IsValid)
 
-	e.POST("/reservations", controllers.PostReservation)
-	e.DELETE("/reservations", controllers.DeleteReservation)
-	e.GET("/reservations/:customerId", controllers.GetReservationsbyUser)
+	e.POST("/reservations", middlewares.CheckUserRole(controllers.PostReservation, "customer"))
+	e.DELETE("/reservations", controllers.DeleteReservation) // TODO: pass customer with params instead of body
+	e.GET("/reservations/:customerId", middlewares.CheckCustomerIdParam(controllers.GetReservationsbyUser))
 
 	e.POST("/auth", controllers.Authentication)
 	e.POST("/customers", controllers.CustomerRegistration)
@@ -39,8 +40,8 @@ func InitRouter(e *echo.Echo) {
 	// e.GET("/role", controllers.GetRole)
 	e.GET("/users/custom/:id", controllers.GetUserByIdCustomer)
 	e.GET("/users/orga/:id", controllers.GetUserByIdOrga)
-	e.PATCH("/users/orga/:id", controllers.UpdateUserByIdOrga)
-	e.PATCH("/users/custom/:id", controllers.UpdateUserByIdCustomer)
+	e.PATCH("/users/orga/:id", middlewares.CheckUserId(controllers.UpdateUserByIdOrga))
+	e.PATCH("/users/custom/:id", middlewares.CheckUserId(controllers.UpdateUserByIdCustomer))
 
 	// e.POST("/send-notification", controllers.SendNotification)
 	e.POST("/send-notification", controllers.SendNotificationToTopic)
@@ -56,18 +57,18 @@ func InitRouter(e *echo.Echo) {
 	e.POST("/users", controllers.CreateUser)
 	e.GET("/users", controllers.GetAllUsers)
 	e.GET("/users/:id", controllers.GetUser)
-	e.PATCH("/users/:id", controllers.UpdateUser)
-	e.DELETE("/users/:id", controllers.DeleteUser)
+	e.PATCH("/users/:id", middlewares.CheckUserId(controllers.UpdateUser))
+	e.DELETE("/users/:id", middlewares.CheckUserRole(controllers.DeleteUser, "admin"))
 	// Forgot password
 	e.POST("/send-mail-forgot-password", controllers.SendMailForgotPassword)
 	e.POST("/forgot-password", controllers.ForgotPassword)
 
 	// Reservation routes
 	e.GET("/reservations", controllers.GetAllReservations)
-	e.POST("/reservations", controllers.PostReservation)
+  
 	// e.GET("/reservations/:id", controllers.GetReservation)
-	e.PUT("/reservations/:id", controllers.UpdateReservation)
-	e.DELETE("/reservations/:id", controllers.DeleteReservation)
+	e.PUT("/reservations/:id", middlewares.CheckCustomerIdBody(controllers.UpdateReservation))
+	e.DELETE("/reservations/:id", middlewares.CheckCustomerIdBody(controllers.DeleteReservation))
 
 	// Chat routes
 	e.POST("/chat", controllers.CreateChat)
@@ -76,31 +77,32 @@ func InitRouter(e *echo.Echo) {
 	e.DELETE("/chat/:id", controllers.DeleteChat)
 
 	// Message routes
-	e.POST("/messages", controllers.CreateMessage)
-	e.GET("/messages/:id", controllers.GetMessage)
-	e.PUT("/messages/:id", controllers.UpdateMessage)
-	e.DELETE("/messages/:id", controllers.DeleteMessage)
-	e.GET("/messages/event/:id", controllers.GetAllMessageByEvent)
+	e.POST("/messages", middlewares.CheckSenderBelongsToEvent(controllers.CreateMessage))
+	e.GET("/messages/:id", middlewares.CheckMessageBelongsToOrganizer(controllers.GetMessage))
+	e.PUT("/messages/:id", middlewares.CheckMessageBelongsToOrganizer(controllers.UpdateMessage))
+	e.DELETE("/messages/:id", middlewares.CheckMessageBelongsToOrganizer(controllers.DeleteMessage))
+	e.GET("/messages/event/:id", middlewares.CheckSenderBelongsToEvent(controllers.GetAllMessageByEvent))
 
 	// Event routes
 	e.POST("/events", controllers.CreateEvent)
+
 	// e.GET("/events/:id", controllers.GetEvent)
 	// e.PATCH("/events/:id", controllers.UpdateEvent)
 	// e.DELETE("/events/:id", controllers.DeleteEvent)
 
 	// Rate routes
-	e.POST("/rates", controllers.CreateRate)
+	e.POST("/rates", middlewares.CheckUserRole(controllers.CreateRate, "customer"))
 	e.GET("/rates/:id", controllers.GetRate)
-	e.GET("/rates/:id", controllers.GetAllRates)
-	e.PUT("/rates/:id", controllers.UpdateRate)
-	e.DELETE("/rates/:id", controllers.DeleteRate)
+	e.GET("/rates", controllers.GetAllRates)
+	e.PUT("/rates/:id", middlewares.CheckUserId(controllers.UpdateRate))
+	e.DELETE("/rates/:id", middlewares.CheckUserId(controllers.DeleteRate))
 
 	// Organizer routes
 	e.POST("/organizers", controllers.CreateOrganizer)
 	e.GET("/organizers/:id", controllers.GetOrganizer)
-	e.GET("/organizers/:id", controllers.GetAllOrganizers)
-	e.PUT("/organizers/:id", controllers.UpdateOrganizer)
-	e.DELETE("/organizers/:id", controllers.DeleteOrganizer)
+	e.GET("/organizers", controllers.GetAllOrganizers)
+	e.PUT("/organizers/:id", middlewares.CheckUserId(controllers.UpdateOrganizer))
+	e.DELETE("/organizers/:id", middlewares.CheckUserRole(controllers.DeleteOrganizer, "admin"))
 	e.GET("/organizers/id/:id", controllers.GetOrganizerID)
 
 	// Notification routes
@@ -111,7 +113,7 @@ func InitRouter(e *echo.Echo) {
 	e.DELETE("/notifications/:id", controllers.DeleteNotification)
 
 	// Feature flipping
-	e.GET("/features", controllers.GetAllFeatures)
-	e.GET("/features/:name", controllers.IsEnabled)
-	e.PATCH("/features", controllers.UpdateState)
+	e.GET("/features", middlewares.CheckUserRole(controllers.GetAllFeatures, "admin"))
+	e.GET("/features/:name", middlewares.CheckUserRole(controllers.IsEnabled, "admin"))
+	e.PATCH("/features", middlewares.CheckUserRole(controllers.UpdateState, "admin"))
 }
