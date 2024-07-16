@@ -9,6 +9,7 @@ import 'package:mobile/mobile/models/profil.dart';
 import 'package:mobile/mobile/services/message_services.dart';
 import 'package:mobile/mobile/services/userServices.dart';
 import 'package:mobile/mobile/utils/secureStorage.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class MessagePage extends StatefulWidget {
   final String id;
@@ -76,7 +77,9 @@ class _MessagePageState extends State<MessagePage> {
 
   void _connectWebSocket() {
     _channel = WebSocketChannel.connect(
-      Uri.parse('ws://10.0.2.2:3000/ws/room?roomName=${widget.id}'),
+      Uri.parse('ws://' +
+          dotenv.env['URL_BACK'].toString() +
+          '/ws/room?roomName=${widget.id}'),
     );
 
     _channel!.stream.listen((message) {
