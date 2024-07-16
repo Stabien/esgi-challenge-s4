@@ -12,7 +12,6 @@ import (
 func InitRouter(e *echo.Echo) {
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
-	// e.GET("/ws", ws.HandleWebSocket)
 	e.GET("/ws/room", ws.HandleRoomWebSocket)
 
 	e.POST("/event", middlewares.CheckUserRole(controllers.CreateEvent, "organizer"))
@@ -23,7 +22,6 @@ func InitRouter(e *echo.Echo) {
 	e.GET("/events/pending", controllers.GetAllPendingEvents)
 	e.PATCH("/events/:id/validate", controllers.ValidateEvent)
 	e.GET("/events/today", controllers.GetAllEventsToday)
-	// e.POST("/event/:id/code", controllers.CreateCode)
 	e.POST("/event/join/:code", controllers.JoinEvent)
 	e.GET("/events/organizer", controllers.GetEventsByOrganizer)
 
@@ -37,19 +35,12 @@ func InitRouter(e *echo.Echo) {
 	e.POST("/auth", controllers.Authentication)
 	e.POST("/customers", controllers.CustomerRegistration)
 	e.POST("/organizers", controllers.OrganizerRegistration)
-	// e.GET("/role", controllers.GetRole)
 	e.GET("/users/custom/:id", controllers.GetUserByIdCustomer)
 	e.GET("/users/orga/:id", controllers.GetUserByIdOrga)
 	e.PATCH("/users/orga/:id", middlewares.CheckUserId(controllers.UpdateUserByIdOrga))
 	e.PATCH("/users/custom/:id", middlewares.CheckUserId(controllers.UpdateUserByIdCustomer))
 
-	// e.POST("/send-notification", controllers.SendNotification)
 	e.GET("/logs", middlewares.CheckUserRole(controllers.GetAllLogs, "admin")) // TODO: add middleware to check if user is admin
-
-	// Admin
-	// Groupes de routes protégées par le middleware CheckAdminMiddleware
-	// adminRoutes := authRoutes.Group("/admin")
-	// adminRoutes.Use(middlewares.CheckAdminMiddleware)
 
 	// User routes
 	e.POST("/users", controllers.CreateUser)
@@ -63,7 +54,6 @@ func InitRouter(e *echo.Echo) {
 
 	// Reservation routes
 	e.POST("/reservations", middlewares.CheckUserRole(controllers.PostReservation, "customer"))
-	// e.GET("/reservations/:id", controllers.GetReservation)
 	e.PUT("/reservations/:id", middlewares.CheckCustomerIdBody(controllers.UpdateReservation))
 	e.DELETE("/reservations/:id", middlewares.CheckCustomerIdBody(controllers.DeleteReservation))
 
@@ -74,17 +64,14 @@ func InitRouter(e *echo.Echo) {
 	e.DELETE("/chat/:id", controllers.DeleteChat)
 
 	// Message routes
-	e.POST("/messages", middlewares.CheckSenderBelongsToEvent(controllers.CreateMessage))
+	e.POST("/messages", controllers.CreateMessage)
 	e.GET("/messages/:id", middlewares.CheckMessageBelongsToOrganizer(controllers.GetMessage))
 	e.PUT("/messages/:id", middlewares.CheckMessageBelongsToOrganizer(controllers.UpdateMessage))
 	e.DELETE("/messages/:id", middlewares.CheckMessageBelongsToOrganizer(controllers.DeleteMessage))
-	e.GET("/messages/event/:id", middlewares.CheckSenderBelongsToEvent(controllers.GetAllMessageByEvent))
+	e.GET("/messages/event/:id", middlewares.CheckEventBelongsToOrganizer(controllers.GetAllMessageByEvent))
 
 	// Event routes
 	e.POST("/events", controllers.CreateEvent)
-	// e.GET("/events/:id", controllers.GetEvent)
-	// e.PATCH("/events/:id", controllers.UpdateEvent)
-	// e.DELETE("/events/:id", controllers.DeleteEvent)
 
 	// Rate routes
 	e.POST("/rates", middlewares.CheckUserRole(controllers.CreateRate, "customer"))

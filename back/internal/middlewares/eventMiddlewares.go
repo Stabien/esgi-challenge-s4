@@ -4,6 +4,7 @@ import (
 	"easynight/internal/models"
 	"easynight/internal/services"
 	"easynight/pkg/utils"
+	"fmt"
 	"net/http"
 
 	"github.com/google/uuid"
@@ -29,6 +30,8 @@ func CheckSenderBelongsToEvent(next echo.HandlerFunc) echo.HandlerFunc {
 		if token["role"] == "admin" {
 			return next(c)
 		}
+
+		fmt.Print(message.EventID, message.OrganizerID, token["id"])
 
 		doesOrganizerBelongsToEvent := services.DoesOrganizerBelongsToEvent(message.EventID, message.OrganizerID)
 
