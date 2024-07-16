@@ -31,7 +31,6 @@ class _MessagePageState extends State<MessagePage> {
   void initState() {
     super.initState();
     getprofil();
-    print(widget.id);
   }
 
   Future<void> getprofil() async {
@@ -79,7 +78,6 @@ class _MessagePageState extends State<MessagePage> {
     _channel = WebSocketChannel.connect(
       Uri.parse('ws://10.0.2.2:3000/ws/room?roomName=${widget.id}'),
     );
-    print('Connected to WebSocket server');
 
     _channel!.stream.listen((message) {
       setState(() {

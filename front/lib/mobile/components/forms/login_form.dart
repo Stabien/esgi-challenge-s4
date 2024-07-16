@@ -33,17 +33,37 @@ class _LoginFormState extends State<LoginForm> {
 
   void _onSubmit(BuildContext context) async {
     final userCredentials = UserCredentials(_email, _password);
-    final Response response = await _userServices.auth(userCredentials);
-    print('test');
 
-    if (response.data['token'] == null) {
-      return;
+    try {
+      final Response response = await _userServices.auth(userCredentials);
+
+      if (response.data['token'] == null) {
+        return;
+      }
+
+      await SecureStorage.addStorageItem('token', response.data['token']);
+      await verifyAndDecodeJwt(response.data['token']);
+
+      redirectToPath(context, '/');
+    } catch (e) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text("Echec"),
+          content: const Text("Utilisateur non trouvé"),
+          actions: <Widget>[
+            TextButton(
+              child: const Text("OK"),
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pop(true);
+                redirectToPath(context, '/');
+              },
+            ),
+          ],
+        ),
+      );
     }
-
-    await SecureStorage.addStorageItem('token', response.data['token']);
-    await verifyAndDecodeJwt(response.data['token']);
-
-    redirectToPath(context, '/');
   }
 
   @override

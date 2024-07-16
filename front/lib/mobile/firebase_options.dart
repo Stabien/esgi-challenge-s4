@@ -3,8 +3,6 @@
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-
 
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///
@@ -19,7 +17,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      // return web;
       throw UnsupportedError(
         'DefaultFirebaseOptions have not been configured for web - '
         'you can reconfigure this by running the FlutterFire CLI again.',
@@ -28,8 +25,11 @@ class DefaultFirebaseOptions {
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return android;
-      // case TargetPlatform.iOS:
-      //   return ios;
+      case TargetPlatform.iOS:
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for ios - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for macos - '
@@ -52,11 +52,11 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static FirebaseOptions android = FirebaseOptions(
-    apiKey: '${dotenv.env['FIREBASE_API_KEY']}',
-    appId: '${dotenv.env['FIREBASE_API_ID']}',
-    messagingSenderId: '${dotenv.env['FIREBASE_API_SENDER_ID']}',
-    projectId: '${dotenv.env['FIREBASE_API_PROJECT_ID']}',
-    storageBucket: '${dotenv.env['FIREBASE_API_STORAGE_BUCKET']}',
+  static const FirebaseOptions android = FirebaseOptions(
+    apiKey: 'AIzaSyCS-mouLOxTPZANKrGBSYBzIAikfW73Xko',
+    appId: '1:817509474589:android:e8526e0193c7c2cbee41f4',
+    messagingSenderId: '817509474589',
+    projectId: 'challenges4notification',
+    storageBucket: 'challenges4notification.appspot.com',
   );
 }

@@ -27,7 +27,6 @@ class _CreateEventFormState extends State<CreateEventForm> {
   final TextEditingController _lngController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
   final TextEditingController _tagController = TextEditingController();
-  final TextEditingController _imageController = TextEditingController();
   final TextEditingController _placeController = TextEditingController();
 
   File? _banner;
