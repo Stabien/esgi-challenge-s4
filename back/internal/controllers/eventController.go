@@ -203,18 +203,19 @@ func UpdateEvent(c echo.Context) error {
 	event.Place = c.FormValue("place")
 
 	bannerFile, _ := c.FormFile("banner")
-	imageFile, _ := c.FormFile("image")
 
 	if bannerFile != nil {
 		bannerPath, err := utils.UploadFile(bannerFile)
-
+		
 		if err != nil {
 			return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
 		}
-
+		
 		event.Banner = bannerPath
 	}
-
+	
+	imageFile, _ := c.FormFile("image")
+	
 	if imageFile != nil {
 		imagePath, err := utils.UploadFile(imageFile)
 
