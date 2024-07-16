@@ -42,3 +42,16 @@ func GetUserByEmail(email string) models.User {
 
 	return user
 }
+
+func GetUserByToken(token string) models.User {
+	var user models.User
+
+	query := map[string]interface{}{
+		"token": token,
+	}
+
+	db := db.DB()
+	db.Where(query).Find(&user)
+
+	return user
+}

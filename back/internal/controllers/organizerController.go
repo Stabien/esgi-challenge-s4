@@ -22,7 +22,7 @@ type OrganizerInput struct {
 // @Tags organizers
 // @Accept json
 // @Produce json
-// @Param organizer body models.OrganizerInput true "Organizer Input"
+// @Param organizer body OrganizerInput true "Organizer Input"
 // @Success 201 {object} models.Organizer
 // @Router /organizers [post]
 func CreateOrganizer(c echo.Context) error {
@@ -63,6 +63,23 @@ func GetOrganizer(c echo.Context) error {
 	return c.JSON(http.StatusOK, organizer)
 }
 
+// GetOrganizer godoc
+// @Summary Get an organizer by ID
+// @Description Get an organizer by ID
+// @Tags organizers
+// @Produce json
+// @Param id path string true "Organizer ID"
+// @Success 200 {object} models.Organizer
+// @Router /organizers/id/{id} [get]
+func GetOrganizerID(c echo.Context) error {
+	id := c.Param("id")
+	var organizer models.Organizer
+	if err := db.DB().Select("id").First(&organizer, "user_id = ?", id).Error; err != nil {
+		return c.JSON(http.StatusNotFound, err)
+	}
+	return c.JSON(http.StatusOK, map[string]interface{}{"id": organizer.ID})
+}
+
 // GetAllOrganizers godoc
 // @Summary Get all organizers
 // @Description Get all organizers
@@ -78,7 +95,6 @@ func GetAllOrganizers(c echo.Context) error {
 	return c.JSON(http.StatusOK, organizers)
 }
 
-
 // UpdateOrganizer godoc
 // @Summary Update an organizer by ID
 // @Description Update an organizer by ID
@@ -86,7 +102,7 @@ func GetAllOrganizers(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Param id path string true "Organizer ID"
-// @Param organizer body models.OrganizerInput true "Organizer Input"
+// @Param organizer body OrganizerInput true "Organizer Input"
 // @Success 200 {object} models.Organizer
 // @Router /organizers/{id} [put]
 func UpdateOrganizer(c echo.Context) error {
@@ -111,7 +127,6 @@ func UpdateOrganizer(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, organizer)
 }
-
 
 // DeleteOrganizer godoc
 // @Summary Delete an organizer by ID

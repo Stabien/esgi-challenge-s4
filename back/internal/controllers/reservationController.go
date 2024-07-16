@@ -3,6 +3,8 @@ package controllers
 import (
 	"easynight/internal/db"
 	"easynight/internal/models"
+	"easynight/pkg/utils"
+	"time"
 
 	// "encoding/json"
 
@@ -10,6 +12,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
+	"gorm.io/gorm"
 )
 
 // @Summary add reservation
@@ -100,13 +103,25 @@ func GetReservationsbyUser(c echo.Context) error {
 	var userReservations []UserReservation
 
 	for _, reservation := range reservations {
+		bannerContent, err := utils.ReadAndEncodeFile("./" + reservation.Event.Banner)
+
+		if err != nil {
+			return echo.NewHTTPError(http.StatusInternalServerError, err)
+		}
+
+		imageContent, err := utils.ReadAndEncodeFile("./" + reservation.Event.Image)
+
+		if err != nil {
+			return echo.NewHTTPError(http.StatusInternalServerError, err)
+		}
+
 		var reservationEvent SimpleEvent = SimpleEvent{
 			ID:          reservation.Event.ID,
 			Title:       reservation.Event.Title,
 			Description: reservation.Event.Description,
 			Tag:         reservation.Event.Tag,
-			Banner:      reservation.Event.Banner,
-			Image:       reservation.Event.Image,
+			Banner:      bannerContent,
+			Image:       imageContent,
 			Date:        reservation.Event.Date,
 			Place:       reservation.Event.Place,
 		}
@@ -140,7 +155,7 @@ func IsReserv(c echo.Context) error {
 	eventID := c.Param("eventId")
 
 	var reservations []models.Reservation
-	if err := db.DB().Where("customer_id = ? AND event_id = ?", customerID, eventID).Find(&reservations).Error; err != nil {
+	if err := db.DB().Where("customer_id = ? AND event_id = ? ", customerID, eventID).Find(&reservations).Error; err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 	}
 
@@ -158,6 +173,41 @@ func IsReserv(c echo.Context) error {
 	return c.JSON(http.StatusOK, simpleReservation)
 }
 
+// @Summary get reservation validity
+// @Tags Reservation
+// @Accept json
+// @Produce json
+// @Param reservationId path string true "reservationId"
+// @Success 204 "Successfully get"
+// @Failure 400 {object} error "Bad request"
+// @Failure 500 {object} error "Internal server error"
+// @Router /reservations/isValid/{reservationId} [get]
+func IsValid(c echo.Context) error {
+	reservationId := c.Param("reservationId")
+
+	var reservation models.Reservation
+
+	if err := db.DB().Preload("Event").Where("id = ? AND deleted_at IS NULL", reservationId).First(&reservation).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return c.JSON(http.StatusNotFound, map[string]string{"error": "Reservation not found or already deleted"})
+		}
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+	}
+
+	if reservation.Event.Date.After(time.Now()) {
+		return c.JSON(http.StatusOK, map[string]bool{"isValid": true})
+	} else {
+		return c.JSON(http.StatusOK, map[string]interface{}{"isValid": false, "message": "The event is in the past"})
+	}
+
+	// if err := db.DB().Preload("Event").Where("reservations.id = ? AND reservations.deleted_at IS NULL",  reservationId).First(&reservation).Error; err != nil {
+	// 	return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+	// }
+
+	// return c.JSON(http.StatusOK, true)!
+
+}
+
 // ReservationInput represents the input structure for creating or updating a reservation
 type ReservationInput struct {
 	CustomerID uuid.UUID `json:"customerId"`
@@ -165,7 +215,6 @@ type ReservationInput struct {
 	Qrcode     string    `json:"qrcode"`
 }
 
-// GetReservation retrieves a reservation by ID
 // @Summary Get a reservation by ID
 // @Description Retrieve a reservation based on its unique ID
 // @Tags reservations
@@ -188,7 +237,6 @@ func GetReservation(c echo.Context) error {
 	return c.JSON(http.StatusOK, reservation)
 }
 
-// GetAllReservations retrieves all reservations
 // @Summary Get all reservations
 // @Description Retrieve all reservations from the database
 // @Tags reservations
@@ -196,9 +244,19 @@ func GetReservation(c echo.Context) error {
 // @Success 200 {array} models.Reservation
 // @Router /reservations [get]
 func GetAllReservations(c echo.Context) error {
+	claims, err := utils.GetTokenFromHeader(c)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+	}
+
+	userRole := claims["role"].(string)
+
+	if userRole != "admin" {
+		return c.JSON(http.StatusForbidden, map[string]string{"error": "You do not have the permission to access this resource"})
+	}
 
 	var reservations []models.Reservation
-	if err := db.DB().Preload("Customer").Preload("Event").Find(&reservations).Error; err != nil {
+	if err := db.DB().Preload("Customer").Preload("Customer.User").Preload("Event").Find(&reservations).Error; err != nil {
 		return err
 	}
 

@@ -18,7 +18,6 @@ type NotificationInput struct {
 	IsOpened   bool      `json:"is_opened"`
 }
 
-
 // CreateNotification crée un nouveau notification
 // @Summary Create a new notification
 // @Tags notification
@@ -54,7 +53,7 @@ func CreateNotification(c echo.Context) error {
 // @Tags notifications
 // @Produce json
 // @Param id path string true "Notification ID"
-// @Success 200 {object} Notification
+// @Success 200 {object} models.Notification
 // @Router /notifications/{id} [get]
 func GetNotification(c echo.Context) error {
 	id := c.Param("id")
@@ -70,7 +69,7 @@ func GetNotification(c echo.Context) error {
 // @Description Get all notifications
 // @Tags notifications
 // @Produce json
-// @Success 200 {array} Notification
+// @Success 200 {array} models.Notification
 // @Router /notifications [get]
 func GetAllNotifications(c echo.Context) error {
 	var notifications []models.Notification
@@ -88,7 +87,7 @@ func GetAllNotifications(c echo.Context) error {
 // @Produce json
 // @Param id path string true "Notification ID"
 // @Param notification body NotificationInput true "Notification Input"
-// @Success 200 {object} Notification
+// @Success 200 {object} models.Notification
 // @Router /notifications/{id} [put]
 func UpdateNotification(c echo.Context) error {
 	id := c.Param("id")
