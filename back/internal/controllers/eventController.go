@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"easynight/internal/db"
+	"easynight/internal/firebase"
 	"easynight/internal/models"
 	"easynight/pkg/utils"
 
@@ -166,30 +167,6 @@ func UpdateEvent(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "You are not the organizer of this event"})
 	}
 
-	bannerFile, err := c.FormFile("banner")
-
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
-	}
-
-	bannerPath, err := utils.UploadFile(bannerFile)
-
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
-	}
-
-	imageFile, err := c.FormFile("image")
-
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
-	}
-
-	imagePath, err := utils.UploadFile(imageFile)
-
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
-	}
-
 	participantNumber, err := strconv.Atoi(c.FormValue("participantNumber"))
 
 	if err != nil {
@@ -217,8 +194,6 @@ func UpdateEvent(c echo.Context) error {
 	// Update event fields
 	event.Title = c.FormValue("title")
 	event.Description = c.FormValue("description")
-	event.Banner = bannerPath
-	event.Image = imagePath
 	event.Date = date
 	event.ParticipantNumber = &participantNumber
 	event.Lat = float32(lat)
@@ -227,10 +202,37 @@ func UpdateEvent(c echo.Context) error {
 	event.Tag = c.FormValue("tag")
 	event.Place = c.FormValue("place")
 
-	// event.Date, err = time.Parse(time.RFC3339, updateInput.Date)
+	bannerFile, _ := c.FormFile("banner")
+	imageFile, _ := c.FormFile("image")
+
+	if bannerFile != nil {
+		bannerPath, err := utils.UploadFile(bannerFile)
+
+		if err != nil {
+			return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+		}
+
+		event.Banner = bannerPath
+	}
+
+	if imageFile != nil {
+		imagePath, err := utils.UploadFile(imageFile)
+
+		if err != nil {
+			return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+		}
+
+		event.Image = imagePath
+	}
 
 	if err := db.DB().Model(&event).Updates(&event).Error; err != nil {
 		return err
+	}
+
+	// Send notification to inform users that the event has been updated
+	err = firebase.SendNotificationToTopic()
+	if err != nil {
+		return c.String(http.StatusInternalServerError, err.Error())
 	}
 
 	return c.String(http.StatusOK, "Event updated successfully!")
@@ -339,7 +341,7 @@ func GetAllEvents(c echo.Context) error {
 
 	nameFilter = c.QueryParam("name")
 	tagFilter := c.QueryParam("tag")
-	today := time.Now()
+	today := time.Now().AddDate(0, 0, -1)
 
 	claims, err := utils.GetTokenFromHeader(c)
 	if err != nil {
@@ -351,20 +353,20 @@ func GetAllEvents(c echo.Context) error {
 			return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 		}
 	} else if tagFilter != "" && nameFilter != "" {
-		if err := db.DB().Where("LOWER(title) LIKE ? AND tag = ? AND is_pending = false AND deleted_at IS NULL AND date > ?", "%"+strings.ToLower(nameFilter)+"%", tagFilter, today).Find(&events).Error; err != nil {
+		if err := db.DB().Where("LOWER(title) LIKE ? AND tag = ? AND is_pending = false AND deleted_at IS NULL AND date >= ?", "%"+strings.ToLower(nameFilter)+"%", tagFilter, today).Find(&events).Error; err != nil {
 			return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 		}
 	} else if tagFilter != "" && nameFilter == "" {
-		if err := db.DB().Where("tag = ? AND is_pending = false AND deleted_at IS NULL  AND date > ?", tagFilter, today).Find(&events).Error; err != nil {
+		if err := db.DB().Where("tag = ? AND is_pending = false AND deleted_at IS NULL  AND date >= ?", tagFilter, today).Find(&events).Error; err != nil {
 			return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 		}
 	} else if tagFilter == "" && nameFilter != "" {
 		nameFilter = "%" + strings.ToLower(nameFilter) + "%"
-		if err := db.DB().Where("LOWER(title) LIKE ? AND is_pending = false AND deleted_at IS NULL  AND date > ? ", nameFilter, today).Find(&events).Error; err != nil {
+		if err := db.DB().Where("LOWER(title) LIKE ? AND is_pending = false AND deleted_at IS NULL  AND date >= ? ", nameFilter, today).Find(&events).Error; err != nil {
 			return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 		}
 	} else {
-		if err := db.DB().Where("is_pending = false AND deleted_at IS NULL  AND date > ?", today).Find(&events).Error; err != nil {
+		if err := db.DB().Where("is_pending = false AND deleted_at IS NULL  AND date >= ?", today).Find(&events).Error; err != nil {
 			return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 		}
 	}
@@ -452,6 +454,7 @@ func GetAllEventsToday(c echo.Context) error {
 			Image:       imageContent,
 			Date:        event.Date,
 			Place:       event.Place,
+			IsPending:   event.IsPending,
 		})
 	}
 
@@ -602,6 +605,7 @@ func GetEventsByOrganizer(c echo.Context) error {
 			Image:       imageContent,
 			Date:        event.Date,
 			Place:       event.Place,
+			IsPending:   event.IsPending,
 		})
 	}
 

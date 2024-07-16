@@ -46,7 +46,6 @@ func CheckEventBelongsToOrganizer(next echo.HandlerFunc) echo.HandlerFunc {
 		eventId := c.Param("id")
 
 		if err != nil {
-
 			return echo.NewHTTPError(http.StatusUnauthorized, err)
 		}
 

@@ -19,8 +19,6 @@ class ReservationBloc extends Bloc<ReservationEvent, ReservationState> {
       try {
         await initUser();
         final reservations = await ApiServices.getMyReservations(_userId);
-        print("les reservations sont dans le bloc");
-        print(reservations);
         emit(ReservationDataLoadingSuccess(reservations: reservations));
       } on ApiException catch (error) {
         emit(ReservationDataLoadingError(errorMessage: error.message));
@@ -31,8 +29,6 @@ class ReservationBloc extends Bloc<ReservationEvent, ReservationState> {
   }
   Future<void> initUser() async {
     await SecureStorage.getStorageItem('userId').then((value) {
-      print("le user id est");
-      print(value);
       _userId = value!;
     });
   }

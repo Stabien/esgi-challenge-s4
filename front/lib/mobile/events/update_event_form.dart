@@ -1,10 +1,16 @@
 // ignore_for_file: use_build_context_synchronously, library_private_types_in_public_api
 
+import 'dart:convert';
+import 'dart:developer';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:mobile/mobile/utils/file.dart';
 import 'package:mobile/mobile/utils/secureStorage.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
+import 'package:mobile/web/utils/api_utils.dart';
 
 class UpdateEventForm extends StatefulWidget {
   final String eventId;
@@ -21,14 +27,39 @@ class _UpdateEventFormState extends State<UpdateEventForm> {
   late TextEditingController _titleController;
   late TextEditingController _descriptionController;
   late TextEditingController _dateController;
-  late TextEditingController _bannerController;
   late TextEditingController _participantNumberController;
   late TextEditingController _latController;
   late TextEditingController _lngController;
   late TextEditingController _locationController;
   late TextEditingController _tagController;
-  late TextEditingController _imageController;
   late TextEditingController _placeController;
+
+  File? _banner;
+  File? _image;
+
+  void pickBannerFile() async {
+    final XFile? image = await pickImage();
+
+    setState(() {
+      if (image != null) {
+        _banner = File(image.path);
+      } else {
+        log('No image selected.');
+      }
+    });
+  }
+
+  void pickImageFile() async {
+    final XFile? image = await pickImage();
+
+    setState(() {
+      if (image != null) {
+        _image = File(image.path);
+      } else {
+        log('No image selected.');
+      }
+    });
+  }
 
   @override
   void initState() {
@@ -36,37 +67,30 @@ class _UpdateEventFormState extends State<UpdateEventForm> {
     _titleController = TextEditingController();
     _descriptionController = TextEditingController();
     _dateController = TextEditingController();
-    _bannerController = TextEditingController();
     _participantNumberController = TextEditingController();
     _latController = TextEditingController();
     _lngController = TextEditingController();
     _locationController = TextEditingController();
     _tagController = TextEditingController();
-    _imageController = TextEditingController();
     _placeController = TextEditingController();
     _fetchEventDetails();
   }
 
   void _fetchEventDetails() async {
     try {
-      var dio = Dio();
-      dio.options.connectTimeout = const Duration(milliseconds: 10000);
-      String? apiUrl = '${dotenv.env['URL_BACK']}/event/${widget.eventId}';
-      var response = await dio.get(apiUrl);
+      var response = await ApiUtils.get('/event/${widget.eventId}');
       if (response.statusCode == 200) {
         setState(() {
           _event = Event.fromJson(response.data);
           _titleController.text = _event.title;
           _descriptionController.text = _event.description;
           _dateController.text = _event.date;
-          _bannerController.text = _event.banner;
           _participantNumberController.text =
               _event.participantNumber.toString();
           _latController.text = _event.lat.toString();
           _lngController.text = _event.lng.toString();
           _locationController.text = _event.location;
           _tagController.text = _event.tag;
-          _imageController.text = _event.image;
           _placeController.text = _event.place;
         });
       }
@@ -76,27 +100,25 @@ class _UpdateEventFormState extends State<UpdateEventForm> {
   }
 
   void _updateEvent() async {
-    var dio = Dio();
-
-    String? token = await SecureStorage.getStorageItem('token');
-    dio.options.headers['Authorization'] = 'Bearer $token';
-
-    String? apiUrl = '${dotenv.env['URL_BACK']}/event/${widget.eventId}';
+    print(_banner);
 
     try {
-      var response = await dio.patch(apiUrl, data: {
+      var formData = FormData.fromMap({
         'title': _titleController.text,
         'description': _descriptionController.text,
         'date': _dateController.text,
-        'banner': _bannerController.text,
-        'participant_number': int.parse(_participantNumberController.text),
+        if (_banner != null)
+          'banner': await MultipartFile.fromFile(_banner!.path),
+        'participantNumber': int.parse(_participantNumberController.text),
         'lat': double.parse(_latController.text),
         'lng': double.parse(_lngController.text),
         'location': _locationController.text,
         'tag': _tagController.text,
-        'image': _imageController.text,
+        if (_image != null) 'image': await MultipartFile.fromFile(_image!.path),
         'place': _placeController.text,
       });
+      var response =
+          await ApiUtils.patchFormData('/event/${widget.eventId}', formData);
 
       if (response.statusCode == 200) {
         showDialog(
@@ -210,10 +232,6 @@ class _UpdateEventFormState extends State<UpdateEventForm> {
                       showTitleActions: true,
                       minTime: DateTime.now(),
                       maxTime: DateTime.now().add(const Duration(days: 730)),
-                      // onChanged: (date) {
-                      //   print('change $date');
-                      //   print('change ${date.toUtc().toIso8601String()}');
-                      // },
                       onConfirm: (date) {
                         setState(() {
                           _dateController.text = date.toUtc().toIso8601String();
@@ -231,12 +249,15 @@ class _UpdateEventFormState extends State<UpdateEventForm> {
             ),
             Container(
               margin: const EdgeInsets.only(bottom: 16.0),
-              child: TextField(
-                style: const TextStyle(color: Colors.white),
-                controller: _bannerController,
-                decoration: const InputDecoration(
-                  labelText: "Bannière (URL)",
-                ),
+              child: Row(
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      pickBannerFile();
+                    },
+                    child: const Text('Choisir une nouvelle bannière'),
+                  ),
+                ],
               ),
             ),
             Container(
@@ -291,12 +312,15 @@ class _UpdateEventFormState extends State<UpdateEventForm> {
             ),
             Container(
               margin: const EdgeInsets.only(bottom: 16.0),
-              child: TextField(
-                style: const TextStyle(color: Colors.white),
-                controller: _imageController,
-                decoration: const InputDecoration(
-                  labelText: "Image",
-                ),
+              child: Row(
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      pickImageFile();
+                    },
+                    child: const Text('Choisir une nouvelle image'),
+                  ),
+                ],
               ),
             ),
             Container(

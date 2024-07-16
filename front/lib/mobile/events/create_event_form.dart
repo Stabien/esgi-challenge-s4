@@ -7,9 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mobile/mobile/utils/file.dart';
-import 'package:mobile/mobile/utils/secureStorage.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
+import 'package:mobile/web/utils/api_utils.dart';
 
 class CreateEventForm extends StatefulWidget {
   const CreateEventForm({super.key});
@@ -28,7 +27,6 @@ class _CreateEventFormState extends State<CreateEventForm> {
   final TextEditingController _lngController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
   final TextEditingController _tagController = TextEditingController();
-  final TextEditingController _imageController = TextEditingController();
   final TextEditingController _placeController = TextEditingController();
 
   File? _banner;
@@ -59,13 +57,6 @@ class _CreateEventFormState extends State<CreateEventForm> {
   }
 
   void createEvent() async {
-    var dio = Dio();
-
-    String? token = await SecureStorage.getStorageItem('token');
-    dio.options.headers['Authorization'] = 'Bearer $token';
-
-    String? apiUrl = '${dotenv.env['URL_BACK']}/event';
-
     log(_participantNumberController.text);
 
     try {
@@ -83,7 +74,7 @@ class _CreateEventFormState extends State<CreateEventForm> {
         'place': _placeController.text,
       });
 
-      var response = await dio.post(apiUrl!, data: formData);
+      var response = await ApiUtils.post('/event', formData);
 
       if (response.statusCode == 200) {
         showDialog(
@@ -174,9 +165,6 @@ class _CreateEventFormState extends State<CreateEventForm> {
                       showTitleActions: true,
                       minTime: DateTime.now(),
                       maxTime: DateTime.now().add(const Duration(days: 730)),
-                      // onChanged: (date) {
-                      //   print('change $date');
-                      // },
                       onConfirm: (date) {
                         setState(() {
                           _dateController.text = date.toUtc().toIso8601String();

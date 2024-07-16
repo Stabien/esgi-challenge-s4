@@ -15,7 +15,7 @@ class ProfilScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Profile'),
-          // add DisconnectButton to the AppBar
+          automaticallyImplyLeading: false,
           actions: const <Widget>[
             DisconnectButton(),
           ],
@@ -76,6 +76,7 @@ class ProfilScreen extends StatelessWidget {
             if (state is ProfilDataLoadingSuccess) {
               final profil = state.profil!;
               return FloatingActionButton(
+                backgroundColor: Colors.orange,
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -85,7 +86,10 @@ class ProfilScreen extends StatelessWidget {
                     ),
                   );
                 },
-                child: const Icon(Icons.edit),
+                child: const Icon(
+                  Icons.edit,
+                  color: Colors.white,
+                ),
               );
             } else {
               return Container();
