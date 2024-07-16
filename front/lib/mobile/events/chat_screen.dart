@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mobile/mobile/services/formatDate.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:web_socket_channel/status.dart' as status;
@@ -25,6 +26,7 @@ class _MessagePageState extends State<MessagePage> {
   final List<Message> _messages = [];
   WebSocketChannel? _channel;
   var _userId = "";
+  var _role = "";
   Profil? profil;
   Organizer? orga;
 
@@ -36,9 +38,15 @@ class _MessagePageState extends State<MessagePage> {
 
   Future<void> getprofil() async {
     final userId = await SecureStorage.getStorageItem('userId');
+    final role = await SecureStorage.getStorageItem('userRole');
+    print("role");
+    print(role);
+
     setState(() {
       _userId = userId!;
+      _role = role!;
     });
+
     profil = await UserServices().profilOrga(_userId);
     _connectWebSocket();
     orga = await UserServices().getOrgaByUser(_userId);
@@ -77,9 +85,7 @@ class _MessagePageState extends State<MessagePage> {
 
   void _connectWebSocket() {
     _channel = WebSocketChannel.connect(
-      Uri.parse('ws://' +
-          dotenv.env['URL_BACK'].toString() +
-          '/ws/room?roomName=${widget.id}'),
+      Uri.parse('ws://${dotenv.env['URL_WS']}/ws/room?roomName=${widget.id}'),
     );
 
     _channel!.stream.listen((message) {
@@ -190,25 +196,27 @@ class _MessagePageState extends State<MessagePage> {
               },
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: TextField(
-                    controller: _controller,
-                    decoration: const InputDecoration(
-                      hintText: 'Enter your message',
-                    ),
+          _role != "admin"
+              ? Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: TextField(
+                          controller: _controller,
+                          decoration: const InputDecoration(
+                            hintText: 'Enter your message',
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.send),
+                        onPressed: _sendMessageText,
+                      ),
+                    ],
                   ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.send),
-                  onPressed: _sendMessageText,
-                ),
-              ],
-            ),
-          ),
+                )
+              : SizedBox(height: 0),
         ],
       ),
     );
