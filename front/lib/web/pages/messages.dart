@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:mobile/mobile/events/chat_screen.dart';
 import 'package:mobile/web/pages/events.dart';
+import 'package:mobile/web/pages/messages_view.dart';
 import 'package:mobile/web/ui/appbar.dart';
 
 class MessagesPage extends StatefulWidget {
@@ -63,7 +63,7 @@ class _MessagesPageState extends State<MessagesPage> {
                             child: SizedBox(
                               width: MediaQuery.of(context).size.width * 0.9,
                               height: MediaQuery.of(context).size.height * 0.7,
-                              child: MessagePage(id: event.id),
+                              child: MessageView(id: event.id),
                             ),
                           );
                         },
