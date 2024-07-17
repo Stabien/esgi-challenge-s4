@@ -3,5 +3,11 @@
   "firstname": "Firstname",
   "email": "Email",
   "password": "Password",
-  "register": "Register"
+  "register": "Register",
+  "events": "Events",
+  "today": "Today",
+  "noEventToday": "No event today",
+  "myTickets": "My tickets",
+  "upcoming": "Upcoming",
+  "profile": "Profile"
 }

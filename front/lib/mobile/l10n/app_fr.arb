@@ -3,5 +3,11 @@
   "firstname": "Prénom",
   "email": "Email",
   "password": "Mot de passe",
-  "register": "S'inscrire"
+  "register": "S'inscrire",
+  "events": "Événements",
+  "today": "Aujourd'hui",
+  "noEventToday": "Aucun événement aujourd'hui",
+  "myTickets": "Mes billets",
+  "upcoming": "À venir",
+  "profile": "Profil"
 }

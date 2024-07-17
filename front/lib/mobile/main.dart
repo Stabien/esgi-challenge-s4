@@ -18,6 +18,7 @@ import 'package:mobile/mobile/events/screen_events.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:mobile/mobile/usersScreen/edit_profil_screen.dart';
+import 'package:mobile/mobile/screens/qr_code_scanner_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -114,6 +115,12 @@ class MobileApp extends StatelessWidget {
             return MaterialPageRoute(
               builder: (context) {
                 return EditProfilePage(userProfile: args as Profil);
+              },
+            );
+          case '/scanner':
+            return MaterialPageRoute(
+              builder: (context) {
+                return const QRCodeScannerScreen();
               },
             );
         }

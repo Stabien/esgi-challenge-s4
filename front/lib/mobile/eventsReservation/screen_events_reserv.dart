@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile/mobile/components/eventComponents/reservation_list_tile.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/mobile/eventsReservation/blocs/reservation_bloc.dart';
+import 'package:mobile/mobile/utils/translate.dart';
 
 class ScreenEventReservation extends StatelessWidget {
   const ScreenEventReservation({super.key});
@@ -13,17 +14,17 @@ class ScreenEventReservation extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          title:
-              const Text('Mes billets', style: TextStyle(color: Colors.white)),
-          bottom: const PreferredSize(
-            preferredSize: Size.fromHeight(100.0),
+          title: Text(t(context)!.myTickets,
+              style: const TextStyle(color: Colors.white)),
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(100.0),
             child: Column(
               children: [
                 Text(
-                  'A VENIR',
-                  style: TextStyle(color: Colors.white, fontSize: 15.0),
+                  t(context)!.upcoming,
+                  style: const TextStyle(color: Colors.white, fontSize: 15.0),
                 ),
-                SizedBox(height: 10.0),
+                const SizedBox(height: 10.0),
               ],
             ),
           ),
