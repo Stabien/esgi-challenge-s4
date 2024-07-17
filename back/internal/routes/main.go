@@ -74,9 +74,6 @@ func InitRouter(e *echo.Echo) {
 	e.DELETE("/messages/:id", middlewares.CheckMessageBelongsToOrganizer(controllers.DeleteMessage))
 	e.GET("/messages/event/:id", middlewares.CheckEventBelongsToOrganizer(controllers.GetAllMessageByEvent))
 
-	// Event routes
-	e.POST("/events", controllers.CreateEvent)
-
 	// Rate routes
 	e.POST("/rates", middlewares.CheckUserRole(controllers.CreateRate, "customer"))
 	e.GET("/rates/:id", controllers.GetRate)

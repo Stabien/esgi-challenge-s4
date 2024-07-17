@@ -39,6 +39,14 @@ type EventInput struct {
 // @Failure 500 {object} error "Internal server error"
 // @Router /event [post]
 func CreateEvent(c echo.Context) error {
+	// Check if the feature flipping is enabled
+	var featureFlipping models.FeatureFlipping
+	db.DB().Table("feature_flippings").Where("name = ?", "event_create").First(&featureFlipping)
+
+	if !featureFlipping.IsEnabled {
+		return c.JSON(http.StatusForbidden, map[string]string{"error": "Feature event creation is disabled"})
+	}
+
 	bannerFile, err := c.FormFile("banner")
 
 	if err != nil {
