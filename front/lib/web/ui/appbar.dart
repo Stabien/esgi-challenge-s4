@@ -42,6 +42,12 @@ class WebAppBar extends StatelessWidget implements PreferredSizeWidget {
           },
         ),
         IconButton(
+          icon: const Icon(Icons.bookmark_outlined),
+          onPressed: () {
+            Navigator.pushNamed(context, '/tags');
+          },
+        ),
+        IconButton(
           icon: const Icon(Icons.insert_drive_file_outlined),
           onPressed: () {
             Navigator.pushNamed(context, '/logs');
