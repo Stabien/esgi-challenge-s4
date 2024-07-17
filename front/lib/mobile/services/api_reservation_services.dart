@@ -58,13 +58,15 @@ class ApiReservation {
 class ReservationStatus {
   final bool isValid;
   final String? message;
+  final String? event;
 
-  ReservationStatus({required this.isValid, this.message});
+  ReservationStatus({required this.isValid, this.message, this.event});
 
   factory ReservationStatus.fromJson(Map<String, dynamic> json) {
     return ReservationStatus(
       isValid: json['isValid'] as bool,
       message: json['message'] as String?,
+      event: json['event'] as String?,
     );
   }
 }

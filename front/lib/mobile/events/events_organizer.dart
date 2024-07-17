@@ -84,28 +84,28 @@ class _EventsOrganizerState extends State<EventsOrganizer> {
             onPressed: () => Navigator.of(context).pushNamed('/event/join'),
             icon: const Icon(Icons.person_add_alt_rounded),
           ),
-          ActionButton(
-            icon: const Icon(Icons.qr_code_scanner_outlined),
-            onPressed: () => showDialog(
-              context: context,
-              builder: (context) => AlertDialog(
-                title: const Text("Scanner un QR code"),
-                content: const Text("Veuillez scanner le QR code."),
-                actions: <Widget>[
-                  TextButton(
-                    child: const Text("Annuler"),
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
-                  TextButton(
-                    child: const Text("Scanner"),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ),
+          // ActionButton(
+          //   icon: const Icon(Icons.qr_code_scanner_outlined),
+          //   onPressed: () => showDialog(
+          //     context: context,
+          //     builder: (context) => AlertDialog(
+          //       title: const Text("Scanner un QR code"),
+          //       content: const Text("Veuillez scanner le QR code."),
+          //       actions: <Widget>[
+          //         TextButton(
+          //           child: const Text("Annuler"),
+          //           onPressed: () => Navigator.of(context).pop(),
+          //         ),
+          //         TextButton(
+          //           child: const Text("Scanner"),
+          //           onPressed: () {
+          //             Navigator.of(context).pop();
+          //           },
+          //         ),
+          //       ],
+          //     ),
+          //   ),
+          // ),
         ],
       ),
       body: Center(
