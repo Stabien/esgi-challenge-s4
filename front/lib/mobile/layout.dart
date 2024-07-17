@@ -4,9 +4,9 @@ import 'package:mobile/mobile/utils/navigation.dart';
 import 'components/navigation/bottom_bar.dart';
 import 'components/navigation/bottom_bar_orga.dart';
 import 'package:mobile/mobile/events/screen_events.dart';
-import 'package:mobile/mobile/eventsReservation/screen_eventsReserv.dart';
-import 'package:mobile/mobile/events/screen_eventsToday.dart';
-import 'package:mobile/mobile/utils/secureStorage.dart';
+import 'package:mobile/mobile/eventsReservation/screen_events_reserv.dart';
+import 'package:mobile/mobile/events/screen_events_today.dart';
+import 'package:mobile/mobile/utils/secure_storage.dart';
 import 'package:mobile/mobile/usersScreen/profil_screen.dart';
 import 'package:mobile/mobile/screens/qr_code_scanner_screen.dart';
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/mobile/components/eventComponents/reservationListTile.dart';
+import 'package:mobile/mobile/components/eventComponents/reservation_list_tile.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/mobile/eventsReservation/blocs/reservation_bloc.dart';
 

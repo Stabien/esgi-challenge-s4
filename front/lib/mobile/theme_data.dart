@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 const ColorScheme colorScheme = ColorScheme(
   primary: Color(0xFF1E1E1E),
   secondary: Color(0xFFFFA726),
-  background: Color(0xFF121212),
+  // background: Color(0xFF121212),
   surface: Color(0xFF1E1E1E),
-  onBackground: Color(0xFFE0E0E0),
+  // onBackground: Color(0xFFE0E0E0),
   error: Color(0xFFD32F2F),
   onError: Colors.white,
   onPrimary: Colors.white,
@@ -17,7 +17,7 @@ const ColorScheme colorScheme = ColorScheme(
 final ThemeData easyTheme = ThemeData(
   hintColor: Colors.white54,
   canvasColor: Colors.black,
-  scaffoldBackgroundColor: colorScheme.background,
+  // scaffoldBackgroundColor: colorScheme.background,
   colorScheme: colorScheme,
   buttonTheme: const ButtonThemeData(
     textTheme: ButtonTextTheme.primary,

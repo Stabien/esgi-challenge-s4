@@ -4,7 +4,7 @@ import 'package:mobile/mobile/models/reservation.dart';
 import 'package:mobile/mobile/services/api_event_services.dart';
 import 'package:mobile/mobile/core/api_exception.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mobile/mobile/utils/secureStorage.dart';
+import 'package:mobile/mobile/utils/secure_storage.dart';
 
 part 'reservation_event.dart';
 part 'reservation_state.dart';

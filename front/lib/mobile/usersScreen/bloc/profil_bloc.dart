@@ -1,9 +1,10 @@
 import 'package:bloc/bloc.dart';
+// ignore: depend_on_referenced_packages
 import 'package:meta/meta.dart';
 import 'package:mobile/mobile/models/profil.dart';
-import 'package:mobile/mobile/services/userServices.dart';
+import 'package:mobile/mobile/services/user_services.dart';
 import 'package:mobile/mobile/core/api_exception.dart';
-import 'package:mobile/mobile/utils/secureStorage.dart';
+import 'package:mobile/mobile/utils/secure_storage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'profil_event.dart';

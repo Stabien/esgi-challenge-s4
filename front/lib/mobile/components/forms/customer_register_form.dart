@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/mobile/models/user.dart';
-import 'package:mobile/mobile/services/userServices.dart';
+import 'package:mobile/mobile/services/user_services.dart';
 import 'package:mobile/mobile/utils/navigation.dart';
 import 'package:mobile/mobile/utils/translate.dart';
 
@@ -57,6 +57,7 @@ class _CustomerRegisterFormState extends State<CustomerRegisterForm> {
     );
 
     if (response.statusCode == 201) {
+      // ignore: use_build_context_synchronously
       redirectToPath(context, '/auth');
     }
   }

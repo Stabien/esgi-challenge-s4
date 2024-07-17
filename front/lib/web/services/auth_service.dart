@@ -1,5 +1,5 @@
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
-import 'package:mobile/mobile/utils/secureStorage.dart';
+import 'package:mobile/mobile/utils/secure_storage.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AuthService {

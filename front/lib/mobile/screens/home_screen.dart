@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/mobile/components/disconnect-button.dart';
+import 'package:mobile/mobile/components/disconnect_button.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'dart:async';

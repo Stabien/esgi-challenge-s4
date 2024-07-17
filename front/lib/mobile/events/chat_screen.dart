@@ -1,15 +1,15 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:mobile/mobile/services/formatDate.dart';
+import 'package:mobile/mobile/services/format_date.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:web_socket_channel/status.dart' as status;
 import 'package:mobile/mobile/models/message.dart';
 import 'package:mobile/mobile/models/organizer.dart';
 import 'package:mobile/mobile/models/profil.dart';
 import 'package:mobile/mobile/services/message_services.dart';
-import 'package:mobile/mobile/services/userServices.dart';
-import 'package:mobile/mobile/utils/secureStorage.dart';
+import 'package:mobile/mobile/services/user_services.dart';
+import 'package:mobile/mobile/utils/secure_storage.dart';
 
 class MessagePage extends StatefulWidget {
   final String id;

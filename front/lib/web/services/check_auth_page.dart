@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/mobile/utils/secureStorage.dart';
+import 'package:mobile/mobile/utils/secure_storage.dart';
 import 'package:mobile/web/services/auth_service.dart';
 
 class CheckAuthPage extends StatefulWidget {
@@ -20,8 +20,10 @@ class CheckAuthPageState extends State<CheckAuthPage> {
     final token = await SecureStorage.getStorageItem('token');
     if (token != null && await AuthService().verifyAndDecodeJwt(token)) {
       AuthService().login();
+      // ignore: use_build_context_synchronously
       Navigator.of(context).pushReplacementNamed('/events');
     } else {
+      // ignore: use_build_context_synchronously
       Navigator.of(context).pushReplacementNamed('/login');
     }
   }

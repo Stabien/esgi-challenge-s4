@@ -7,6 +7,7 @@ class QRCodeScannerScreen extends StatefulWidget {
   const QRCodeScannerScreen({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _QRCodeScannerScreenState createState() => _QRCodeScannerScreenState();
 }
 

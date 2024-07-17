@@ -1,5 +1,5 @@
 import 'package:mobile/mobile/utils/navigation.dart';
-import 'package:mobile/mobile/utils/secureStorage.dart';
+import 'package:mobile/mobile/utils/secure_storage.dart';
 import 'package:flutter/material.dart';
 
 class DisconnectButton extends StatelessWidget {
@@ -12,6 +12,7 @@ class DisconnectButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: () async {
           await SecureStorage.deleteStorageItem('token');
+          // ignore: use_build_context_synchronously
           redirectToPath(context, "/auth");
         },
         style: ElevatedButton.styleFrom(

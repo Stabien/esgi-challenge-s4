@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:mobile/mobile/services/api_event_services.dart';
 import 'package:mobile/mobile/models/event.dart';
-import 'package:mobile/mobile/services/formatDate.dart';
+import 'package:mobile/mobile/services/format_date.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/mobile/components/expandable_fab.dart';
 

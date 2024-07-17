@@ -7,6 +7,7 @@ class TagPage extends StatefulWidget {
   const TagPage({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _TagPageState createState() => _TagPageState();
 }
 
