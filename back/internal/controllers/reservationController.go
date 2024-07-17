@@ -189,23 +189,25 @@ func IsValid(c echo.Context) error {
 
 	if err := db.DB().Preload("Event").Where("id = ? AND deleted_at IS NULL", reservationId).First(&reservation).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
-			return c.JSON(http.StatusNotFound, map[string]string{"error": "Reservation not found or already deleted"})
+			return c.JSON(http.StatusNotFound, map[string]string{"error": "Réservation non trouvé ou supprimé"})
 		}
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 	}
 
 	if reservation.Event.Date.After(time.Now()) {
-		return c.JSON(http.StatusOK, map[string]bool{"isValid": true})
+		if reservation.IsScanned {
+			return c.JSON(http.StatusOK, map[string]interface{}{"isValid": false, "message": "Le QR code a déjà été scanné"})
+		} else {
+			reservation.IsScanned = true
+			if err := db.DB().Save(&reservation).Error; err != nil {
+				return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+			}
+
+			return c.JSON(http.StatusOK, map[string]interface{}{"isValid": true, "event": reservation.Event.Title})
+		}
 	} else {
-		return c.JSON(http.StatusOK, map[string]interface{}{"isValid": false, "message": "The event is in the past"})
+		return c.JSON(http.StatusOK, map[string]interface{}{"isValid": false, "message": "L'événement est déjà passé"})
 	}
-
-	// if err := db.DB().Preload("Event").Where("reservations.id = ? AND reservations.deleted_at IS NULL",  reservationId).First(&reservation).Error; err != nil {
-	// 	return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
-	// }
-
-	// return c.JSON(http.StatusOK, true)!
-
 }
 
 // ReservationInput represents the input structure for creating or updating a reservation
@@ -244,9 +246,19 @@ func GetReservation(c echo.Context) error {
 // @Success 200 {array} models.Reservation
 // @Router /reservations [get]
 func GetAllReservations(c echo.Context) error {
+	claims, err := utils.GetTokenFromHeader(c)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+	}
+
+	userRole := claims["role"].(string)
+
+	if userRole != "admin" {
+		return c.JSON(http.StatusForbidden, map[string]string{"error": "You do not have the permission to access this resource"})
+	}
 
 	var reservations []models.Reservation
-	if err := db.DB().Preload("Customer").Preload("Event").Find(&reservations).Error; err != nil {
+	if err := db.DB().Preload("Customer").Preload("Customer.User").Preload("Event").Find(&reservations).Error; err != nil {
 		return err
 	}
 

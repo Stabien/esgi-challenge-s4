@@ -41,6 +41,7 @@ func InitRouter(e *echo.Echo) {
 	e.PATCH("/users/custom/:id", middlewares.CheckUserId(controllers.UpdateUserByIdCustomer))
 
 	e.GET("/logs", middlewares.CheckUserRole(controllers.GetAllLogs, "admin")) // TODO: add middleware to check if user is admin
+	e.POST("/send-notification", controllers.SendNotificationToTopic)
 
 	// User routes
 	e.POST("/users", controllers.CreateUser)
@@ -54,6 +55,8 @@ func InitRouter(e *echo.Echo) {
 
 	// Reservation routes
 	e.POST("/reservations", middlewares.CheckUserRole(controllers.PostReservation, "customer"))
+	e.GET("/reservations", controllers.GetAllReservations)
+
 	e.PUT("/reservations/:id", middlewares.CheckCustomerIdBody(controllers.UpdateReservation))
 	e.DELETE("/reservations/:id", middlewares.CheckCustomerIdBody(controllers.DeleteReservation))
 

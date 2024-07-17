@@ -1,9 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:mobile/web/ui/appbar.dart';
-import 'package:dio/dio.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:mobile/mobile/utils/secureStorage.dart';
 import 'package:mobile/web/utils/api_utils.dart';
 
 class EventsPage extends StatefulWidget {

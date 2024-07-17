@@ -17,7 +17,8 @@ void main() async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
-    FirebaseMessaging.instance.requestPermission();
+    await FirebaseMessaging.instance.requestPermission();
+
     runApp(const MobileApp());
   }
 }

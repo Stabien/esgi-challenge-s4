@@ -1,5 +1,3 @@
-import 'package:dio/dio.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mobile/mobile/models/reservation.dart';
 import 'package:mobile/web/utils/api_utils.dart';
 
@@ -60,13 +58,15 @@ class ApiReservation {
 class ReservationStatus {
   final bool isValid;
   final String? message;
+  final String? event;
 
-  ReservationStatus({required this.isValid, this.message});
+  ReservationStatus({required this.isValid, this.message, this.event});
 
   factory ReservationStatus.fromJson(Map<String, dynamic> json) {
     return ReservationStatus(
       isValid: json['isValid'] as bool,
       message: json['message'] as String?,
+      event: json['event'] as String?,
     );
   }
 }
