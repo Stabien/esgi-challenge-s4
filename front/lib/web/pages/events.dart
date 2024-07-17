@@ -27,15 +27,19 @@ class EventsPageState extends State<EventsPage> {
     _pendingEventsFuture = fetchPendingEvents();
 
     _allEventsFuture.then((events) {
-      setState(() {
-        _allEvents = events;
-      });
+      if (mounted) {
+        setState(() {
+          _allEvents = events;
+        });
+      }
     });
 
     _pendingEventsFuture.then((events) {
-      setState(() {
-        _pendingEvents = events;
-      });
+      if (mounted) {
+        setState(() {
+          _pendingEvents = events;
+        });
+      }
     });
   }
 
