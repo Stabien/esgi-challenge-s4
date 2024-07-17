@@ -10,7 +10,7 @@ class ApiReservation {
       };
       await ApiUtils.post('/reservations', data);
     } catch (error) {
-      print('Erreur inconnue lors de la réservation de l\'événement: $error');
+      // print('Erreur inconnue lors de la réservation de l\'événement: $error');
     }
   }
 
@@ -22,7 +22,7 @@ class ApiReservation {
       final data = response.data as List;
       return data.map((item) => Reservation.fromJson(item)).toList();
     } catch (error) {
-      print('Unknown error: $error');
+      // print('Unknown error: $error');
       return [];
     }
   }
@@ -34,7 +34,7 @@ class ApiReservation {
       final data = ReservationStatus.fromJson(response.data);
       return data;
     } catch (error) {
-      print('Unknown error: $error');
+      // print('Unknown error: $error');
       return ReservationStatus(isValid: false);
     }
   }
@@ -49,8 +49,8 @@ class ApiReservation {
 
       await ApiUtils.delete('/reservations', data);
     } catch (error) {
-      print(
-          'Erreur inconnue lors de l\'annulation de la réservation de l\'événement: $error');
+      // print(
+      //     'Erreur inconnue lors de l\'annulation de la réservation de l\'événement: $error');
     }
   }
 }

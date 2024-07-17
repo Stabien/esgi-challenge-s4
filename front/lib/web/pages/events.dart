@@ -65,7 +65,7 @@ class EventsPageState extends State<EventsPage> {
         }
       });
     } catch (error) {
-      print(error);
+      // print(error);
     }
   }
 

@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/mobile/components/eventComponents/eventListTile.dart';
+import 'package:mobile/mobile/components/eventComponents/event_list_tile.dart';
 import 'package:mobile/mobile/models/event.dart';
 import 'package:mobile/mobile/services/api_event_services.dart';
 import 'package:mobile/mobile/services/api_tag_services.dart';
-import 'package:mobile/mobile/services/formatDate.dart';
+import 'package:mobile/mobile/services/format_date.dart';
 import 'event_search_delegate.dart';
 
 class ScreenEvent extends StatefulWidget {
   const ScreenEvent({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _ScreenEventState createState() => _ScreenEventState();
 }
 

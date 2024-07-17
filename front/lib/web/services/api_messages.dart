@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:mobile/mobile/models/message.dart';
 import 'package:mobile/web/utils/api_utils.dart';
 
@@ -18,12 +17,12 @@ class MessageServices {
 
         return messages;
       } else {
-        print(
-            'Erreur lors de la récupération des messages: ${response.statusCode}');
+        // print(
+        //     'Erreur lors de la récupération des messages: ${response.statusCode}');
         return [];
       }
     } catch (error) {
-      print('Erreur inconnue dans getMessagesByEvent: $error');
+      // print('Erreur inconnue dans getMessagesByEvent: $error');
       return [];
     }
   }

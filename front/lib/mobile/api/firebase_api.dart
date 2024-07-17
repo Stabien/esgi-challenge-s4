@@ -9,10 +9,10 @@ class FirebaseApi {
   Future<void> initNotifications() async {
     await _firebaseMessaging.requestPermission();
 
-    final token = await _firebaseMessaging.getToken();
+    // final token = await _firebaseMessaging.getToken();
 
-    print('-------------------------------------------');
-    print('Firebase token: $token');
-    print('-------------------------------------------');
+    // print('-------------------------------------------');
+    // print('Firebase token: $token');
+    // print('-------------------------------------------');
   }
 }

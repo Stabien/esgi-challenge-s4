@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/mobile/models/profil.dart';
-import 'package:mobile/mobile/utils/secureStorage.dart';
-import 'package:mobile/mobile/services/userServices.dart';
+import 'package:mobile/mobile/utils/secure_storage.dart';
+import 'package:mobile/mobile/services/user_services.dart';
 
 class EditProfilePage extends StatefulWidget {
   final Profil userProfile;
@@ -9,6 +9,7 @@ class EditProfilePage extends StatefulWidget {
   const EditProfilePage({super.key, required this.userProfile});
 
   @override
+  // ignore: library_private_types_in_public_api
   _EditProfilePageState createState() => _EditProfilePageState();
 }
 
@@ -62,7 +63,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         UserServices().patchProfilCusto(_userId, widget.userProfile);
       }
     } catch (error) {
-      print('Unknown error in updateBDD: $error');
+      // print('Unknown error in updateBDD: $error');
     }
   }
 

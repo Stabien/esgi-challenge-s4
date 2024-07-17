@@ -1,14 +1,11 @@
 // ignore_for_file: use_build_context_synchronously, library_private_types_in_public_api
 
-import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mobile/mobile/utils/file.dart';
-import 'package:mobile/mobile/utils/secureStorage.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:mobile/web/utils/api_utils.dart';
 
@@ -95,13 +92,11 @@ class _UpdateEventFormState extends State<UpdateEventForm> {
         });
       }
     } catch (e) {
-      print("Error fetching event details: $e");
+      // print("Error fetching event details: $e");
     }
   }
 
   void _updateEvent() async {
-    print(_banner);
-
     try {
       var formData = FormData.fromMap({
         'title': _titleController.text,
@@ -211,7 +206,7 @@ class _UpdateEventFormState extends State<UpdateEventForm> {
             _dateController.text.isEmpty
                 ? const Text(
                     "Date (YYYY-MM-DD) :",
-                    style: const TextStyle(color: Colors.white),
+                    style: TextStyle(color: Colors.white),
                   )
                 : Column(children: [
                     Text(

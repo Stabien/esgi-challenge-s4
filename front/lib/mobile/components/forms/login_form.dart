@@ -1,10 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/mobile/models/user.dart';
-import 'package:mobile/mobile/services/userServices.dart';
+import 'package:mobile/mobile/services/user_services.dart';
 import 'package:mobile/mobile/utils/navigation.dart';
-import 'package:mobile/mobile/utils/secureStorage.dart';
-import 'package:mobile/mobile/utils/tradToken.dart';
+import 'package:mobile/mobile/utils/secure_storage.dart';
+import 'package:mobile/mobile/utils/trad_token.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
@@ -44,9 +44,11 @@ class _LoginFormState extends State<LoginForm> {
       await SecureStorage.addStorageItem('token', response.data['token']);
       await verifyAndDecodeJwt(response.data['token']);
 
+      // ignore: use_build_context_synchronously
       redirectToPath(context, '/');
     } catch (e) {
       showDialog(
+        // ignore: use_build_context_synchronously
         context: context,
         builder: (context) => AlertDialog(
           title: const Text("Echec"),

@@ -7,6 +7,7 @@ class FeatureFlippingPage extends StatefulWidget {
   const FeatureFlippingPage({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _FeatureFlippingPageState createState() => _FeatureFlippingPageState();
 }
 
@@ -36,7 +37,7 @@ class _FeatureFlippingPageState extends State<FeatureFlippingPage> {
       setState(() {
         _loading = false;
       });
-      print('Error fetching features: $e');
+      // print('Error fetching features: $e');
     }
   }
 
@@ -55,10 +56,10 @@ class _FeatureFlippingPageState extends State<FeatureFlippingPage> {
               (feature) => feature['Name'] == name)['IsEnabled'] = isEnabled;
         });
       } else {
-        print('Failed to update feature: ${response.statusCode}');
+        // print('Failed to update feature: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error updating feature: $e');
+      // print('Error updating feature: $e');
     }
   }
 

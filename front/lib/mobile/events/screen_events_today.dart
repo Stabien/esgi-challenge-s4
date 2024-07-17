@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:mobile/mobile/models/event.dart';
 import 'package:mobile/mobile/services/api_event_services.dart';
-import 'package:mobile/mobile/services/formatDate.dart';
+import 'package:mobile/mobile/services/format_date.dart';
 
 const List<String> list = <String>['', 'Jazz', 'Techno', 'Disco'];
 
@@ -11,6 +11,7 @@ class ScreenEventToday extends StatefulWidget {
   const ScreenEventToday({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _ScreenEventState createState() => _ScreenEventState();
 }
 

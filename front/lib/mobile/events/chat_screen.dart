@@ -1,16 +1,15 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:mobile/mobile/services/formatDate.dart';
+import 'package:mobile/mobile/services/format_date.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:web_socket_channel/status.dart' as status;
 import 'package:mobile/mobile/models/message.dart';
 import 'package:mobile/mobile/models/organizer.dart';
 import 'package:mobile/mobile/models/profil.dart';
 import 'package:mobile/mobile/services/message_services.dart';
-import 'package:mobile/mobile/services/userServices.dart';
-import 'package:mobile/mobile/utils/secureStorage.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:mobile/mobile/services/user_services.dart';
+import 'package:mobile/mobile/utils/secure_storage.dart';
 
 class MessagePage extends StatefulWidget {
   final String id;
@@ -39,8 +38,6 @@ class _MessagePageState extends State<MessagePage> {
   Future<void> getprofil() async {
     final userId = await SecureStorage.getStorageItem('userId');
     final role = await SecureStorage.getStorageItem('userRole');
-    print("role");
-    print(role);
 
     setState(() {
       _userId = userId!;
@@ -94,14 +91,14 @@ class _MessagePageState extends State<MessagePage> {
           var decodedMessage = jsonDecode(message);
           _messages.add(Message.fromJson(decodedMessage));
         } catch (e) {
-          print('Erreur lors du décodage du message: $e');
+          // print('Erreur lors du décodage du message: $e');
         }
       });
     }, onDone: () {
-      print('Disconnected from WebSocket');
+      // print('Disconnected from WebSocket');
       _reconnectWebSocket();
     }, onError: (error) {
-      print('WebSocket error: $error');
+      // print('WebSocket error: $error');
       _reconnectWebSocket();
     });
   }
@@ -133,8 +130,6 @@ class _MessagePageState extends State<MessagePage> {
               itemCount: _messages.length,
               itemBuilder: (context, index) {
                 final message = _messages[index];
-                final bool isCurrentUserMessage =
-                    message.organizerId == orga?.id;
 
                 final bool isCurrentOrganizerMessage =
                     message.organizerId == orga?.id;
@@ -148,7 +143,7 @@ class _MessagePageState extends State<MessagePage> {
                         : CrossAxisAlignment.start,
                     children: [
                       Text(
-                        message.sender ?? 'Unknown',
+                        message.sender,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.grey[700],
@@ -216,7 +211,7 @@ class _MessagePageState extends State<MessagePage> {
                     ],
                   ),
                 )
-              : SizedBox(height: 0),
+              : const SizedBox(height: 0),
         ],
       ),
     );

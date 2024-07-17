@@ -24,17 +24,20 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           await ApiUtils.post('/send-mail-forgot-password?email=$email', {});
 
       if (response.statusCode == 200) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
             content:
                 Text('If the email exists, a reset token has been sent.')));
         setState(() {
           _showResetForm = true;
         });
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
             content: Text('Failed to send email. Please try again later.')));
       }
     } catch (e) {
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text('An error occurred: $e')));
     }
@@ -47,15 +50,19 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       });
 
       if (response.statusCode == 200) {
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Password has been reset successfully.')));
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text('Password has been reset successfully.')));
+        // ignore: use_build_context_synchronously
         Navigator.of(context).pop();
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
             content:
                 Text('Failed to reset password. Please try again later.')));
       }
     } catch (e) {
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text('An error occurred: $e')));
     }
@@ -89,7 +96,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     if (email.isNotEmpty) {
                       sendTokenByMail(email);
                     } else {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content:
                               Text('Please enter a valid email address.')));
                     }
@@ -142,10 +149,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         resetPassword(token, password);
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Passwords do not match.')));
+                            const SnackBar(
+                                content: Text('Passwords do not match.')));
                       }
                     } else {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text('Please fill out all fields.')));
                     }
                   },

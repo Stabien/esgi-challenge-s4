@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:mobile/mobile/utils/secureStorage.dart';
+import 'package:mobile/mobile/utils/secure_storage.dart';
 
 class ApiUtils {
   static final Dio dio = Dio(

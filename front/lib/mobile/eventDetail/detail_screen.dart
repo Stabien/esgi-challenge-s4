@@ -1,11 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:mobile/mobile/models/eventDetail.dart';
+import 'package:mobile/mobile/models/event_detail.dart';
 import 'package:mobile/mobile/services/api_event_services.dart';
 import 'package:mobile/mobile/services/api_reservation_services.dart';
-import 'package:mobile/mobile/services/formatDate.dart';
-import 'package:mobile/mobile/utils/secureStorage.dart';
+import 'package:mobile/mobile/services/format_date.dart';
+import 'package:mobile/mobile/utils/secure_storage.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 

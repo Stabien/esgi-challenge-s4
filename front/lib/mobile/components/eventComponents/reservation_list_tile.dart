@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:mobile/mobile/components/qr-code-button.dart';
+import 'package:mobile/mobile/components/qr_code_button.dart';
 import 'package:mobile/mobile/eventsReservation/blocs/reservation_bloc.dart';
 import 'package:mobile/mobile/models/reservation.dart';
-import 'package:mobile/mobile/services/formatDate.dart';
+import 'package:mobile/mobile/services/format_date.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ReservationListTile extends StatelessWidget {

@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:mobile/mobile/services/api_event_services.dart';
 import 'package:mobile/mobile/models/event.dart';
-import 'package:mobile/mobile/services/formatDate.dart';
+import 'package:mobile/mobile/services/format_date.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/mobile/components/expandable_fab.dart';
 
@@ -45,7 +45,7 @@ class _EventsOrganizerState extends State<EventsOrganizer> {
         _eventCreationEnabled = data;
       });
     } catch (e) {
-      print('Error occurred: $e');
+      // print('Error occurred: $e');
     }
   }
 
@@ -111,179 +111,175 @@ class _EventsOrganizerState extends State<EventsOrganizer> {
       body: Center(
         child: _loading
             ? const CircularProgressIndicator()
-            : Container(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: ListView.builder(
-                        itemBuilder: (context, index) {
-                          final event = _events[index];
-                          return GestureDetector(
-                            onTap: () => Navigator.of(context).pushNamed(
-                              '/event/detail',
-                              arguments: event.id,
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(35.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Image.memory(base64Decode(event.image)),
-                                  const SizedBox(height: 10),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        event.title,
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                      const Spacer(),
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 8, vertical: 4),
-                                        decoration: BoxDecoration(
-                                          border: Border.all(
-                                            color: event.isPending
-                                                ? Colors.orange
-                                                : Colors.green,
-                                            width: 1,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                        ),
-                                        child: Text(
-                                          event.isPending
-                                              ? 'En Attente'
-                                              : 'Valider',
-                                          style: TextStyle(
-                                            fontSize: 10,
-                                            color: event.isPending
-                                                ? Colors.orange
-                                                : Colors.green,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Text(
-                                    event.place,
-                                    style: const TextStyle(
-                                      fontSize: 10,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                  Text(
-                                    transformerDate(event.date),
-                                    style: const TextStyle(
-                                      fontSize: 10,
-                                      color: Colors.orange,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8, vertical: 4),
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: Colors.white,
-                                        width: 1,
-                                      ),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: Text(
-                                      event.tag,
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: ListView.builder(
+                      itemBuilder: (context, index) {
+                        final event = _events[index];
+                        return GestureDetector(
+                          onTap: () => Navigator.of(context).pushNamed(
+                            '/event/detail',
+                            arguments: event.id,
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(35.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Image.memory(base64Decode(event.image)),
+                                const SizedBox(height: 10),
+                                Row(
+                                  children: [
+                                    Text(
+                                      event.title,
                                       style: const TextStyle(
-                                        fontSize: 10,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
                                         color: Colors.white,
                                       ),
                                     ),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          ElevatedButton(
-                                            onPressed: () async {
-                                              final result =
-                                                  await Navigator.of(context)
-                                                      .pushNamed(
-                                                '/event/update',
-                                                arguments: event.id,
-                                              );
-                                              if (result == true) {
-                                                _fetchEvents();
-                                              }
-                                            },
-                                            child: const Text('Modifier',
-                                                style: TextStyle(
-                                                  fontSize: 15,
-                                                )),
-                                          ),
-                                          Spacer(),
-                                          ElevatedButton(
-                                            onPressed: () =>
-                                                Navigator.of(context).pushNamed(
-                                              '/event/message',
-                                              arguments: event.id,
-                                            ),
-                                            child: const IntrinsicWidth(
-                                              child: Row(
-                                                children: [
-                                                  Icon(Icons.message_outlined),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ],
+                                    const Spacer(),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8, vertical: 4),
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: event.isPending
+                                              ? Colors.orange
+                                              : Colors.green,
+                                          width: 1,
+                                        ),
+                                        borderRadius: BorderRadius.circular(8),
                                       ),
-                                      ElevatedButton(
-                                        onPressed: () => showDialog(
-                                          context: context,
-                                          builder: (context) => AlertDialog(
-                                            title: const Text("Supprimer"),
-                                            content: const Text(
-                                                "Voulez-vous vraiment supprimer cet événement ?"),
-                                            actions: <Widget>[
-                                              TextButton(
-                                                child: const Text("Annuler"),
-                                                onPressed: () =>
-                                                    Navigator.of(context).pop(),
-                                              ),
-                                              TextButton(
-                                                child: const Text("Supprimer"),
-                                                onPressed: () {
-                                                  ApiServices.deleteEvent(
-                                                          event.id)
-                                                      .then((_) {
-                                                    Navigator.of(context).pop();
-                                                    _fetchEvents();
-                                                  });
-                                                },
-                                              ),
-                                            ],
+                                      child: Text(
+                                        event.isPending
+                                            ? 'En Attente'
+                                            : 'Valider',
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                          color: event.isPending
+                                              ? Colors.orange
+                                              : Colors.green,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Text(
+                                  event.place,
+                                  style: const TextStyle(
+                                    fontSize: 10,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                Text(
+                                  transformerDate(event.date),
+                                  style: const TextStyle(
+                                    fontSize: 10,
+                                    color: Colors.orange,
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8, vertical: 4),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors.white,
+                                      width: 1,
+                                    ),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Text(
+                                    event.tag,
+                                    style: const TextStyle(
+                                      fontSize: 10,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        ElevatedButton(
+                                          onPressed: () async {
+                                            final result =
+                                                await Navigator.of(context)
+                                                    .pushNamed(
+                                              '/event/update',
+                                              arguments: event.id,
+                                            );
+                                            if (result == true) {
+                                              _fetchEvents();
+                                            }
+                                          },
+                                          child: const Text('Modifier',
+                                              style: TextStyle(
+                                                fontSize: 15,
+                                              )),
+                                        ),
+                                        const Spacer(),
+                                        ElevatedButton(
+                                          onPressed: () =>
+                                              Navigator.of(context).pushNamed(
+                                            '/event/message',
+                                            arguments: event.id,
+                                          ),
+                                          child: const IntrinsicWidth(
+                                            child: Row(
+                                              children: [
+                                                Icon(Icons.message_outlined),
+                                              ],
+                                            ),
                                           ),
                                         ),
-                                        child: const Text('Supprimer'),
+                                      ],
+                                    ),
+                                    ElevatedButton(
+                                      onPressed: () => showDialog(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                          title: const Text("Supprimer"),
+                                          content: const Text(
+                                              "Voulez-vous vraiment supprimer cet événement ?"),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              child: const Text("Annuler"),
+                                              onPressed: () =>
+                                                  Navigator.of(context).pop(),
+                                            ),
+                                            TextButton(
+                                              child: const Text("Supprimer"),
+                                              onPressed: () {
+                                                ApiServices.deleteEvent(
+                                                        event.id)
+                                                    .then((_) {
+                                                  Navigator.of(context).pop();
+                                                  _fetchEvents();
+                                                });
+                                              },
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                    ],
-                                  ),
-                                ],
-                              ),
+                                      child: const Text('Supprimer'),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
-                          );
-                        },
-                        itemCount: _events.length,
-                      ),
+                          ),
+                        );
+                      },
+                      itemCount: _events.length,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
       ),
     );

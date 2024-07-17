@@ -5,7 +5,6 @@ import 'package:mobile/web/services/check_auth_page.dart';
 import 'package:mobile/web/ui/appbar.dart';
 import 'pages/events.dart';
 import 'pages/messages.dart';
-import 'pages/notifications.dart';
 import 'pages/reservations.dart';
 import 'pages/users.dart';
 import 'pages/feature_flipping.dart';

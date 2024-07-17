@@ -25,6 +25,7 @@ class JoinEventState extends State<JoinEvent> {
 
       if (response.statusCode == 200) {
         showDialog(
+          // ignore: use_build_context_synchronously
           context: context,
           builder: (context) => AlertDialog(
             title: const Text('Succès'),
@@ -44,7 +45,9 @@ class JoinEventState extends State<JoinEvent> {
       }
     } on DioException catch (e) {
       String errorMessage = '';
-      if (e.response != null && e.response?.data != null && e.response?.data['error'] != null) {
+      if (e.response != null &&
+          e.response?.data != null &&
+          e.response?.data['error'] != null) {
         errorMessage += e.response!.data['error'];
       } else {
         errorMessage += e.message!;

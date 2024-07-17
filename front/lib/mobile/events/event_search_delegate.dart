@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/mobile/models/event.dart';
 import 'package:mobile/mobile/services/api_event_services.dart';
-import 'package:mobile/mobile/services/formatDate.dart';
-import 'package:mobile/mobile/components/eventComponents/eventListTile.dart';
+import 'package:mobile/mobile/services/format_date.dart';
+import 'package:mobile/mobile/components/eventComponents/event_list_tile.dart';
 
 class EventSearchDelegate extends SearchDelegate<String> {
   @override
