@@ -29,7 +29,7 @@ func InitRouter(e *echo.Echo) {
 	e.GET("/reservations/isreserv/:customerId/:eventId", controllers.IsReserv)
 	e.GET("/reservations/isValid/:reservationId", controllers.IsValid)
 
-	e.POST("/reservations", middlewares.CheckUserRole(controllers.PostReservation, "customer"))
+	e.POST("/reservations", controllers.PostReservation)
 	e.DELETE("/reservations", controllers.DeleteReservation) // TODO: pass customer with params instead of body
 	e.GET("/reservations/:customerId", middlewares.CheckCustomerIdParam(controllers.GetReservationsbyUser))
 
