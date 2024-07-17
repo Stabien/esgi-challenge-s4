@@ -13,4 +13,5 @@ type Reservation struct {
 	EventID    uuid.UUID `gorm:"type:uuid"`
 	Event      Event
 	Qrcode     string
+	IsScanned  bool `gorm:"default:false"`
 }
