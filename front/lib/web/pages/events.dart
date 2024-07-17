@@ -11,38 +11,52 @@ class EventsPage extends StatefulWidget {
 }
 
 class EventsPageState extends State<EventsPage> {
-  late Future<List<Event>> _allEventsFuture;
-  late Future<List<Event>> _pendingEventsFuture;
   List<Event> _allEvents = [];
   List<Event> _pendingEvents = [];
+  bool _isMounted = false;
 
   @override
   void initState() {
     super.initState();
-    _allEventsFuture = fetchAllEvents();
-    _pendingEventsFuture = fetchPendingEvents();
-
-    _allEventsFuture.then((events) {
-      setState(() {
-        _allEvents = events;
-      });
-    });
-
-    _pendingEventsFuture.then((events) {
-      setState(() {
-        _pendingEvents = events;
-      });
-    });
+    _isMounted = true;
+    _initializeFutures();
   }
 
-  void _validateEvent(String eventId) async {
+  Future<void> _initializeFutures() async {
+    try {
+      _allEvents = await fetchAllEvents();
+      if (_isMounted) {
+        setState(() {});
+      }
+
+      _pendingEvents = await fetchPendingEvents();
+      if (_isMounted) {
+        setState(() {});
+      }
+    } catch (error) {
+      if (_isMounted) {
+        setState(() {});
+      }
+      print('Error initializing futures: $error');
+    }
+  }
+
+  @override
+  void dispose() {
+    _isMounted = false;
+    super.dispose();
+  }
+
+  Future<void> _validateEvent(String eventId) async {
     try {
       await validateEvent(eventId);
-      setState(() {
-        _pendingEvents.removeWhere((event) => event.id == eventId);
-      });
+      if (_isMounted) {
+        setState(() {
+          _pendingEvents.removeWhere((event) => event.id == eventId);
+        });
+      }
     } catch (error) {
-      // print(error);
+      print('Error validating event: $error');
     }
   }
 
@@ -55,113 +69,100 @@ class EventsPageState extends State<EventsPage> {
           const Text('Tous les événements', style: TextStyle(fontSize: 20)),
           const SizedBox(height: 20),
           Expanded(
-            child: FutureBuilder<List<Event>>(
-              future: _allEventsFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                } else {
-                  return ListView.builder(
-                    itemCount: _allEvents.length,
-                    itemBuilder: (context, index) {
-                      final event = _allEvents[index];
-                      return ListTile(
-                        title: Text(event.title),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(event.description),
-                            Text(
-                              event.isPending
-                                  ? 'En attente de validation'
-                                  : 'Validé',
-                              style: TextStyle(
-                                color: event.isPending
-                                    ? Colors.orange
-                                    : Colors.green,
-                              ),
-                            ),
-                          ],
-                        ),
-                        leading: Image.memory(
-                          base64Decode(event.banner),
-                          width: 100,
-                          height: 100,
-                          fit: BoxFit.cover,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          side: BorderSide(
-                            color: Colors.grey[400]!,
-                            width: 1,
-                          ),
-                        ),
-                      );
-                    },
-                  );
-                }
-              },
-            ),
+            child: _buildEventList(_allEvents),
           ),
           const Text('Événements en attente de validation',
               style: TextStyle(fontSize: 20)),
           const SizedBox(height: 20),
           Expanded(
-            child: FutureBuilder<List<Event>>(
-              future: _pendingEventsFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                } else if (_pendingEvents.isEmpty) {
-                  return const Center(
-                      child: Text('Aucun événement en attente'));
-                } else {
-                  return ListView.builder(
-                    itemCount: _pendingEvents.length,
-                    itemBuilder: (context, index) {
-                      final event = _pendingEvents[index];
-                      return ListTile(
-                        title: Text(event.title),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(event.description),
-                            const Text(
-                              'En attente de validation',
-                              style: TextStyle(
-                                color: Colors.orange,
-                              ),
-                            ),
-                          ],
-                        ),
-                        leading: Image.memory(
-                          base64Decode(event.banner),
-                          width: 100,
-                          height: 100,
-                          fit: BoxFit.cover,
-                        ),
-                        trailing: ElevatedButton(
-                          onPressed: () => _validateEvent(event.id),
-                          child: const Text('Valider'),
-                        ),
-                        shape: RoundedRectangleBorder(
-                          side: BorderSide(
-                            color: Colors.grey[400]!,
-                            width: 1,
-                          ),
-                        ),
-                      );
-                    },
-                  );
-                }
-              },
-            ),
+            child: _buildPendingEventList(_pendingEvents),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildEventList(List<Event> events) {
+    if (events.isEmpty) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    return ListView.builder(
+      itemCount: events.length,
+      itemBuilder: (context, index) {
+        final event = events[index];
+        return ListTile(
+          title: Text(event.title),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(event.description),
+              Text(
+                event.isPending ? 'En attente de validation' : 'Validé',
+                style: TextStyle(
+                  color: event.isPending ? Colors.orange : Colors.green,
+                ),
+              ),
+            ],
+          ),
+          leading: Image.memory(
+            base64Decode(event.banner),
+            width: 100,
+            height: 100,
+            fit: BoxFit.cover,
+          ),
+          shape: RoundedRectangleBorder(
+            side: BorderSide(
+              color: Colors.grey[400]!,
+              width: 1,
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildPendingEventList(List<Event> events) {
+    if (events.isEmpty) {
+      return const Center(child: Text('Aucun événement en attente'));
+    }
+
+    return ListView.builder(
+      itemCount: events.length,
+      itemBuilder: (context, index) {
+        final event = events[index];
+        return ListTile(
+          title: Text(event.title),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(event.description),
+              const Text(
+                'En attente de validation',
+                style: TextStyle(
+                  color: Colors.orange,
+                ),
+              ),
+            ],
+          ),
+          leading: Image.memory(
+            base64Decode(event.banner),
+            width: 100,
+            height: 100,
+            fit: BoxFit.cover,
+          ),
+          trailing: ElevatedButton(
+            onPressed: () => _validateEvent(event.id),
+            child: const Text('Valider'),
+          ),
+          shape: RoundedRectangleBorder(
+            side: BorderSide(
+              color: Colors.grey[400]!,
+              width: 1,
+            ),
+          ),
+        );
+      },
     );
   }
 }
