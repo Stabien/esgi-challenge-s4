@@ -4,6 +4,7 @@ import (
 	"easynight/internal/models"
 	"easynight/internal/services"
 	"easynight/pkg/utils"
+	"fmt"
 	"net/http"
 
 	"github.com/google/uuid"
@@ -30,7 +31,9 @@ func CheckSenderBelongsToEvent(next echo.HandlerFunc) echo.HandlerFunc {
 			return next(c)
 		}
 
-		doesOrganizerBelongsToEvent := services.DoesOrganizerBelongsToEvent(message.OrganizerID, message.EventID)
+		fmt.Print(message.EventID, message.OrganizerID, token["id"])
+
+		doesOrganizerBelongsToEvent := services.DoesOrganizerBelongsToEvent(message.EventID, message.OrganizerID)
 
 		if !doesOrganizerBelongsToEvent {
 			return echo.NewHTTPError(http.StatusUnauthorized)
@@ -42,11 +45,11 @@ func CheckSenderBelongsToEvent(next echo.HandlerFunc) echo.HandlerFunc {
 
 func CheckEventBelongsToOrganizer(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		token, error := utils.GetTokenFromHeader(c)
+		token, err := utils.GetTokenFromHeader(c)
 		eventId := c.Param("id")
 
-		if error != nil {
-			return echo.NewHTTPError(http.StatusUnauthorized)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusUnauthorized, err)
 		}
 
 		if token["role"] == "admin" {

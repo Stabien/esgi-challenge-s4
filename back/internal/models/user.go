@@ -15,7 +15,7 @@ type User struct {
 	NotificationSent     []Notification `gorm:"foreignKey:SenderID"`
 	NotificationReceived []Notification `gorm:"foreignKey:ReceiverID"`
 	Email                string
-	Password             string
+	Password             string `json:"-"`
 	Role                 string
-	Token                string
+	Token                string `json:"-"`
 }

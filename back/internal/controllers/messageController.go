@@ -28,7 +28,6 @@ type MessageInput struct {
 // @Success 201 {object} models.Message
 // @Router /messages [post]
 func CreateMessage(c echo.Context) error {
-
 	var input MessageInput
 	if err := c.Bind(&input); err != nil {
 		return err

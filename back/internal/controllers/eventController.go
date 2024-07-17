@@ -167,30 +167,6 @@ func UpdateEvent(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "You are not the organizer of this event"})
 	}
 
-	bannerFile, err := c.FormFile("banner")
-
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
-	}
-
-	bannerPath, err := utils.UploadFile(bannerFile)
-
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
-	}
-
-	imageFile, err := c.FormFile("image")
-
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
-	}
-
-	imagePath, err := utils.UploadFile(imageFile)
-
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
-	}
-
 	participantNumber, err := strconv.Atoi(c.FormValue("participantNumber"))
 
 	if err != nil {
@@ -218,8 +194,6 @@ func UpdateEvent(c echo.Context) error {
 	// Update event fields
 	event.Title = c.FormValue("title")
 	event.Description = c.FormValue("description")
-	event.Banner = bannerPath
-	event.Image = imagePath
 	event.Date = date
 	event.ParticipantNumber = &participantNumber
 	event.Lat = float32(lat)
@@ -228,7 +202,29 @@ func UpdateEvent(c echo.Context) error {
 	event.Tag = c.FormValue("tag")
 	event.Place = c.FormValue("place")
 
-	// event.Date, err = time.Parse(time.RFC3339, updateInput.Date)
+	bannerFile, _ := c.FormFile("banner")
+
+	if bannerFile != nil {
+		bannerPath, err := utils.UploadFile(bannerFile)
+
+		if err != nil {
+			return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+		}
+
+		event.Banner = bannerPath
+	}
+
+	imageFile, _ := c.FormFile("image")
+
+	if imageFile != nil {
+		imagePath, err := utils.UploadFile(imageFile)
+
+		if err != nil {
+			return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+		}
+
+		event.Image = imagePath
+	}
 
 	if err := db.DB().Model(&event).Updates(&event).Error; err != nil {
 		return err
