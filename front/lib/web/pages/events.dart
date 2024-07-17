@@ -19,6 +19,10 @@ class EventsPageState extends State<EventsPage> {
   @override
   void initState() {
     super.initState();
+    _fetchEvents();
+  }
+
+  void _fetchEvents() {
     _allEventsFuture = fetchAllEvents();
     _pendingEventsFuture = fetchPendingEvents();
 
@@ -40,6 +44,21 @@ class EventsPageState extends State<EventsPage> {
       await validateEvent(eventId);
       setState(() {
         _pendingEvents.removeWhere((event) => event.id == eventId);
+
+        final eventIndex =
+            _allEvents.indexWhere((event) => event.id == eventId);
+        if (eventIndex != -1) {
+          _allEvents[eventIndex] = Event(
+            id: _allEvents[eventIndex].id,
+            title: _allEvents[eventIndex].title,
+            description: _allEvents[eventIndex].description,
+            tag: _allEvents[eventIndex].tag,
+            banner: _allEvents[eventIndex].banner,
+            date: _allEvents[eventIndex].date,
+            place: _allEvents[eventIndex].place,
+            isPending: false,
+          );
+        }
       });
     } catch (error) {
       print(error);
@@ -53,7 +72,7 @@ class EventsPageState extends State<EventsPage> {
       body: Column(
         children: [
           const Text('Tous les événements', style: TextStyle(fontSize: 20)),
-          const SizedBox(height: 20),
+          const SizedBox(height: 50),
           Expanded(
             child: FutureBuilder<List<Event>>(
               future: _allEventsFuture,
@@ -67,34 +86,31 @@ class EventsPageState extends State<EventsPage> {
                     itemCount: _allEvents.length,
                     itemBuilder: (context, index) {
                       final event = _allEvents[index];
-                      return ListTile(
-                        title: Text(event.title),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(event.description),
-                            Text(
-                              event.isPending
-                                  ? 'En attente de validation'
-                                  : 'Validé',
-                              style: TextStyle(
-                                color: event.isPending
-                                    ? Colors.orange
-                                    : Colors.green,
+                      return Card(
+                        elevation: 0,
+                        child: ListTile(
+                          title: Text(event.title),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(event.description),
+                              Text(
+                                event.isPending
+                                    ? 'En attente de validation'
+                                    : 'Validé',
+                                style: TextStyle(
+                                  color: event.isPending
+                                      ? Colors.orange
+                                      : Colors.green,
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                        leading: Image.memory(
-                          base64Decode(event.banner),
-                          width: 100,
-                          height: 100,
-                          fit: BoxFit.cover,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          side: BorderSide(
-                            color: Colors.grey[400]!,
-                            width: 1,
+                            ],
+                          ),
+                          leading: Image.memory(
+                            base64Decode(event.banner),
+                            width: 100,
+                            height: 100,
+                            fit: BoxFit.cover,
                           ),
                         ),
                       );
@@ -104,6 +120,7 @@ class EventsPageState extends State<EventsPage> {
               },
             ),
           ),
+          const SizedBox(height: 50),
           const Text('Événements en attente de validation',
               style: TextStyle(fontSize: 20)),
           const SizedBox(height: 20),
@@ -235,7 +252,6 @@ Future<List<Event>> fetchPendingEvents() async {
 Future<void> validateEvent(String eventId) async {
   try {
     await ApiUtils.patch('/events/$eventId/validate', {});
-
   } catch (error) {
     throw Exception('An error occurred while validating the event');
   }
