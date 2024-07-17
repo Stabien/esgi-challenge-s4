@@ -235,7 +235,6 @@ Future<List<Event>> fetchPendingEvents() async {
 Future<void> validateEvent(String eventId) async {
   try {
     await ApiUtils.patch('/events/$eventId/validate', {});
-
   } catch (error) {
     throw Exception('An error occurred while validating the event');
   }
