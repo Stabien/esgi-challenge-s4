@@ -358,7 +358,7 @@ func GetAllEvents(c echo.Context) error {
 			return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 		}
 	} else if tagFilter != "" && nameFilter != "" {
-		if err := db.DB().Where("LOWER(title) LIKE ? AND tag = ? AND is_pending = false AND deleted_at IS NULL AND date >= ?", "%"+strings.ToLower(nameFilter)+"%", tagFilter, today).Find(&events).Error; err != nil {
+		if err := db.DB().Where("(LOWER(title) LIKE ? OR LOWER(location) LIKE ?) AND tag = ? AND is_pending = false AND deleted_at IS NULL AND date >= ?", "%"+strings.ToLower(nameFilter)+"%", "%"+strings.ToLower(nameFilter)+"%", tagFilter, today).Find(&events).Error; err != nil {
 			return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 		}
 	} else if tagFilter != "" && nameFilter == "" {
@@ -367,7 +367,7 @@ func GetAllEvents(c echo.Context) error {
 		}
 	} else if tagFilter == "" && nameFilter != "" {
 		nameFilter = "%" + strings.ToLower(nameFilter) + "%"
-		if err := db.DB().Where("LOWER(title) LIKE ? AND is_pending = false AND deleted_at IS NULL  AND date >= ? ", nameFilter, today).Find(&events).Error; err != nil {
+		if err := db.DB().Where("(LOWER(title) LIKE ? OR LOWER(location) LIKE ?) AND is_pending = false AND deleted_at IS NULL  AND date >= ? ", "%"+strings.ToLower(nameFilter)+"%", "%"+strings.ToLower(nameFilter)+"%", today).Find(&events).Error; err != nil {
 			return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 		}
 	} else {
