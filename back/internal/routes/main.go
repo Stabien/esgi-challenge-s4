@@ -10,7 +10,8 @@ import (
 )
 
 func InitRouter(e *echo.Echo) {
-	e.GET("/swagger/*", middlewares.CheckUserRole(echoSwagger.WrapHandler, "admin"))
+	// e.GET("/swagger/*", middlewares.CheckUserRole(echoSwagger.WrapHandler, "admin"))
+	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
 	e.GET("/ws/room", ws.HandleRoomWebSocket)
 
@@ -102,4 +103,9 @@ func InitRouter(e *echo.Echo) {
 	e.GET("/features", middlewares.CheckUserRole(controllers.GetAllFeatures, "admin"))
 	e.GET("/features/:name", middlewares.CheckUserRole(controllers.IsEnabled, "admin"))
 	e.PATCH("/features", middlewares.CheckUserRole(controllers.UpdateState, "admin"))
+
+	// Tag routes
+	e.POST("/tag", controllers.CreateTag)
+	e.GET("/tags", controllers.GetTags)
+	e.DELETE("/tag/:id", controllers.DeleteTag)
 }
