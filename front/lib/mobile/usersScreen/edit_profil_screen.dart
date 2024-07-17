@@ -62,7 +62,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         UserServices().patchProfilCusto(_userId, widget.userProfile);
       }
     } catch (error) {
-      print('Unknown error in updateBDD: $error');
+      // print('Unknown error in updateBDD: $error');
     }
   }
 

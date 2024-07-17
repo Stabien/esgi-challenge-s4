@@ -3,7 +3,7 @@ import 'package:mobile/web/ui/appbar.dart';
 import 'package:mobile/web/utils/api_utils.dart';
 
 class ReservationsPage extends StatefulWidget {
-  const ReservationsPage({Key? key}) : super(key: key);
+  const ReservationsPage({super.key});
 
   @override
   _ReservationsPageState createState() => _ReservationsPageState();
@@ -25,7 +25,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
         reservations = response.data;
       });
     } else {
-      print('Failed to fetch reservations: ${response.statusCode}');
+      // print('Failed to fetch reservations: ${response.statusCode}');
     }
   }
 
@@ -48,7 +48,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
                         ListTile(
                           title: Text(
                             "Titre de l'événement : ${reservation['Event']['Title']}",
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
@@ -69,7 +69,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
                                           style: TextStyle(
                                               color: Colors.grey[700]),
                                         ),
-                                        Text(" / "),
+                                        const Text(" / "),
                                         Text(
                                           'Nom: ${reservation['Customer']['Firstname']} ${reservation['Customer']['Lastname']}',
                                           style: TextStyle(

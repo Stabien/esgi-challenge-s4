@@ -14,7 +14,6 @@ class MessagesPage extends StatefulWidget {
 
 class _MessagesPageState extends State<MessagesPage> {
   late Future<List<Event>> _allEventsFuture;
-  List<Event> _allEvents = [];
 
   @override
   void initState() {
@@ -22,11 +21,9 @@ class _MessagesPageState extends State<MessagesPage> {
     _allEventsFuture = fetchAllEvents();
 
     _allEventsFuture.then((events) {
-      setState(() {
-        _allEvents = events;
-      });
+      setState(() {});
     }).catchError((error) {
-      print('Error fetching events: $error');
+      // print('Error fetching events: $error');
     });
   }
 
@@ -54,8 +51,8 @@ class _MessagesPageState extends State<MessagesPage> {
                     fit: BoxFit.cover,
                   ),
                   title: Text(event.title),
-                  subtitle:
-                      Text(event.description, style: TextStyle(fontSize: 16)),
+                  subtitle: Text(event.description,
+                      style: const TextStyle(fontSize: 16)),
                   trailing: IconButton(
                     icon: const Icon(Icons.message),
                     onPressed: () {
@@ -63,7 +60,7 @@ class _MessagesPageState extends State<MessagesPage> {
                         context: context,
                         builder: (BuildContext context) {
                           return Dialog(
-                            child: Container(
+                            child: SizedBox(
                               width: MediaQuery.of(context).size.width * 0.9,
                               height: MediaQuery.of(context).size.height * 0.7,
                               child: MessagePage(id: event.id),

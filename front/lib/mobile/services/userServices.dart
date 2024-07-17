@@ -57,11 +57,11 @@ class UserServices {
         Profil profil = Profil.fromJson(data);
         return profil;
       } else {
-        print("No data found");
+        // print("No data found");
         return Profil(firstname: "", lastname: "", email: "", password: "");
       }
     } catch (error) {
-      print('Unknown error dans profilCustomer: $error');
+      // print('Unknown error dans profilCustomer: $error');
       return null;
     }
   }
@@ -77,11 +77,11 @@ class UserServices {
         Profil profil = Profil.fromJson(data);
         return profil;
       } else {
-        print("No data found");
+        // print("No data found");
         return Profil(firstname: "", lastname: "", email: "", password: "");
       }
     } catch (error) {
-      print('Unknown error dans profilCustomer: $error');
+      // print('Unknown error dans profilCustomer: $error');
       return null;
     }
   }
@@ -93,11 +93,11 @@ class UserServices {
       if (response.data is Map<String, dynamic>) {
         return Organizer.fromJson(response.data);
       } else {
-        print('La réponse n\'est pas un JSON valide');
+        // print('La réponse n\'est pas un JSON valide');
         return null;
       }
     } catch (error) {
-      print('Unknown error dans profilCustomer: $error');
+      // print('Unknown error dans profilCustomer: $error');
       return null;
     }
   }
@@ -122,9 +122,9 @@ class UserServices {
       }
     } catch (e) {
       if (e is DioException) {
-        print('Dio error: ${e.message}');
+        // print('Dio error: ${e.message}');
       } else {
-        print('Unknown error in patchProfilOrga: $e');
+        // print('Unknown error in patchProfilOrga: $e');
       }
       return null;
     }
@@ -150,9 +150,9 @@ class UserServices {
       }
     } catch (e) {
       if (e is DioException) {
-        print('Dio error: ${e.message}');
+        // print('Dio error: ${e.message}');
       } else {
-        print('Unknown error in patchProfilOrga: $e');
+        // print('Unknown error in patchProfilOrga: $e');
       }
       return null;
     }

@@ -42,7 +42,7 @@ class EventsPageState extends State<EventsPage> {
         _pendingEvents.removeWhere((event) => event.id == eventId);
       });
     } catch (error) {
-      print(error);
+      // print(error);
     }
   }
 

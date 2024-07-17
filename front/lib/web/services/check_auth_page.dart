@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/mobile/utils/secureStorage.dart';
 import 'package:mobile/web/services/auth_service.dart';
-import 'package:mobile/web/ui/appbar.dart';
 
 class CheckAuthPage extends StatefulWidget {
   const CheckAuthPage({super.key});

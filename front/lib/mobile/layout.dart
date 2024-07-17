@@ -53,7 +53,7 @@ class _LayoutState extends State<Layout> {
   final List<Widget> _pagesOrga = <Widget>[
     const EventsOrganizer(),
     const ProfilScreen(),
-    QRCodeScannerScreen()
+    const QRCodeScannerScreen()
   ];
 
   void _onBottomBarItemTapped(int index) {

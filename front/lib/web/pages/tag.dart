@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:mobile/mobile/services/api_tag_services.dart';
 import 'package:mobile/web/ui/appbar.dart';
 import 'package:mobile/mobile/models/tag.dart';
-import 'package:mobile/mobile/services/message_services.dart';
 
 class TagPage extends StatefulWidget {
   const TagPage({super.key});
@@ -39,7 +38,7 @@ class _TagPageState extends State<TagPage> {
   }
 
   void _showCreateTagDialog() {
-    final TextEditingController _controller = TextEditingController();
+    final TextEditingController controller = TextEditingController();
 
     showDialog(
       context: context,
@@ -47,7 +46,7 @@ class _TagPageState extends State<TagPage> {
         return AlertDialog(
           title: const Text('Créer un nouveau tag'),
           content: TextField(
-            controller: _controller,
+            controller: controller,
             decoration: const InputDecoration(hintText: 'Nom du tag'),
           ),
           actions: <Widget>[
@@ -59,7 +58,7 @@ class _TagPageState extends State<TagPage> {
             ),
             ElevatedButton(
               onPressed: () {
-                _createTag(_controller.text);
+                _createTag(controller.text);
                 Navigator.of(context).pop();
               },
               child: const Text('Créer'),
@@ -73,7 +72,7 @@ class _TagPageState extends State<TagPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: WebAppBar(),
+      appBar: const WebAppBar(),
       body: Column(
         children: <Widget>[
           const Padding(
@@ -88,11 +87,11 @@ class _TagPageState extends State<TagPage> {
               future: futureTags,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Erreur: ${snapshot.error}'));
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return Center(child: Text('Aucun tag trouvé'));
+                  return const Center(child: Text('Aucun tag trouvé'));
                 } else {
                   List<Tag> tags = snapshot.data!;
                   return ListView.builder(
@@ -118,7 +117,7 @@ class _TagPageState extends State<TagPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _showCreateTagDialog,
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }

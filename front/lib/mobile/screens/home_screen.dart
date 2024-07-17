@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/mobile/components/disconnect-button.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'dart:async';
@@ -14,16 +13,16 @@ class HomeScreen extends StatelessWidget {
     String? apiUrl = '${dotenv.env['URL_BACK']}/send-notification';
 
     try {
-      await Future.delayed(Duration(seconds: 2));
+      await Future.delayed(const Duration(seconds: 2));
       var response = await dio.post(apiUrl);
       if (response.statusCode == 200) {
-        print('----------Notification sent successfully----------');
+        // print('----------Notification sent successfully----------');
       } else {
-        print(
-            '----------Failed to send notification: ${response.statusCode}----------');
+        // print(
+        //     '----------Failed to send notification: ${response.statusCode}----------');
       }
     } catch (e) {
-      print('----------Error sending notification: $e----------');
+      // print('----------Error sending notification: $e----------');
     }
   }
 
@@ -36,7 +35,7 @@ class HomeScreen extends StatelessWidget {
           // text center
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Directionality(
+            const Directionality(
               textDirection: TextDirection.ltr,
               child: DisconnectButton(),
               // Text(

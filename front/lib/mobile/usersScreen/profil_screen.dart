@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/mobile/components/disconnect-button.dart';
 import 'package:mobile/mobile/usersScreen/bloc/profil_bloc.dart';
-import 'package:mobile/mobile/usersScreen/edit_profil_screen.dart';
-import 'package:mobile/mobile/components/disconnect-button.dart';
 
 class ProfilScreen extends StatelessWidget {
   const ProfilScreen({super.key});
@@ -78,7 +76,7 @@ class ProfilScreen extends StatelessWidget {
               return FloatingActionButton(
                 backgroundColor: Colors.orange,
                 onPressed: () async {
-                  final result = await Navigator.of(context)
+                  await Navigator.of(context)
                       .pushNamed('/profil/update', arguments: profil)
                       .then((_) {
                     context.read<ProfilBloc>().add(ProfilDataLoaded());

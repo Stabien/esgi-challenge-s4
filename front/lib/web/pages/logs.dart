@@ -27,7 +27,7 @@ class _LogsPageState extends State<LogsPage> {
         logs = data.substring(1, data.length - 1).split(',');
       });
     } else {
-      print('Failed to load logs');
+      // print('Failed to load logs');
     }
   }
 

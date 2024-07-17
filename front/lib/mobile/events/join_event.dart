@@ -44,7 +44,9 @@ class JoinEventState extends State<JoinEvent> {
       }
     } on DioException catch (e) {
       String errorMessage = '';
-      if (e.response != null && e.response?.data != null && e.response?.data['error'] != null) {
+      if (e.response != null &&
+          e.response?.data != null &&
+          e.response?.data['error'] != null) {
         errorMessage += e.response!.data['error'];
       } else {
         errorMessage += e.message!;

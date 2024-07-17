@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 
 class QRButton extends StatelessWidget {
   final String text;
-  QRButton({required this.text});
+  const QRButton({super.key, required this.text});
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        padding: EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
+        padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
       ),
       onPressed: () {

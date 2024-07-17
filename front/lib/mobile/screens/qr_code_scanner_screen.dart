@@ -4,6 +4,8 @@ import 'package:mobile/mobile/services/api_reservation_services.dart';
 import 'dart:io';
 
 class QRCodeScannerScreen extends StatefulWidget {
+  const QRCodeScannerScreen({super.key});
+
   @override
   _QRCodeScannerScreenState createState() => _QRCodeScannerScreenState();
 }
@@ -37,7 +39,7 @@ class _QRCodeScannerScreenState extends State<QRCodeScannerScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Scanner QR Code'),
+        title: const Text('Scanner QR Code'),
         automaticallyImplyLeading: false,
       ),
       body: Stack(
@@ -60,7 +62,7 @@ class _QRCodeScannerScreenState extends State<QRCodeScannerScreen> {
             ],
           ),
           if (_isLoading)
-            Center(
+            const Center(
               child: CircularProgressIndicator(),
             ),
         ],
@@ -72,7 +74,7 @@ class _QRCodeScannerScreenState extends State<QRCodeScannerScreen> {
     this.controller = controller;
     controller.scannedDataStream.listen((scanData) async {
       String scannedText = scanData.code!;
-      print("Scanned QR Code: $scannedText");
+      // print("Scanned QR Code: $scannedText");
 
       setState(() {
         qrText = scannedText;
@@ -121,16 +123,16 @@ class _QRCodeScannerScreenState extends State<QRCodeScannerScreen> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: isValid
-              ? Icon(Icons.check_circle, color: Colors.green, size: 50)
-              : Icon(Icons.close, color: Colors.red, size: 50),
+              ? const Icon(Icons.check_circle, color: Colors.green, size: 50)
+              : const Icon(Icons.close, color: Colors.red, size: 50),
           content: Text(
             message,
-            style: TextStyle(fontSize: 20),
+            style: const TextStyle(fontSize: 20),
             textAlign: TextAlign.center,
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('OK'),
+              child: const Text('OK'),
               onPressed: () {
                 setState(() {
                   _isDialogShowing = false;
