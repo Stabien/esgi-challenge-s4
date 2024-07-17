@@ -61,7 +61,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
                                 'Réservation ID: ${reservation['ID']}',
                                 style: TextStyle(color: Colors.grey[700]),
                               ),
-                              const Spacer(),
+                              // const Spacer(),
                               reservation['Customer'] != null
                                   ? Row(
                                       children: [
@@ -79,7 +79,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
                                       ],
                                     )
                                   : Container(),
-                              const Spacer(),
+                              // const Spacer(),
                               Text(
                                 'Réservation faite le : ${reservation['CreatedAt']}',
                                 style: TextStyle(color: Colors.grey[700]),

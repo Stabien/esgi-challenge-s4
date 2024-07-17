@@ -29,7 +29,7 @@ func InitRouter(e *echo.Echo) {
 	e.GET("/reservations/isreserv/:customerId/:eventId", controllers.IsReserv)
 	e.GET("/reservations/isValid/:reservationId", controllers.IsValid)
 
-	e.POST("/reservations", middlewares.CheckUserRole(controllers.PostReservation, "customer"))
+	e.POST("/reservations", controllers.PostReservation)
 	e.DELETE("/reservations", controllers.DeleteReservation) // TODO: pass customer with params instead of body
 	e.GET("/reservations/:customerId", middlewares.CheckCustomerIdParam(controllers.GetReservationsbyUser))
 
@@ -73,9 +73,6 @@ func InitRouter(e *echo.Echo) {
 	e.PUT("/messages/:id", middlewares.CheckMessageBelongsToOrganizer(controllers.UpdateMessage))
 	e.DELETE("/messages/:id", middlewares.CheckMessageBelongsToOrganizer(controllers.DeleteMessage))
 	e.GET("/messages/event/:id", middlewares.CheckEventBelongsToOrganizer(controllers.GetAllMessageByEvent))
-
-	// Event routes
-	e.POST("/events", controllers.CreateEvent)
 
 	// Rate routes
 	e.POST("/rates", middlewares.CheckUserRole(controllers.CreateRate, "customer"))
