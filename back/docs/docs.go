@@ -521,7 +521,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/events/organizer/{id}": {
+        "/events/organizer": {
             "get": {
                 "consumes": [
                     "application/json"
@@ -1688,6 +1688,143 @@ const docTemplate = `{
                 }
             }
         },
+        "/tag": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "LesTag"
+                ],
+                "summary": "Create a new Tag",
+                "parameters": [
+                    {
+                        "description": "Tag name",
+                        "name": "tag",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/internal_controllers.TagInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Tag created successfully!",
+                        "schema": {
+                            "$ref": "#/definitions/easynight_internal_models.Tag"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/tag/{id}": {
+            "delete": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "LesTag"
+                ],
+                "summary": "Delete a Tag by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Tag ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Tag deleted successfully"
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Tag not found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/tags": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "LesTag"
+                ],
+                "summary": "Get all Tags",
+                "responses": {
+                    "200": {
+                        "description": "List of tags",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/easynight_internal_models.Tag"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/users": {
             "get": {
                 "description": "Retrieve all users from the database",
@@ -2111,6 +2248,9 @@ const docTemplate = `{
                 "image": {
                     "type": "string"
                 },
+                "isPending": {
+                    "type": "boolean"
+                },
                 "lat": {
                     "type": "number"
                 },
@@ -2354,7 +2494,30 @@ const docTemplate = `{
                 "id": {
                     "type": "string"
                 },
+                "isScanned": {
+                    "type": "boolean"
+                },
                 "qrcode": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "easynight_internal_models.Tag": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "deletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
                     "type": "string"
                 },
                 "updatedAt": {
@@ -2407,9 +2570,6 @@ const docTemplate = `{
                         "$ref": "#/definitions/easynight_internal_models.Organizer"
                     }
                 },
-                "password": {
-                    "type": "string"
-                },
                 "rates": {
                     "type": "array",
                     "items": {
@@ -2417,9 +2577,6 @@ const docTemplate = `{
                     }
                 },
                 "role": {
-                    "type": "string"
-                },
-                "token": {
                     "type": "string"
                 },
                 "updatedAt": {
@@ -2615,6 +2772,17 @@ const docTemplate = `{
                 }
             }
         },
+        "internal_controllers.TagInput": {
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
         "internal_controllers.UpdateUserRequest": {
             "type": "object",
             "properties": {
@@ -2625,9 +2793,6 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "lastname": {
-                    "type": "string"
-                },
-                "password": {
                     "type": "string"
                 }
             }

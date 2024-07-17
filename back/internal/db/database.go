@@ -25,6 +25,7 @@ func migrate(database *gorm.DB) error {
 		&models.Rate{},
 		&models.Reservation{},
 		&models.FeatureFlipping{},
+		&models.Tag{},
 	)
 }
 
