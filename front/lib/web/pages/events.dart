@@ -37,7 +37,7 @@ class EventsPageState extends State<EventsPage> {
       if (_isMounted) {
         setState(() {});
       }
-      print('Error initializing futures: $error');
+      // print('Error initializing futures: $error');
     }
   }
 
@@ -56,7 +56,7 @@ class EventsPageState extends State<EventsPage> {
         });
       }
     } catch (error) {
-      print('Error validating event: $error');
+      // print('Error validating event: $error');
     }
   }
 
