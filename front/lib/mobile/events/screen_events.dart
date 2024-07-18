@@ -5,6 +5,7 @@ import 'package:mobile/mobile/services/api_event_services.dart';
 import 'package:mobile/mobile/services/api_tag_services.dart';
 import 'package:mobile/mobile/services/format_date.dart';
 import 'event_search_delegate.dart';
+import 'package:mobile/mobile/utils/translate.dart';
 
 class ScreenEvent extends StatefulWidget {
   const ScreenEvent({super.key});
@@ -68,7 +69,7 @@ class _ScreenEventState extends State<ScreenEvent> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Text('Événements'),
+        title: Text(t(context)!.events),
         actions: [
           IconButton(
             icon: const Icon(Icons.search),

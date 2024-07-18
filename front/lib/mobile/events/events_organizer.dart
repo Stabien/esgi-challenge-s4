@@ -86,25 +86,7 @@ class _EventsOrganizerState extends State<EventsOrganizer> {
           ),
           ActionButton(
             icon: const Icon(Icons.qr_code_scanner_outlined),
-            onPressed: () => showDialog(
-              context: context,
-              builder: (context) => AlertDialog(
-                title: const Text("Scanner un QR code"),
-                content: const Text("Veuillez scanner le QR code."),
-                actions: <Widget>[
-                  TextButton(
-                    child: const Text("Annuler"),
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
-                  TextButton(
-                    child: const Text("Scanner"),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              ),
-            ),
+            onPressed: () => Navigator.of(context).pushNamed('/scanner'),
           ),
         ],
       ),

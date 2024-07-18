@@ -45,7 +45,6 @@ func InitRouter(e *echo.Echo) {
 	e.POST("/send-notification", controllers.SendNotificationToTopic)
 
 	// User routes
-	e.POST("/users", controllers.CreateUser)
 	e.GET("/users", controllers.GetAllUsers)
 	e.GET("/users/:id", controllers.GetUser)
 	e.PATCH("/users/:id", middlewares.CheckUserId(controllers.UpdateUser))
@@ -82,7 +81,7 @@ func InitRouter(e *echo.Echo) {
 	e.DELETE("/rates/:id", middlewares.CheckUserId(controllers.DeleteRate))
 
 	// Organizer routes
-	e.POST("/organizers", controllers.CreateOrganizer)
+	e.POST("/organizers", controllers.OrganizerRegistration)
 	e.GET("/organizers/:id", controllers.GetOrganizer)
 	e.GET("/organizers", controllers.GetAllOrganizers)
 	e.PUT("/organizers/:id", middlewares.CheckUserId(controllers.UpdateOrganizer))

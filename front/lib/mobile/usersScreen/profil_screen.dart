@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/mobile/components/disconnect_button.dart';
 import 'package:mobile/mobile/usersScreen/bloc/profil_bloc.dart';
+import 'package:mobile/mobile/utils/translate.dart';
 
 class ProfilScreen extends StatelessWidget {
   const ProfilScreen({super.key});
@@ -12,7 +13,7 @@ class ProfilScreen extends StatelessWidget {
       create: (context) => ProfilBloc()..add(ProfilDataLoaded()),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Profile'),
+          title: Text(t(context)!.profile),
           automaticallyImplyLeading: false,
           actions: const <Widget>[
             DisconnectButton(),

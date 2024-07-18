@@ -32,7 +32,7 @@ class _BottomBarOrgaState extends State<BottomBarOrga> {
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: 'Events Organizer',
+            label: 'Evenements',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
@@ -40,7 +40,7 @@ class _BottomBarOrgaState extends State<BottomBarOrga> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.qr_code_scanner_outlined),
-            label: 'QR Code Scanner',
+            label: 'Scanner',
           ),
         ],
         currentIndex: widget.selectedIndex,
