@@ -129,6 +129,7 @@ func OrganizerRegistration(c echo.Context) error {
 
 	organizer, err := services.CreateOrganizer(
 		models.Organizer{
+			ID: 			 uuid.New(),
 			UserID:    user.ID,
 			User:      user,
 			Firstname: body.Firstname,
