@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mobile/mobile/components/disconnect-button.dart';
+import 'package:mobile/mobile/components/disconnect_button.dart';
 import 'package:mobile/mobile/usersScreen/bloc/profil_bloc.dart';
-import 'package:mobile/mobile/usersScreen/edit_profil_screen.dart';
-import 'package:mobile/mobile/components/disconnect-button.dart';
+import 'package:mobile/mobile/utils/translate.dart';
 
 class ProfilScreen extends StatelessWidget {
   const ProfilScreen({super.key});
@@ -14,7 +13,7 @@ class ProfilScreen extends StatelessWidget {
       create: (context) => ProfilBloc()..add(ProfilDataLoaded()),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Profile'),
+          title: Text(t(context)!.profile),
           automaticallyImplyLeading: false,
           actions: const <Widget>[
             DisconnectButton(),
@@ -77,14 +76,12 @@ class ProfilScreen extends StatelessWidget {
               final profil = state.profil!;
               return FloatingActionButton(
                 backgroundColor: Colors.orange,
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          EditProfilePage(userProfile: profil),
-                    ),
-                  );
+                onPressed: () async {
+                  await Navigator.of(context)
+                      .pushNamed('/profil/update', arguments: profil)
+                      .then((_) {
+                    context.read<ProfilBloc>().add(ProfilDataLoaded());
+                  });
                 },
                 child: const Icon(
                   Icons.edit,

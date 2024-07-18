@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/mobile/utils/tradToken.dart';
+import 'package:mobile/mobile/utils/trad_token.dart';
 import 'package:mobile/web/services/auth_service.dart';
-import 'package:mobile/mobile/utils/secureStorage.dart';
-import 'package:mobile/mobile/services/userServices.dart';
+import 'package:mobile/mobile/utils/secure_storage.dart';
+import 'package:mobile/mobile/services/user_services.dart';
 import 'package:mobile/mobile/models/user.dart';
-import 'package:mobile/mobile/utils/navigation.dart';
 import 'package:dio/dio.dart';
 
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:mobile/mobile/utils/secureStorage.dart';
 
 String jwtSecret = '${dotenv.env['JWT_SECRET']}';
 
@@ -39,10 +37,14 @@ class LoginState extends State<Login> {
 
   void _onSubmit(BuildContext context) async {
     final userCredentials = UserCredentials(_email, _password);
+    if (userCredentials.email.isEmpty || userCredentials.password.isEmpty) {
+      return;
+    }
     final Response response = await _userServices.auth(userCredentials);
-    
+
     if (response.data['token'] == null) {
       showDialog(
+        // ignore: use_build_context_synchronously
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
@@ -66,11 +68,13 @@ class LoginState extends State<Login> {
     final role = jwt.payload['role'];
     if (role != 'admin') {
       showDialog(
+        // ignore: use_build_context_synchronously
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
             title: const Text('Erreur'),
-            content: const Text('Vous n\'avez pas les droits d\'administrateur.'),
+            content:
+                const Text('Vous n\'avez pas les droits d\'administrateur.'),
             actions: [
               TextButton(
                 onPressed: () {
@@ -88,6 +92,7 @@ class LoginState extends State<Login> {
     await SecureStorage.addStorageItem('token', response.data['token']);
     await verifyAndDecodeJwt(response.data['token']);
     AuthService().login();
+    // ignore: use_build_context_synchronously
     Navigator.of(context).pushReplacementNamed('/');
   }
 

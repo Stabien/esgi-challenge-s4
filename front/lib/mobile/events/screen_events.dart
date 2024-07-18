@@ -1,21 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/mobile/components/eventComponents/eventListTile.dart';
+import 'package:mobile/mobile/components/eventComponents/event_list_tile.dart';
 import 'package:mobile/mobile/models/event.dart';
 import 'package:mobile/mobile/services/api_event_services.dart';
-import 'package:mobile/mobile/services/formatDate.dart';
+import 'package:mobile/mobile/services/api_tag_services.dart';
+import 'package:mobile/mobile/services/format_date.dart';
 import 'event_search_delegate.dart';
-
-const List<String> list = <String>[
-  'Aucun tag sélectionné',
-  'Jazz',
-  'Techno',
-  'Disco'
-];
+import 'package:mobile/mobile/utils/translate.dart';
 
 class ScreenEvent extends StatefulWidget {
   const ScreenEvent({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _ScreenEventState createState() => _ScreenEventState();
 }
 
@@ -24,11 +20,29 @@ class _ScreenEventState extends State<ScreenEvent> {
   bool _loading = false;
   dynamic _error;
   String tag = 'Aucun tag sélectionné';
+  List<String> list = ['Aucun tag sélectionné'];
 
   @override
   void initState() {
     super.initState();
+    _fetchTags();
     _fetchEvents();
+  }
+
+  void _fetchTags() async {
+    try {
+      final tags = await TagServices.getTags();
+      setState(() {
+        list = ['Aucun tag sélectionné'];
+        for (var tag in tags) {
+          list.add(tag.name);
+        }
+      });
+    } catch (error) {
+      setState(() {
+        _error = error;
+      });
+    }
   }
 
   void _fetchEvents() {
@@ -55,7 +69,7 @@ class _ScreenEventState extends State<ScreenEvent> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Text('Événements'),
+        title: Text(t(context)!.events),
         actions: [
           IconButton(
             icon: const Icon(Icons.search),

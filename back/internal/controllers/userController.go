@@ -274,6 +274,8 @@ func UpdateUserByIdOrga(c echo.Context) error {
 		organizerUpdates["lastname"] = *updateUser.LastName
 	}
 
+	userUpdates["role"] = "organizer"
+
 	if err := db.DB().Transaction(func(tx *gorm.DB) error {
 		if len(userUpdates) > 0 {
 			if err := tx.Table("users").Where("id = ? AND deleted_at IS NULL", userIDparam).Updates(userUpdates).Error; err != nil {
@@ -327,6 +329,8 @@ func UpdateUserByIdCustomer(c echo.Context) error {
 	if updateUser.LastName != nil {
 		customerUpdates["lastname"] = *updateUser.LastName
 	}
+
+	userUpdates["role"] = "customer"
 
 	if err := db.DB().Transaction(func(tx *gorm.DB) error {
 		if len(userUpdates) > 0 {

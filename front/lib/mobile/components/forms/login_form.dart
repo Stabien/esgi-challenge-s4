@@ -1,10 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/mobile/models/user.dart';
-import 'package:mobile/mobile/services/userServices.dart';
+import 'package:mobile/mobile/services/user_services.dart';
 import 'package:mobile/mobile/utils/navigation.dart';
-import 'package:mobile/mobile/utils/secureStorage.dart';
-import 'package:mobile/mobile/utils/tradToken.dart';
+import 'package:mobile/mobile/utils/secure_storage.dart';
+import 'package:mobile/mobile/utils/trad_token.dart';
+import 'package:mobile/mobile/utils/translate.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
@@ -33,17 +34,42 @@ class _LoginFormState extends State<LoginForm> {
 
   void _onSubmit(BuildContext context) async {
     final userCredentials = UserCredentials(_email, _password);
-    final Response response = await _userServices.auth(userCredentials);
-    print('test');
 
-    if (response.data['token'] == null) {
-      return;
+    try {
+      if (userCredentials.email.isEmpty || userCredentials.password.isEmpty) {
+        return;
+      }
+      final Response response = await _userServices.auth(userCredentials);
+
+      if (response.data['token'] == null) {
+        return;
+      }
+
+      await SecureStorage.addStorageItem('token', response.data['token']);
+      await verifyAndDecodeJwt(response.data['token']);
+
+      // ignore: use_build_context_synchronously
+      redirectToPath(context, '/');
+    } catch (e) {
+      showDialog(
+        // ignore: use_build_context_synchronously
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text("Echec"),
+          content: Text(t(context)!.userNotFound),
+          actions: <Widget>[
+            TextButton(
+              child: const Text("OK"),
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pop(true);
+                redirectToPath(context, '/');
+              },
+            ),
+          ],
+        ),
+      );
     }
-
-    await SecureStorage.addStorageItem('token', response.data['token']);
-    await verifyAndDecodeJwt(response.data['token']);
-
-    redirectToPath(context, '/');
   }
 
   @override
@@ -58,8 +84,8 @@ class _LoginFormState extends State<LoginForm> {
             style: TextStyle(
               color: Theme.of(context).textTheme.titleMedium!.color,
             ),
-            decoration: const InputDecoration(
-              labelText: 'Email',
+            decoration: InputDecoration(
+              labelText: t(context)!.email,
             ),
           ),
           const SizedBox(height: 16.0),
@@ -69,14 +95,14 @@ class _LoginFormState extends State<LoginForm> {
             style: TextStyle(
               color: Theme.of(context).textTheme.titleMedium!.color,
             ),
-            decoration: const InputDecoration(
-              labelText: 'Mot de passe',
+            decoration: InputDecoration(
+              labelText: t(context)!.password,
             ),
           ),
           const SizedBox(height: 16.0),
           ElevatedButton(
             onPressed: () => _onSubmit(context),
-            child: const Text("Envoyer"),
+            child: Text(t(context)!.send),
           ),
         ],
       ),

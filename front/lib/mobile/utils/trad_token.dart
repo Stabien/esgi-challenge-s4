@@ -1,6 +1,6 @@
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:mobile/mobile/utils/secureStorage.dart';
+import 'package:mobile/mobile/utils/secure_storage.dart';
 
 String jwtSecret = '${dotenv.env['JWT_SECRET']}';
 
@@ -16,6 +16,6 @@ Future<void> verifyAndDecodeJwt(String token) async {
     await SecureStorage.addStorageItem('userEmail', email);
     await SecureStorage.addStorageItem('userRole', role);
   } catch (e) {
-    print('Erreur de vérification du jeton: $e');
+    // print('Erreur de vérification du jeton: $e');
   }
 }

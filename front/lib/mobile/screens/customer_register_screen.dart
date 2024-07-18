@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/mobile/components/forms/customer_register_form.dart';
 import 'package:mobile/mobile/utils/navigation.dart';
+import 'package:mobile/mobile/utils/translate.dart';
 
 class CustomerRegisterScreen extends StatelessWidget {
   const CustomerRegisterScreen({super.key});
@@ -29,7 +30,7 @@ class CustomerRegisterScreen extends StatelessWidget {
             TextButton(
               onPressed: () => redirectToPath(context, '/auth'),
               child: Text(
-                'Déjà inscrit ? Connectez-vous !',
+                t(context)!.alreadyRegisteredConnect,
                 style: TextStyle(
                   color: Theme.of(context).textTheme.titleMedium!.color,
                 ),
@@ -38,7 +39,7 @@ class CustomerRegisterScreen extends StatelessWidget {
             TextButton(
               onPressed: () => redirectToPath(context, '/register/organizer'),
               child: Text(
-                "S'inscrire en tant qu'organisateur",
+                t(context)!.signUpOrganizer,
                 style: TextStyle(
                   color: Theme.of(context).textTheme.titleMedium!.color,
                 ),

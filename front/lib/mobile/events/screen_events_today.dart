@@ -3,7 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:mobile/mobile/models/event.dart';
 import 'package:mobile/mobile/services/api_event_services.dart';
-import 'package:mobile/mobile/services/formatDate.dart';
+import 'package:mobile/mobile/services/format_date.dart';
+import 'package:mobile/mobile/utils/translate.dart';
 
 const List<String> list = <String>['', 'Jazz', 'Techno', 'Disco'];
 
@@ -11,6 +12,7 @@ class ScreenEventToday extends StatefulWidget {
   const ScreenEventToday({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _ScreenEventState createState() => _ScreenEventState();
 }
 
@@ -55,29 +57,20 @@ class _ScreenEventState extends State<ScreenEventToday> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Text(t(context)!.today),
+      ),
       body: Column(
         children: [
-          const SizedBox(height: 50),
-          const Padding(
-            padding: EdgeInsets.all(1.0),
-            child: Padding(
-              padding: EdgeInsets.all(3.0),
-              child: Column(
-                children: [
-                  Text("Aujourd'hui",
-                      style: TextStyle(fontSize: 20, color: Colors.white)),
-                ],
-              ),
-            ),
-          ),
           Expanded(
             child: _loading
                 ? const Center(child: CircularProgressIndicator())
                 : _error != null
                     ? Center(child: Text('Erreur: $_error'))
                     : _events.isEmpty
-                        ? const Center(
-                            child: Text('Aucun événement trouvé aujourd\'hui'),
+                        ? Center(
+                            child: Text(t(context)!.noEventToday),
                           )
                         : ListView.builder(
                             itemBuilder: (context, index) {

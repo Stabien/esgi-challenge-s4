@@ -24,13 +24,13 @@ class _EventMapState extends State<EventMap> {
     bool isAllowed = await _checkPermission();
 
     if (!isAllowed) {
-      print('----------Permission denied----------');
+      // print('----------Permission denied----------');
       return;
     } else {
-      print('----------Permission granted----------');
+      // print('----------Permission granted----------');
       Position position = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high);
-      print(position);
+      // print(position);
       setState(() {
         _currentPosition = position;
       });
@@ -45,7 +45,7 @@ class _EventMapState extends State<EventMap> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          print('----------Geolocate user----------');
+          // print('----------Geolocate user----------');
           printLocation();
         },
         backgroundColor: Colors.blue,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/mobile/utils/translate.dart';
 
 class BottomBar extends StatefulWidget {
   const BottomBar({super.key, required this.selectedIndex, this.onItemTapped});
@@ -28,22 +29,22 @@ class _BottomBarState extends State<BottomBar> {
         backgroundColor: Colors.black,
         selectedItemColor: Colors.white,
         unselectedItemColor: Colors.white54,
-        items: const [
+        items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.flash_on),
-            label: 'Today',
+            icon: const Icon(Icons.flash_on),
+            label: t(context)!.today,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Evenements',
+            icon: const Icon(Icons.search),
+            label: t(context)!.events,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.event_available),
-            label: 'Mes evenements',
+            icon: const Icon(Icons.event_available),
+            label: t(context)!.myTickets,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profil',
+            icon: const Icon(Icons.person),
+            label: t(context)!.profile,
           ),
         ],
         currentIndex: widget.selectedIndex,

@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:mobile/mobile/models/message.dart';
 import 'package:mobile/web/utils/api_utils.dart';
 
@@ -26,19 +25,5 @@ class MessageServices {
       // print('Erreur inconnue dans getMessagesByEvent: $error');
       return [];
     }
-  }
-
-  Future<Response> postMessage(payload) async {
-    var data = {
-      'date': payload.date,
-      'sender': payload.sender,
-      'organizerId': payload.organizerId,
-      'eventId': payload.eventId,
-      'text': payload.text,
-    };
-
-    var response = await ApiUtils.post('/messages', data);
-
-    return response;
   }
 }

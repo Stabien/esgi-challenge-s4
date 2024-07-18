@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:mobile/mobile/services/api_reservation_services.dart';
-import 'package:dio/dio.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'dart:io';
 
 class QRCodeScannerScreen extends StatefulWidget {
+  const QRCodeScannerScreen({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _QRCodeScannerScreenState createState() => _QRCodeScannerScreenState();
 }
 
@@ -15,6 +16,7 @@ class _QRCodeScannerScreenState extends State<QRCodeScannerScreen> {
   QRViewController? controller;
   String qrText = '';
   bool _isLoading = false;
+  bool _isDialogShowing = false;
 
   bool isValidUUID(String uuid) {
     final uuidRegExp = RegExp(
@@ -37,7 +39,10 @@ class _QRCodeScannerScreenState extends State<QRCodeScannerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Scanner QR Code')),
+      appBar: AppBar(
+        title: const Text('Scanner QR Code'),
+        automaticallyImplyLeading: false,
+      ),
       body: Stack(
         children: <Widget>[
           Column(
@@ -45,7 +50,7 @@ class _QRCodeScannerScreenState extends State<QRCodeScannerScreen> {
               Expanded(
                 flex: 5,
                 child: QRView(
-                  key: GlobalKey(),
+                  key: qrKey,
                   onQRViewCreated: _onQRViewCreated,
                 ),
               ),
@@ -58,8 +63,8 @@ class _QRCodeScannerScreenState extends State<QRCodeScannerScreen> {
             ],
           ),
           if (_isLoading)
-            Center(
-              child: CircularProgressIndicator(), // Indicateur de chargement
+            const Center(
+              child: CircularProgressIndicator(),
             ),
         ],
       ),
@@ -70,40 +75,77 @@ class _QRCodeScannerScreenState extends State<QRCodeScannerScreen> {
     this.controller = controller;
     controller.scannedDataStream.listen((scanData) async {
       String scannedText = scanData.code!;
-      print("Scanned QR Code: $scannedText");
+      // print("Scanned QR Code: $scannedText");
 
       setState(() {
         qrText = scannedText;
       });
 
-      if (isValidUUID(scannedText)) {
-        setState(() {
-          _isLoading = true;
-        });
-
-        try {
-          ReservationStatus status = await ApiReservation.isValid(scannedText);
-
+      if (!_isDialogShowing) {
+        if (isValidUUID(scannedText)) {
           setState(() {
-            _isLoading = false;
+            _isLoading = true;
+            _isDialogShowing = true;
+          });
+
+          controller.pauseCamera();
+
+          try {
+            ReservationStatus status =
+                await ApiReservation.isValid(scannedText);
+
+            setState(() {
+              _isLoading = false;
+            });
+
             if (status.isValid) {
-              qrText = 'Réservation valide';
+              _showResultDialog(
+                  true, 'Réservation valide pour l\'événement ${status.event}');
             } else {
-              qrText = 'Réservation invalide';
+              _showResultDialog(
+                  false, status.message ?? 'Réservation invalide');
             }
-          });
-        } catch (e) {
-          setState(() {
-            _isLoading = false;
-            qrText = 'Error: $e';
-          });
+          } catch (e) {
+            setState(() {
+              _isLoading = false;
+            });
+            _showResultDialog(false, 'Error: $e');
+          }
+        } else {
+          _showResultDialog(false, 'QR Code invalide');
         }
-      } else {
-        setState(() {
-          qrText = 'QR Code invalide';
-        });
       }
     });
+  }
+
+  void _showResultDialog(bool isValid, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: isValid
+              ? const Icon(Icons.check_circle, color: Colors.green, size: 50)
+              : const Icon(Icons.close, color: Colors.red, size: 50),
+          content: Text(
+            message,
+            style: const TextStyle(fontSize: 20),
+            textAlign: TextAlign.center,
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                setState(() {
+                  _isDialogShowing = false;
+                });
+                Navigator.of(context).pop();
+                controller?.resumeCamera();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override

@@ -39,6 +39,14 @@ type EventInput struct {
 // @Failure 500 {object} error "Internal server error"
 // @Router /event [post]
 func CreateEvent(c echo.Context) error {
+	// Check if the feature flipping is enabled
+	var featureFlipping models.FeatureFlipping
+	db.DB().Table("feature_flippings").Where("name = ?", "event_create").First(&featureFlipping)
+
+	if !featureFlipping.IsEnabled {
+		return c.JSON(http.StatusForbidden, map[string]string{"error": "Feature event creation is disabled"})
+	}
+
 	bannerFile, err := c.FormFile("banner")
 
 	if err != nil {
@@ -158,37 +166,16 @@ func UpdateEvent(c echo.Context) error {
 	}
 
 	// If the user is not the organizer of the event, return an error
-	var count int64
-	if err := db.DB().Table("organizer_events").Where("organizer_user_id = ? AND event_id = ?", userID, eventID).Count(&count).Error; err != nil {
-		return err
-	}
 
-	if count == 0 {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "You are not the organizer of this event"})
-	}
-
-	bannerFile, err := c.FormFile("banner")
-
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
-	}
-
-	bannerPath, err := utils.UploadFile(bannerFile)
-
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
-	}
-
-	imageFile, err := c.FormFile("image")
-
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
-	}
-
-	imagePath, err := utils.UploadFile(imageFile)
-
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+	if claims["role"] != "admin" {
+		var count int64
+		if err := db.DB().Table("organizer_events").Where("organizer_user_id = ? AND event_id = ?", userID, eventID).Count(&count).Error; err != nil {
+			return err
+		}
+	
+		if count == 0 {
+			return c.JSON(http.StatusBadRequest, map[string]string{"error": "You are not the organizer of this event"})
+		}
 	}
 
 	participantNumber, err := strconv.Atoi(c.FormValue("participantNumber"))
@@ -218,8 +205,6 @@ func UpdateEvent(c echo.Context) error {
 	// Update event fields
 	event.Title = c.FormValue("title")
 	event.Description = c.FormValue("description")
-	event.Banner = bannerPath
-	event.Image = imagePath
 	event.Date = date
 	event.ParticipantNumber = &participantNumber
 	event.Lat = float32(lat)
@@ -228,7 +213,29 @@ func UpdateEvent(c echo.Context) error {
 	event.Tag = c.FormValue("tag")
 	event.Place = c.FormValue("place")
 
-	// event.Date, err = time.Parse(time.RFC3339, updateInput.Date)
+	bannerFile, _ := c.FormFile("banner")
+
+	if bannerFile != nil {
+		bannerPath, err := utils.UploadFile(bannerFile)
+
+		if err != nil {
+			return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+		}
+
+		event.Banner = bannerPath
+	}
+
+	imageFile, _ := c.FormFile("image")
+
+	if imageFile != nil {
+		imagePath, err := utils.UploadFile(imageFile)
+
+		if err != nil {
+			return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+		}
+
+		event.Image = imagePath
+	}
 
 	if err := db.DB().Model(&event).Updates(&event).Error; err != nil {
 		return err
@@ -358,16 +365,16 @@ func GetAllEvents(c echo.Context) error {
 			return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 		}
 	} else if tagFilter != "" && nameFilter != "" {
-		if err := db.DB().Where("LOWER(title) LIKE ? AND tag = ? AND is_pending = false AND deleted_at IS NULL AND date >= ?", "%"+strings.ToLower(nameFilter)+"%", tagFilter, today).Find(&events).Error; err != nil {
+		if err := db.DB().Where("(LOWER(title) LIKE ? OR LOWER(location) LIKE ?) AND tag = ? AND is_pending = false AND deleted_at IS NULL AND date >= ?", "%"+strings.ToLower(nameFilter)+"%", "%"+strings.ToLower(nameFilter)+"%", strings.ToLower(tagFilter), today).Find(&events).Error; err != nil {
 			return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 		}
 	} else if tagFilter != "" && nameFilter == "" {
-		if err := db.DB().Where("tag = ? AND is_pending = false AND deleted_at IS NULL  AND date >= ?", tagFilter, today).Find(&events).Error; err != nil {
+		if err := db.DB().Where("tag = ? AND is_pending = false AND deleted_at IS NULL  AND date >= ?", strings.ToLower(tagFilter), today).Find(&events).Error; err != nil {
 			return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 		}
 	} else if tagFilter == "" && nameFilter != "" {
 		nameFilter = "%" + strings.ToLower(nameFilter) + "%"
-		if err := db.DB().Where("LOWER(title) LIKE ? AND is_pending = false AND deleted_at IS NULL  AND date >= ? ", nameFilter, today).Find(&events).Error; err != nil {
+		if err := db.DB().Where("(LOWER(title) LIKE ? OR LOWER(location) LIKE ?) AND is_pending = false AND deleted_at IS NULL  AND date >= ? ", "%"+strings.ToLower(nameFilter)+"%", "%"+strings.ToLower(nameFilter)+"%", today).Find(&events).Error; err != nil {
 			return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 		}
 	} else {
@@ -716,4 +723,20 @@ func ValidateEvent(c echo.Context) error {
 	}
 
 	return c.String(http.StatusOK, "Event validated successfully!")
+}
+func UnvalidateEvent(c echo.Context) error {
+	eventID := c.Param("id")
+
+	var event models.Event
+	if err := db.DB().First(&event, "id = ?", eventID).Error; err != nil {
+		return err
+	}
+
+	event.IsPending = true
+
+	if err := db.DB().Save(&event).Error; err != nil {
+		return err
+	}
+
+	return c.String(http.StatusOK, "Event unvalidated successfully!")
 }

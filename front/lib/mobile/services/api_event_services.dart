@@ -1,11 +1,10 @@
-import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:dio/dio.dart';
 
 import 'package:flinq/flinq.dart';
 import 'package:mobile/mobile/models/event.dart';
-import 'package:mobile/mobile/models/eventDetail.dart';
+import 'package:mobile/mobile/models/event_detail.dart';
 import 'package:mobile/mobile/core/api_exception.dart';
 import 'package:mobile/mobile/models/reservation.dart';
 import 'package:mobile/web/utils/api_utils.dart';

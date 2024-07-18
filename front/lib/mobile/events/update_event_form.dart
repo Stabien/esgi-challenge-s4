@@ -1,10 +1,13 @@
 // ignore_for_file: use_build_context_synchronously, library_private_types_in_public_api
 
+import 'dart:developer';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:mobile/mobile/utils/secureStorage.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:mobile/mobile/utils/file.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
+import 'package:mobile/mobile/utils/secure_storage.dart';
 import 'package:mobile/web/utils/api_utils.dart';
 
 class UpdateEventForm extends StatefulWidget {
@@ -18,18 +21,57 @@ class UpdateEventForm extends StatefulWidget {
 
 class _UpdateEventFormState extends State<UpdateEventForm> {
   late Event _event = Event.empty();
+  late String _userRole;
+  late bool _colorBlack = true;
+
+  Future<void> fetchrole() async {
+    String? userRole = await SecureStorage.getStorageItem('userRole');
+    setState(() {
+      _userRole = userRole!;
+    });
+    if (_userRole == 'admin') {
+      _colorBlack = false;
+    } else {
+      _colorBlack = true;
+    }
+  }
 
   late TextEditingController _titleController;
   late TextEditingController _descriptionController;
   late TextEditingController _dateController;
-  late TextEditingController _bannerController;
   late TextEditingController _participantNumberController;
   late TextEditingController _latController;
   late TextEditingController _lngController;
   late TextEditingController _locationController;
   late TextEditingController _tagController;
-  late TextEditingController _imageController;
   late TextEditingController _placeController;
+
+  File? _banner;
+  File? _image;
+
+  void pickBannerFile() async {
+    final XFile? image = await pickImage();
+
+    setState(() {
+      if (image != null) {
+        _banner = File(image.path);
+      } else {
+        log('No image selected.');
+      }
+    });
+  }
+
+  void pickImageFile() async {
+    final XFile? image = await pickImage();
+
+    setState(() {
+      if (image != null) {
+        _image = File(image.path);
+      } else {
+        log('No image selected.');
+      }
+    });
+  }
 
   @override
   void initState() {
@@ -37,15 +79,14 @@ class _UpdateEventFormState extends State<UpdateEventForm> {
     _titleController = TextEditingController();
     _descriptionController = TextEditingController();
     _dateController = TextEditingController();
-    _bannerController = TextEditingController();
     _participantNumberController = TextEditingController();
     _latController = TextEditingController();
     _lngController = TextEditingController();
     _locationController = TextEditingController();
     _tagController = TextEditingController();
-    _imageController = TextEditingController();
     _placeController = TextEditingController();
     _fetchEventDetails();
+    fetchrole();
   }
 
   void _fetchEventDetails() async {
@@ -57,38 +98,62 @@ class _UpdateEventFormState extends State<UpdateEventForm> {
           _titleController.text = _event.title;
           _descriptionController.text = _event.description;
           _dateController.text = _event.date;
-          _bannerController.text = _event.banner;
           _participantNumberController.text =
               _event.participantNumber.toString();
           _latController.text = _event.lat.toString();
           _lngController.text = _event.lng.toString();
           _locationController.text = _event.location;
           _tagController.text = _event.tag;
-          _imageController.text = _event.image;
           _placeController.text = _event.place;
         });
       }
     } catch (e) {
-      print("Error fetching event details: $e");
+      // print("Error fetching event details: $e");
     }
   }
 
   void _updateEvent() async {
     try {
-      var data = {
+      if (_titleController.text.isEmpty ||
+          _descriptionController.text.isEmpty ||
+          _dateController.text.isEmpty ||
+          _participantNumberController.text.isEmpty ||
+          _latController.text.isEmpty ||
+          _lngController.text.isEmpty ||
+          _locationController.text.isEmpty ||
+          _tagController.text.isEmpty ||
+          _placeController.text.isEmpty) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text("Erreur"),
+            content: const Text("Veuillez remplir tous les champs."),
+            actions: <Widget>[
+              TextButton(
+                child: const Text("OK"),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ],
+          ),
+        );
+        return;
+      }
+      var formData = FormData.fromMap({
         'title': _titleController.text,
         'description': _descriptionController.text,
         'date': _dateController.text,
-        'banner': _bannerController.text,
-        'participant_number': int.parse(_participantNumberController.text),
+        if (_banner != null)
+          'banner': await MultipartFile.fromFile(_banner!.path),
+        'participantNumber': int.parse(_participantNumberController.text),
         'lat': double.parse(_latController.text),
         'lng': double.parse(_lngController.text),
         'location': _locationController.text,
         'tag': _tagController.text,
-        'image': _imageController.text,
+        if (_image != null) 'image': await MultipartFile.fromFile(_image!.path),
         'place': _placeController.text,
-      };
-      var response = await ApiUtils.patch('/event/${widget.eventId}', data);
+      });
+      var response =
+          await ApiUtils.patchFormData('/event/${widget.eventId}', formData);
 
       if (response.statusCode == 200) {
         showDialog(
@@ -161,7 +226,8 @@ class _UpdateEventFormState extends State<UpdateEventForm> {
             Container(
               margin: const EdgeInsets.only(bottom: 16.0),
               child: TextField(
-                style: const TextStyle(color: Colors.white),
+                style:
+                    TextStyle(color: _colorBlack ? Colors.white : Colors.black),
                 controller: _titleController,
                 decoration: const InputDecoration(
                   labelText: "Titre",
@@ -171,7 +237,8 @@ class _UpdateEventFormState extends State<UpdateEventForm> {
             Container(
               margin: const EdgeInsets.only(bottom: 16.0),
               child: TextField(
-                style: const TextStyle(color: Colors.white),
+                style:
+                    TextStyle(color: _colorBlack ? Colors.white : Colors.black),
                 controller: _descriptionController,
                 decoration: const InputDecoration(
                   labelText: "Description",
@@ -181,7 +248,7 @@ class _UpdateEventFormState extends State<UpdateEventForm> {
             _dateController.text.isEmpty
                 ? const Text(
                     "Date (YYYY-MM-DD) :",
-                    style: const TextStyle(color: Colors.white),
+                    style: TextStyle(color: Colors.white),
                   )
                 : Column(children: [
                     Text(
@@ -219,18 +286,22 @@ class _UpdateEventFormState extends State<UpdateEventForm> {
             ),
             Container(
               margin: const EdgeInsets.only(bottom: 16.0),
-              child: TextField(
-                style: const TextStyle(color: Colors.white),
-                controller: _bannerController,
-                decoration: const InputDecoration(
-                  labelText: "Bannière (URL)",
-                ),
+              child: Row(
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      pickBannerFile();
+                    },
+                    child: const Text('Choisir une nouvelle bannière'),
+                  ),
+                ],
               ),
             ),
             Container(
               margin: const EdgeInsets.only(bottom: 16.0),
               child: TextField(
-                style: const TextStyle(color: Colors.white),
+                style:
+                    TextStyle(color: _colorBlack ? Colors.white : Colors.black),
                 controller: _participantNumberController,
                 decoration: const InputDecoration(
                   labelText: "Nombre de participants",
@@ -240,7 +311,8 @@ class _UpdateEventFormState extends State<UpdateEventForm> {
             Container(
               margin: const EdgeInsets.only(bottom: 16.0),
               child: TextField(
-                style: const TextStyle(color: Colors.white),
+                style:
+                    TextStyle(color: _colorBlack ? Colors.white : Colors.black),
                 controller: _latController,
                 decoration: const InputDecoration(
                   labelText: "Latitude",
@@ -250,7 +322,8 @@ class _UpdateEventFormState extends State<UpdateEventForm> {
             Container(
               margin: const EdgeInsets.only(bottom: 16.0),
               child: TextField(
-                style: const TextStyle(color: Colors.white),
+                style:
+                    TextStyle(color: _colorBlack ? Colors.white : Colors.black),
                 controller: _lngController,
                 decoration: const InputDecoration(
                   labelText: "Longitude",
@@ -260,7 +333,8 @@ class _UpdateEventFormState extends State<UpdateEventForm> {
             Container(
               margin: const EdgeInsets.only(bottom: 16.0),
               child: TextField(
-                style: const TextStyle(color: Colors.white),
+                style:
+                    TextStyle(color: _colorBlack ? Colors.white : Colors.black),
                 controller: _locationController,
                 decoration: const InputDecoration(
                   labelText: "Location",
@@ -270,7 +344,8 @@ class _UpdateEventFormState extends State<UpdateEventForm> {
             Container(
               margin: const EdgeInsets.only(bottom: 16.0),
               child: TextField(
-                style: const TextStyle(color: Colors.white),
+                style:
+                    TextStyle(color: _colorBlack ? Colors.white : Colors.black),
                 controller: _tagController,
                 decoration: const InputDecoration(
                   labelText: "Tag",
@@ -279,18 +354,22 @@ class _UpdateEventFormState extends State<UpdateEventForm> {
             ),
             Container(
               margin: const EdgeInsets.only(bottom: 16.0),
-              child: TextField(
-                style: const TextStyle(color: Colors.white),
-                controller: _imageController,
-                decoration: const InputDecoration(
-                  labelText: "Image",
-                ),
+              child: Row(
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      pickImageFile();
+                    },
+                    child: const Text('Choisir une nouvelle image'),
+                  ),
+                ],
               ),
             ),
             Container(
               margin: const EdgeInsets.only(bottom: 16.0),
               child: TextField(
-                style: const TextStyle(color: Colors.white),
+                style:
+                    TextStyle(color: _colorBlack ? Colors.white : Colors.black),
                 controller: _placeController,
                 decoration: const InputDecoration(
                   labelText: "Place",

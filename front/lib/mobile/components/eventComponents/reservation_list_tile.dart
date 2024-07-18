@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:mobile/mobile/components/qr-code-button.dart';
+import 'package:mobile/mobile/components/qr_code_button.dart';
 import 'package:mobile/mobile/eventsReservation/blocs/reservation_bloc.dart';
 import 'package:mobile/mobile/models/reservation.dart';
-import 'package:mobile/mobile/services/formatDate.dart';
+import 'package:mobile/mobile/services/format_date.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ReservationListTile extends StatelessWidget {
@@ -33,12 +33,11 @@ class ReservationListTile extends StatelessWidget {
           fit: BoxFit.cover,
         ),
         title: Row(children: [
-          Text(
-            reservation.event.title,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-              color: Colors.white,
+          Expanded(
+            child: Text(
+              reservation.event.title,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
           const SizedBox(width: 10),
@@ -54,17 +53,6 @@ class ReservationListTile extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 10),
-            Expanded(
-              child: Text(
-                reservation.customerId,
-                style: const TextStyle(
-                  fontSize: 10,
-                  color: Colors.grey,
-                ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
           ],
         ),
       ),

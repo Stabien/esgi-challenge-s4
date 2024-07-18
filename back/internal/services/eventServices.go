@@ -9,14 +9,14 @@ import (
 
 func ContainsOrganizerId(organizers []models.Organizer, organizerId uuid.UUID) bool {
 	for _, organizer := range organizers {
-		if organizer.ID == organizerId {
+		if organizer.UserID == organizerId {
 			return true
 		}
 	}
 	return false
 }
 
-func DoesOrganizerBelongsToEvent(organizerId uuid.UUID, eventId uuid.UUID) bool {
+func DoesOrganizerBelongsToEvent(eventId uuid.UUID, organizerId uuid.UUID) bool {
 	var event models.Event
 
 	query := map[string]interface{}{
@@ -24,7 +24,7 @@ func DoesOrganizerBelongsToEvent(organizerId uuid.UUID, eventId uuid.UUID) bool 
 	}
 
 	db := db.DB()
-	db.Where(query).Find(&event)
+	db.Preload("Organizers").Where(query).Find(&event)
 
 	return ContainsOrganizerId(event.Organizers, organizerId)
 }

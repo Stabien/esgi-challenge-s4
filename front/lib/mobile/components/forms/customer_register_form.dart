@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/mobile/models/user.dart';
-import 'package:mobile/mobile/services/userServices.dart';
+import 'package:mobile/mobile/services/user_services.dart';
 import 'package:mobile/mobile/utils/navigation.dart';
 import 'package:mobile/mobile/utils/translate.dart';
 
@@ -52,12 +52,20 @@ class _CustomerRegisterFormState extends State<CustomerRegisterForm> {
       _lastname,
     );
 
-    final Response response = await _userServices.registerCustomer(
-      userCredentials,
-    );
+    if (userCredentials.email.isEmpty ||
+        userCredentials.password.isEmpty ||
+        userCredentials.firstname.isEmpty ||
+        userCredentials.lastname.isEmpty) {
+      return;
+    } else {
+      final Response response = await _userServices.registerCustomer(
+        userCredentials,
+      );
 
-    if (response.statusCode == 201) {
-      redirectToPath(context, '/auth');
+      if (response.statusCode == 201) {
+        // ignore: use_build_context_synchronously
+        redirectToPath(context, '/auth');
+      }
     }
   }
 

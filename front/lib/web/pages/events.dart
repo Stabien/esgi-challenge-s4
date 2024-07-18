@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:mobile/mobile/events/update_event_form.dart';
 import 'package:mobile/web/ui/appbar.dart';
 import 'package:mobile/web/utils/api_utils.dart';
 
@@ -19,19 +20,27 @@ class EventsPageState extends State<EventsPage> {
   @override
   void initState() {
     super.initState();
+    _fetchEvents();
+  }
+
+  void _fetchEvents() {
     _allEventsFuture = fetchAllEvents();
     _pendingEventsFuture = fetchPendingEvents();
 
     _allEventsFuture.then((events) {
-      setState(() {
-        _allEvents = events;
-      });
+      if (mounted) {
+        setState(() {
+          _allEvents = events;
+        });
+      }
     });
 
     _pendingEventsFuture.then((events) {
-      setState(() {
-        _pendingEvents = events;
-      });
+      if (mounted) {
+        setState(() {
+          _pendingEvents = events;
+        });
+      }
     });
   }
 
@@ -40,9 +49,50 @@ class EventsPageState extends State<EventsPage> {
       await validateEvent(eventId);
       setState(() {
         _pendingEvents.removeWhere((event) => event.id == eventId);
+
+        final eventIndex =
+            _allEvents.indexWhere((event) => event.id == eventId);
+        if (eventIndex != -1) {
+          _allEvents[eventIndex] = Event(
+            id: _allEvents[eventIndex].id,
+            title: _allEvents[eventIndex].title,
+            description: _allEvents[eventIndex].description,
+            tag: _allEvents[eventIndex].tag,
+            banner: _allEvents[eventIndex].banner,
+            date: _allEvents[eventIndex].date,
+            place: _allEvents[eventIndex].place,
+            isPending: false,
+          );
+        }
       });
     } catch (error) {
-      print(error);
+      // print(error);
+    }
+  }
+
+  void _unvalidateEvent(String eventId) async {
+    try {
+      await unvalidateEvent(eventId);
+      setState(() {
+        _pendingEvents.removeWhere((event) => event.id == eventId);
+
+        final eventIndex =
+            _allEvents.indexWhere((event) => event.id == eventId);
+        if (eventIndex != -1) {
+          _allEvents[eventIndex] = Event(
+            id: _allEvents[eventIndex].id,
+            title: _allEvents[eventIndex].title,
+            description: _allEvents[eventIndex].description,
+            tag: _allEvents[eventIndex].tag,
+            banner: _allEvents[eventIndex].banner,
+            date: _allEvents[eventIndex].date,
+            place: _allEvents[eventIndex].place,
+            isPending: true,
+          );
+        }
+      });
+    } catch (error) {
+      // print(error);
     }
   }
 
@@ -53,7 +103,7 @@ class EventsPageState extends State<EventsPage> {
       body: Column(
         children: [
           const Text('Tous les événements', style: TextStyle(fontSize: 20)),
-          const SizedBox(height: 20),
+          const SizedBox(height: 50),
           Expanded(
             child: FutureBuilder<List<Event>>(
               future: _allEventsFuture,
@@ -67,34 +117,55 @@ class EventsPageState extends State<EventsPage> {
                     itemCount: _allEvents.length,
                     itemBuilder: (context, index) {
                       final event = _allEvents[index];
-                      return ListTile(
-                        title: Text(event.title),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(event.description),
-                            Text(
-                              event.isPending
-                                  ? 'En attente de validation'
-                                  : 'Validé',
-                              style: TextStyle(
-                                color: event.isPending
-                                    ? Colors.orange
-                                    : Colors.green,
+                      return Card(
+                        elevation: 0,
+                        child: ListTile(
+                          title: Text(event.title),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(event.description),
+                              Text(
+                                event.isPending
+                                    ? 'En attente de validation'
+                                    : 'Validé',
+                                style: TextStyle(
+                                  color: event.isPending
+                                      ? Colors.orange
+                                      : Colors.green,
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                        leading: Image.memory(
-                          base64Decode(event.banner),
-                          width: 100,
-                          height: 100,
-                          fit: BoxFit.cover,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          side: BorderSide(
-                            color: Colors.grey[400]!,
-                            width: 1,
+                              IconButton(
+                                icon: const Icon(Icons.create_sharp),
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return Dialog(
+                                        child: SizedBox(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.9,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.7,
+                                          child: UpdateEventForm(
+                                              eventId: event.id),
+                                        ),
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                          leading: Image.memory(
+                            base64Decode(event.banner),
+                            width: 100,
+                            height: 100,
+                            fit: BoxFit.cover,
                           ),
                         ),
                       );
@@ -104,6 +175,7 @@ class EventsPageState extends State<EventsPage> {
               },
             ),
           ),
+          const SizedBox(height: 50),
           const Text('Événements en attente de validation',
               style: TextStyle(fontSize: 20)),
           const SizedBox(height: 20),
@@ -235,7 +307,14 @@ Future<List<Event>> fetchPendingEvents() async {
 Future<void> validateEvent(String eventId) async {
   try {
     await ApiUtils.patch('/events/$eventId/validate', {});
+  } catch (error) {
+    throw Exception('An error occurred while validating the event');
+  }
+}
 
+Future<void> unvalidateEvent(String eventId) async {
+  try {
+    await ApiUtils.patch('/events/$eventId/unvalidate', {});
   } catch (error) {
     throw Exception('An error occurred while validating the event');
   }
