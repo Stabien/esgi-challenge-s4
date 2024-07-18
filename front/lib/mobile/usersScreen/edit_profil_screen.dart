@@ -46,6 +46,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   void _saveProfile() {
+    if (_lastnameController.text.isEmpty ||
+        _emailController.text.isEmpty ||
+        _firstnameController.text.isEmpty) {
+      return;
+    }
     setState(() {
       widget.userProfile.lastname = _lastnameController.text;
       widget.userProfile.email = _emailController.text;

@@ -98,6 +98,30 @@ class _UpdateEventFormState extends State<UpdateEventForm> {
 
   void _updateEvent() async {
     try {
+      if (_titleController.text.isEmpty ||
+          _descriptionController.text.isEmpty ||
+          _dateController.text.isEmpty ||
+          _participantNumberController.text.isEmpty ||
+          _latController.text.isEmpty ||
+          _lngController.text.isEmpty ||
+          _locationController.text.isEmpty ||
+          _tagController.text.isEmpty ||
+          _placeController.text.isEmpty) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text("Erreur"),
+            content: const Text("Veuillez remplir tous les champs."),
+            actions: <Widget>[
+              TextButton(
+                child: const Text("OK"),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ],
+          ),
+        );
+        return;
+      }
       var formData = FormData.fromMap({
         'title': _titleController.text,
         'description': _descriptionController.text,
