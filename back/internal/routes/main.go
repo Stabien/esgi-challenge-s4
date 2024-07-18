@@ -46,7 +46,7 @@ func InitRouter(e *echo.Echo) {
 	e.POST("/send-notification", controllers.SendNotificationToTopic)
 
 	// User routes
-	e.GET("/users", controllers.GetAllUsers)
+	e.GET("/users", middlewares.CheckUserRole(controllers.GetAllUsers, "admin"))
 	e.GET("/users/:id", controllers.GetUser)
 	e.PATCH("/users/:id", middlewares.CheckUserId(controllers.UpdateUser))
 	e.DELETE("/users/:id", middlewares.CheckUserRole(controllers.DeleteUser, "admin"))
