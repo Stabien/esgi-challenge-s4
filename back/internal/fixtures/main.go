@@ -14,6 +14,7 @@ var AllFixtures = []any{
 	Events,
 	Reservations,
 	Features,
+	Tags,
 }
 
 func LoadFixtures(db *gorm.DB) {
