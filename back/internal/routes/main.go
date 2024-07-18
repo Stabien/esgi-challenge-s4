@@ -97,8 +97,8 @@ func InitRouter(e *echo.Echo) {
 	e.DELETE("/notifications/:id", controllers.DeleteNotification)
 
 	// Feature flipping
-	e.GET("/features", middlewares.CheckUserRole(controllers.GetAllFeatures, "admin"))
-	e.GET("/features/:name", middlewares.CheckUserRole(controllers.IsEnabled, "admin"))
+	e.GET("/features", controllers.GetAllFeatures)
+	e.GET("/features/:name", controllers.IsEnabled)
 	e.PATCH("/features", middlewares.CheckUserRole(controllers.UpdateState, "admin"))
 
 	// Tag routes
