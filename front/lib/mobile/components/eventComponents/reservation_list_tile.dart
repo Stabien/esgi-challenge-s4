@@ -54,17 +54,6 @@ class ReservationListTile extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 10),
-            Expanded(
-              child: Text(
-                reservation.customerId,
-                style: const TextStyle(
-                  fontSize: 10,
-                  color: Colors.grey,
-                ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
           ],
         ),
       ),
