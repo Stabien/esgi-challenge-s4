@@ -166,13 +166,16 @@ func UpdateEvent(c echo.Context) error {
 	}
 
 	// If the user is not the organizer of the event, return an error
-	var count int64
-	if err := db.DB().Table("organizer_events").Where("organizer_user_id = ? AND event_id = ?", userID, eventID).Count(&count).Error; err != nil {
-		return err
-	}
 
-	if count == 0 {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "You are not the organizer of this event"})
+	if claims["role"] != "admin" {
+		var count int64
+		if err := db.DB().Table("organizer_events").Where("organizer_user_id = ? AND event_id = ?", userID, eventID).Count(&count).Error; err != nil {
+			return err
+		}
+	
+		if count == 0 {
+			return c.JSON(http.StatusBadRequest, map[string]string{"error": "You are not the organizer of this event"})
+		}
 	}
 
 	participantNumber, err := strconv.Atoi(c.FormValue("participantNumber"))
@@ -720,4 +723,20 @@ func ValidateEvent(c echo.Context) error {
 	}
 
 	return c.String(http.StatusOK, "Event validated successfully!")
+}
+func UnvalidateEvent(c echo.Context) error {
+	eventID := c.Param("id")
+
+	var event models.Event
+	if err := db.DB().First(&event, "id = ?", eventID).Error; err != nil {
+		return err
+	}
+
+	event.IsPending = true
+
+	if err := db.DB().Save(&event).Error; err != nil {
+		return err
+	}
+
+	return c.String(http.StatusOK, "Event unvalidated successfully!")
 }
