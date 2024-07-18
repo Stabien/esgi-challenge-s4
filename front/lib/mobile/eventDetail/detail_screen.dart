@@ -162,7 +162,7 @@ class _DetailScreen extends State<DetailScreen> {
                               ),
                               const SizedBox(width: 15),
                               Text(
-                                transformerDate(eventDetail.date),
+                                traduireDateEvent(eventDetail.date),
                                 style: const TextStyle(
                                   fontSize: 12,
                                   color: Colors.grey,

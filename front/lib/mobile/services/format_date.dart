@@ -14,6 +14,14 @@ String transformerDate(String dateString) {
   return formattedDate;
 }
 
+String traduireDateEvent(String dateString) {
+  DateTime dateTime = DateTime.parse(dateString);
+  DateFormat dateFormat = DateFormat('dd/MM/yyyy HH:mm');
+  String formattedDate = dateFormat.format(dateTime);
+
+  return formattedDate;
+}
+
 String traduireDate(String dateString) {
   DateTime dateTime = DateTime.parse(dateString);
   DateFormat dateFormat = DateFormat('dd/MM/yyyy HH:mm:ss');
