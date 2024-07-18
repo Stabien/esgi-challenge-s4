@@ -36,6 +36,9 @@ class _LoginFormState extends State<LoginForm> {
     final userCredentials = UserCredentials(_email, _password);
 
     try {
+      if (userCredentials.email.isEmpty || userCredentials.password.isEmpty) {
+        return;
+      }
       final Response response = await _userServices.auth(userCredentials);
 
       if (response.data['token'] == null) {

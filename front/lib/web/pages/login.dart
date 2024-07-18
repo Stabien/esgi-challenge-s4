@@ -37,6 +37,9 @@ class LoginState extends State<Login> {
 
   void _onSubmit(BuildContext context) async {
     final userCredentials = UserCredentials(_email, _password);
+    if (userCredentials.email.isEmpty || userCredentials.password.isEmpty) {
+      return;
+    }
     final Response response = await _userServices.auth(userCredentials);
 
     if (response.data['token'] == null) {

@@ -52,13 +52,20 @@ class _OrganizerRegisterFormState extends State<OrganizerRegisterForm> {
       _lastname,
     );
 
-    final Response response = await _userServices.registerOrganizer(
-      userCredentials,
-    );
+    if (userCredentials.email.isEmpty ||
+        userCredentials.password.isEmpty ||
+        userCredentials.firstname.isEmpty ||
+        userCredentials.lastname.isEmpty) {
+      return;
+    } else {
+      final Response response = await _userServices.registerOrganizer(
+        userCredentials,
+      );
 
-    if (response.statusCode == 201) {
-      // ignore: use_build_context_synchronously
-      redirectToPath(context, '/auth');
+      if (response.statusCode == 201) {
+        // ignore: use_build_context_synchronously
+        redirectToPath(context, '/auth');
+      }
     }
   }
 
