@@ -20,7 +20,7 @@ func CheckUserRole(next echo.HandlerFunc, role string) echo.HandlerFunc {
 			return next(c)
 		}
 
-		return next(c)
+		return echo.NewHTTPError(http.StatusUnauthorized)
 	}
 }
 
