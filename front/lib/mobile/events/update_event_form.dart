@@ -7,6 +7,7 @@ import 'package:dio/dio.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mobile/mobile/utils/file.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
+import 'package:mobile/mobile/utils/secure_storage.dart';
 import 'package:mobile/web/utils/api_utils.dart';
 
 class UpdateEventForm extends StatefulWidget {
@@ -20,6 +21,20 @@ class UpdateEventForm extends StatefulWidget {
 
 class _UpdateEventFormState extends State<UpdateEventForm> {
   late Event _event = Event.empty();
+  late String _userRole;
+  late bool _colorBlack = true;
+
+  Future<void> fetchrole() async {
+    String? userRole = await SecureStorage.getStorageItem('userRole');
+    setState(() {
+      _userRole = userRole!;
+    });
+    if (_userRole == 'admin') {
+      _colorBlack = false;
+    } else {
+      _colorBlack = true;
+    }
+  }
 
   late TextEditingController _titleController;
   late TextEditingController _descriptionController;
@@ -71,6 +86,7 @@ class _UpdateEventFormState extends State<UpdateEventForm> {
     _tagController = TextEditingController();
     _placeController = TextEditingController();
     _fetchEventDetails();
+    fetchrole();
   }
 
   void _fetchEventDetails() async {
@@ -210,7 +226,8 @@ class _UpdateEventFormState extends State<UpdateEventForm> {
             Container(
               margin: const EdgeInsets.only(bottom: 16.0),
               child: TextField(
-                style: const TextStyle(color: Colors.white),
+                style:
+                    TextStyle(color: _colorBlack ? Colors.white : Colors.black),
                 controller: _titleController,
                 decoration: const InputDecoration(
                   labelText: "Titre",
@@ -220,7 +237,8 @@ class _UpdateEventFormState extends State<UpdateEventForm> {
             Container(
               margin: const EdgeInsets.only(bottom: 16.0),
               child: TextField(
-                style: const TextStyle(color: Colors.white),
+                style:
+                    TextStyle(color: _colorBlack ? Colors.white : Colors.black),
                 controller: _descriptionController,
                 decoration: const InputDecoration(
                   labelText: "Description",
@@ -282,7 +300,8 @@ class _UpdateEventFormState extends State<UpdateEventForm> {
             Container(
               margin: const EdgeInsets.only(bottom: 16.0),
               child: TextField(
-                style: const TextStyle(color: Colors.white),
+                style:
+                    TextStyle(color: _colorBlack ? Colors.white : Colors.black),
                 controller: _participantNumberController,
                 decoration: const InputDecoration(
                   labelText: "Nombre de participants",
@@ -292,7 +311,8 @@ class _UpdateEventFormState extends State<UpdateEventForm> {
             Container(
               margin: const EdgeInsets.only(bottom: 16.0),
               child: TextField(
-                style: const TextStyle(color: Colors.white),
+                style:
+                    TextStyle(color: _colorBlack ? Colors.white : Colors.black),
                 controller: _latController,
                 decoration: const InputDecoration(
                   labelText: "Latitude",
@@ -302,7 +322,8 @@ class _UpdateEventFormState extends State<UpdateEventForm> {
             Container(
               margin: const EdgeInsets.only(bottom: 16.0),
               child: TextField(
-                style: const TextStyle(color: Colors.white),
+                style:
+                    TextStyle(color: _colorBlack ? Colors.white : Colors.black),
                 controller: _lngController,
                 decoration: const InputDecoration(
                   labelText: "Longitude",
@@ -312,7 +333,8 @@ class _UpdateEventFormState extends State<UpdateEventForm> {
             Container(
               margin: const EdgeInsets.only(bottom: 16.0),
               child: TextField(
-                style: const TextStyle(color: Colors.white),
+                style:
+                    TextStyle(color: _colorBlack ? Colors.white : Colors.black),
                 controller: _locationController,
                 decoration: const InputDecoration(
                   labelText: "Location",
@@ -322,7 +344,8 @@ class _UpdateEventFormState extends State<UpdateEventForm> {
             Container(
               margin: const EdgeInsets.only(bottom: 16.0),
               child: TextField(
-                style: const TextStyle(color: Colors.white),
+                style:
+                    TextStyle(color: _colorBlack ? Colors.white : Colors.black),
                 controller: _tagController,
                 decoration: const InputDecoration(
                   labelText: "Tag",
@@ -345,7 +368,8 @@ class _UpdateEventFormState extends State<UpdateEventForm> {
             Container(
               margin: const EdgeInsets.only(bottom: 16.0),
               child: TextField(
-                style: const TextStyle(color: Colors.white),
+                style:
+                    TextStyle(color: _colorBlack ? Colors.white : Colors.black),
                 controller: _placeController,
                 decoration: const InputDecoration(
                   labelText: "Place",
