@@ -136,12 +136,6 @@ class EventsPageState extends State<EventsPage> {
                               ),
                             ],
                           ),
-                          trailing: event.isPending
-                              ? null
-                              : ElevatedButton(
-                                  onPressed: () => _unvalidateEvent(event.id),
-                                  child: const Text('Invalider'),
-                                ),
                           leading: Image.memory(
                             base64Decode(event.banner),
                             width: 100,

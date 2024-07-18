@@ -33,12 +33,11 @@ class ReservationListTile extends StatelessWidget {
           fit: BoxFit.cover,
         ),
         title: Row(children: [
-          Text(
-            reservation.event.title,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-              color: Colors.white,
+          Expanded(
+            child: Text(
+              reservation.event.title,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
           const SizedBox(width: 10),
