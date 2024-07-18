@@ -26,16 +26,17 @@ class EventListTile extends StatelessWidget {
           height: 100,
           fit: BoxFit.cover,
         ),
-        title: Row(children: [
-          Text(
-            event.title,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-              color: Colors.white,
+        title: Row(
+          children: [
+            Expanded(
+              child: Text(
+                event.title,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
-          ),
-        ]),
+          ],
+        ),
         subtitle: Row(
           children: [
             Text(
