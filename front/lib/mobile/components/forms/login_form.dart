@@ -5,6 +5,7 @@ import 'package:mobile/mobile/services/user_services.dart';
 import 'package:mobile/mobile/utils/navigation.dart';
 import 'package:mobile/mobile/utils/secure_storage.dart';
 import 'package:mobile/mobile/utils/trad_token.dart';
+import 'package:mobile/mobile/utils/translate.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
@@ -52,7 +53,7 @@ class _LoginFormState extends State<LoginForm> {
         context: context,
         builder: (context) => AlertDialog(
           title: const Text("Echec"),
-          content: const Text("Utilisateur non trouvé"),
+          content: Text(t(context)!.userNotFound),
           actions: <Widget>[
             TextButton(
               child: const Text("OK"),
@@ -80,8 +81,8 @@ class _LoginFormState extends State<LoginForm> {
             style: TextStyle(
               color: Theme.of(context).textTheme.titleMedium!.color,
             ),
-            decoration: const InputDecoration(
-              labelText: 'Email',
+            decoration: InputDecoration(
+              labelText: t(context)!.email,
             ),
           ),
           const SizedBox(height: 16.0),
@@ -91,14 +92,14 @@ class _LoginFormState extends State<LoginForm> {
             style: TextStyle(
               color: Theme.of(context).textTheme.titleMedium!.color,
             ),
-            decoration: const InputDecoration(
-              labelText: 'Mot de passe',
+            decoration: InputDecoration(
+              labelText: t(context)!.password,
             ),
           ),
           const SizedBox(height: 16.0),
           ElevatedButton(
             onPressed: () => _onSubmit(context),
-            child: const Text("Envoyer"),
+            child: Text(t(context)!.send),
           ),
         ],
       ),

@@ -112,8 +112,8 @@ class _OrganizerRegisterFormState extends State<OrganizerRegisterForm> {
           const SizedBox(height: 16.0),
           ElevatedButton(
             onPressed: _onSubmit,
-            child: const Text(
-              "Envoyer",
+            child: Text(
+              t(context)!.send,
             ),
           ),
         ],

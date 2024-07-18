@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:mobile/web/utils/api_utils.dart';
+import 'package:mobile/mobile/utils/translate.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -25,9 +26,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
       if (response.statusCode == 200) {
         // ignore: use_build_context_synchronously
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content:
-                Text('If the email exists, a reset token has been sent.')));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            // ignore: use_build_context_synchronously
+            content: Text(t(context)!.ifTheEmailExistsAResetTokenHasBeenSent)));
         setState(() {
           _showResetForm = true;
         });
@@ -51,8 +52,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
       if (response.statusCode == 200) {
         // ignore: use_build_context_synchronously
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text('Password has been reset successfully.')));
+        ScaffoldMessenger.of(context).showSnackBar(
+            // ignore: use_build_context_synchronously
+            SnackBar(content: Text(t(context)!.passwordResetSuccessfully)));
         // ignore: use_build_context_synchronously
         Navigator.of(context).pop();
       } else {
@@ -72,7 +74,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Forgot password'),
+        title: Text(t(context)!.forgotPassword),
       ),
       body: Center(
         child: FractionallySizedBox(
@@ -101,7 +103,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                               Text('Please enter a valid email address.')));
                     }
                   },
-                  child: const Text('Send email'),
+                  child: Text(t(context)!.send),
                 ),
               ],
               if (_showResetForm) ...[

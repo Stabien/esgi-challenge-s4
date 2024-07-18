@@ -9,5 +9,14 @@
   "noEventToday": "No event today",
   "myTickets": "My tickets",
   "upcoming": "Upcoming",
-  "profile": "Profile"
+  "profile": "Profile",
+  "alreadyRegisteredConnect": "Already registered? Connect",
+  "signUpOrganizer": "Sign up as an organizer",
+  "signUpCustomer": "Sign up as a customer",
+  "userNotFound": "User not found",
+  "send": "Send",
+  "signup": "Sign up",
+  "forgotPassword": "Forgot password",
+  "passwordResetSuccessfully": "Password reset successfully",
+  "ifTheEmailExistsAResetTokenHasBeenSent": "If the email exists, a reset token has been sent"
 }

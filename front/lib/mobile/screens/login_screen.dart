@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/mobile/components/forms/login_form.dart';
 import 'package:mobile/mobile/utils/navigation.dart';
+import 'package:mobile/mobile/utils/translate.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -28,7 +29,7 @@ class LoginScreen extends StatelessWidget {
               TextButton(
                 onPressed: () => redirectToPath(context, '/register/customer'),
                 child: Text(
-                  "S'inscrire",
+                  t(context)!.signup,
                   style: TextStyle(
                     color: Theme.of(context).textTheme.titleMedium!.color,
                   ),
@@ -37,7 +38,7 @@ class LoginScreen extends StatelessWidget {
               TextButton(
                 onPressed: () => redirectToPath(context, '/forgot-password'),
                 child: Text(
-                  'Mot de passe oublié',
+                  t(context)!.forgotPassword,
                   style: TextStyle(
                     color: Theme.of(context).textTheme.titleMedium!.color,
                   ),
