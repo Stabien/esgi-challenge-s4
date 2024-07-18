@@ -721,3 +721,19 @@ func ValidateEvent(c echo.Context) error {
 
 	return c.String(http.StatusOK, "Event validated successfully!")
 }
+func UnvalidateEvent(c echo.Context) error {
+	eventID := c.Param("id")
+
+	var event models.Event
+	if err := db.DB().First(&event, "id = ?", eventID).Error; err != nil {
+		return err
+	}
+
+	event.IsPending = true
+
+	if err := db.DB().Save(&event).Error; err != nil {
+		return err
+	}
+
+	return c.String(http.StatusOK, "Event unvalidated successfully!")
+}

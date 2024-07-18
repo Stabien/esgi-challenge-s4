@@ -69,6 +69,32 @@ class EventsPageState extends State<EventsPage> {
     }
   }
 
+  void _unvalidateEvent(String eventId) async {
+    try {
+      await unvalidateEvent(eventId);
+      setState(() {
+        _pendingEvents.removeWhere((event) => event.id == eventId);
+
+        final eventIndex =
+            _allEvents.indexWhere((event) => event.id == eventId);
+        if (eventIndex != -1) {
+          _allEvents[eventIndex] = Event(
+            id: _allEvents[eventIndex].id,
+            title: _allEvents[eventIndex].title,
+            description: _allEvents[eventIndex].description,
+            tag: _allEvents[eventIndex].tag,
+            banner: _allEvents[eventIndex].banner,
+            date: _allEvents[eventIndex].date,
+            place: _allEvents[eventIndex].place,
+            isPending: true,
+          );
+        }
+      });
+    } catch (error) {
+      // print(error);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -110,6 +136,12 @@ class EventsPageState extends State<EventsPage> {
                               ),
                             ],
                           ),
+                          trailing: event.isPending
+                              ? null
+                              : ElevatedButton(
+                                  onPressed: () => _unvalidateEvent(event.id),
+                                  child: const Text('Invalider'),
+                                ),
                           leading: Image.memory(
                             base64Decode(event.banner),
                             width: 100,
@@ -256,6 +288,14 @@ Future<List<Event>> fetchPendingEvents() async {
 Future<void> validateEvent(String eventId) async {
   try {
     await ApiUtils.patch('/events/$eventId/validate', {});
+  } catch (error) {
+    throw Exception('An error occurred while validating the event');
+  }
+}
+
+Future<void> unvalidateEvent(String eventId) async {
+  try {
+    await ApiUtils.patch('/events/$eventId/unvalidate', {});
   } catch (error) {
     throw Exception('An error occurred while validating the event');
   }
