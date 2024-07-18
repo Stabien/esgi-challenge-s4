@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:mobile/mobile/events/update_event_form.dart';
 import 'package:mobile/web/ui/appbar.dart';
 import 'package:mobile/web/utils/api_utils.dart';
 
@@ -134,14 +135,32 @@ class EventsPageState extends State<EventsPage> {
                                       : Colors.green,
                                 ),
                               ),
+                              IconButton(
+                                icon: const Icon(Icons.create_sharp),
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return Dialog(
+                                        child: SizedBox(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.9,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.7,
+                                          child: UpdateEventForm(
+                                              eventId: event.id),
+                                        ),
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
                             ],
                           ),
-                          trailing: event.isPending
-                              ? null
-                              : ElevatedButton(
-                                  onPressed: () => _unvalidateEvent(event.id),
-                                  child: const Text('Invalider'),
-                                ),
                           leading: Image.memory(
                             base64Decode(event.banner),
                             width: 100,
