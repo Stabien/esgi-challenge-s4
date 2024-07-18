@@ -57,22 +57,12 @@ class _ScreenEventState extends State<ScreenEventToday> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Text(t(context)!.today),
+      ),
       body: Column(
         children: [
-          const SizedBox(height: 50),
-          Padding(
-            padding: const EdgeInsets.all(1.0),
-            child: Padding(
-              padding: const EdgeInsets.all(3.0),
-              child: Column(
-                children: [
-                  Text(
-                    t(context)!.today,
-                  ),
-                ],
-              ),
-            ),
-          ),
           Expanded(
             child: _loading
                 ? const Center(child: CircularProgressIndicator())
