@@ -274,7 +274,7 @@ func UpdateUserByIdOrga(c echo.Context) error {
 		organizerUpdates["lastname"] = *updateUser.LastName
 	}
 
-	organizerUpdates["role"] = "organizer"
+	userUpdates["role"] = "organizer"
 
 	if err := db.DB().Transaction(func(tx *gorm.DB) error {
 		if len(userUpdates) > 0 {
@@ -330,7 +330,7 @@ func UpdateUserByIdCustomer(c echo.Context) error {
 		customerUpdates["lastname"] = *updateUser.LastName
 	}
 
-	customerUpdates["role"] = "customer"
+	userUpdates["role"] = "customer"
 
 	if err := db.DB().Transaction(func(tx *gorm.DB) error {
 		if len(userUpdates) > 0 {
