@@ -7,17 +7,22 @@ Avant de commencer, assurez-vous de remplacer les variables d'environnement dans
 ## Build de l'APK
 
 Pour construire l'APK, exécutez la commande suivante :
-```bash
+```flutter
 flutter build apk
 ```
 
 ## Backend:
 ### Lancer le backend
 Pour lancer le backend, utilisez les commandes suivantes :
-```bash
+```docker
 docker compose up -d
 docker compose exec api make fixtures
 docker compose exec api make swagger
+```
+
+### Lancer les tests
+```docker
+docker compose exec api go test ./internal/controllers/
 ```
 
 ## CONTRIBUTEURS :
