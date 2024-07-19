@@ -18,7 +18,12 @@ import (
 
 func GetEnvVariable(key string) string {
 	// load .env file
-	err := godotenv.Load(".env.local")
+	var err error
+	if os.Getenv("TESTING") == "true" {
+		err = godotenv.Load("../../.env.local")
+	} else {
+		err = godotenv.Load(".env.local")
+	}
 
 	if err != nil {
 		log.Fatalf("Error loading .env file")
