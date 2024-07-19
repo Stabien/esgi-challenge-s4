@@ -64,3 +64,9 @@ Bastien PIEDALLU :
 - Création de la CD avec Terraform, AWS et Github Actions
 
 Raphael SELWA :
+
+- Génération du Qr code
+- Qr code Scanner
+- Controllers admin back
+- Navigation FLutter Web Admin
+- Futures Flutter
