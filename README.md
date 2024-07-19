@@ -47,6 +47,13 @@ Nicolas CAPELLA :
 
 Benoit DE CARLI :
 
+- Mise en place du temps reel par l'intermiediaire du chat pour les organisateurs
+- Affichage des événements, des détails d'un événement,
+- Filtre par catégorie, par nom et par lieu
+- Reservation d'un événement
+- Creation de la partie profil + modification du profil
+- Participation à la réalisation du panel admin
+
 Bastien PIEDALLU :
 
 - Mise en place de l'environnement de développement côté back (Docker + air)
