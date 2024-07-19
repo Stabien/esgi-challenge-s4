@@ -59,6 +59,7 @@ Bastien PIEDALLU :
 - Mise en place de l'environnement de développement côté back (Docker + air)
 - Création de la base de données PostreSQL
 - Mise en place de la sécurité côté back
+- Création du layout côté front et d'une partie de la navigation
 - Gestion de l'authentification (back et front)
 - Gestion de l'upload de fichier (back et front)
 - Création de la CD avec Terraform, AWS et Github Actions
