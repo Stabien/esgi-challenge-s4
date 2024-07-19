@@ -2,7 +2,7 @@
 
 ## Prérequis
 
-Avant de commencer, assurez-vous de remplacer les variables d'environnement dans le fichier `.env`.
+Avant de commencer, assurez-vous de remplacer les variables d'environnement dans le fichier `.env`, ainsi que d'ajouter les credentials de l'API Google dans le fichier `account_key` du back.
 
 ## Build de l'APK
 
@@ -29,6 +29,10 @@ docker compose exec api make swagger
 ```docker
 docker compose exec api go test ./internal/controllers/
 ```
+
+### URL de l'API en production
+
+https://prod.api-easynight.com/
 
 ## CONTRIBUTEURS :
 
