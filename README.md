@@ -30,9 +30,10 @@ docker compose exec api make swagger
 docker compose exec api go test ./internal/controllers/
 ```
 
-### URL de l'API en production
+### Lien des productions
 
-https://prod.api-easynight.com/
+API : https://prod.api-easynight.com/
+Admin Web : https://esgi-challenge-s4-sigma.vercel.app/
 
 ## CONTRIBUTEURS :
 
